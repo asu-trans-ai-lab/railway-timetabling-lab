@@ -41,7 +41,7 @@ def schedule(d, rule="class"):
         r = tdsp(trains[ti], adj, cfg, pre)
         if not r:
             continue
-        arr, occ = r
+        arr, occ, _segs = r
         scheds[ti] = (arr, sorted(set(occ)))
         for (lid, b) in set(occ):
             usage[lid][b] += 1

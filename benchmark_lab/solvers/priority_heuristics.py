@@ -120,12 +120,13 @@ def tdsp(tr, adj, cfg, blockedpre):
                     heapq.heappush(pq, (cc, m, arrive))
     if arr is None:
         return None
-    occ = []; cur = (d, arr)
+    occ = []; segs = []; cur = (d, arr)
     while cur in pred:
         pn, pt, lid = pred[cur]
         occ += [(lid, b) for b in range(pt, cur[1] + HW) if b < T]
+        segs.append((pn, lid, pt, cur[1]))     # (from_node, link, enter, leave=arrival at next node)
         cur = (pn, pt)
-    return arr, occ
+    return arr, occ, segs[::-1]
 
 
 # ---------------------------------------------------------------- B0 dispatcher
@@ -141,13 +142,14 @@ def dispatch(order, trains, adj, cfg, links, base_usage):
     cap = {lk["id"]: lk["cap"] for lk in links}
     blocked = {lid: (usage[lid] >= cap[lid]).astype(np.int64) for lid in usage}
     pre = _prefix(blocked)
-    total = 0.0; ok = True
+    total = 0.0; ok = True; scheds = {}
     for ti in order:
         tr = trains[ti]
         r = tdsp(tr, adj, cfg, pre)
         if r is None:
             ok = False; total += 1e6; continue
-        arr, occ = r
+        arr, occ, _segs = r
+        scheds[ti] = _segs
         total += abs(arr - tr["intended"])
         touched = set()
         for (lid, b) in occ:
@@ -155,7 +157,7 @@ def dispatch(order, trains, adj, cfg, links, base_usage):
         for lid in touched:                       # refresh prefixes only for changed links
             blk = (usage[lid] >= cap[lid]).astype(np.int64)
             pre[lid] = np.concatenate(([0], np.cumsum(blk)))
-    return total, ok
+    return total, ok, scheds
 
 
 def run_instance(d, instance_id, rand_n, records):
@@ -186,18 +188,30 @@ def run_instance(d, instance_id, rand_n, records):
     results = {}
     for name, order in rules.items():
         t0 = time.time()
-        obj, ok = dispatch(order, trains, adj, cfg, links, base_usage)
-        results[name] = (obj, ok, time.time() - t0)
+        obj, ok, sch = dispatch(order, trains, adj, cfg, links, base_usage)
+        results[name] = (obj, ok, time.time() - t0, order, sch)
     rng = random.Random(0)
     t0 = time.time(); best_r = (float("inf"), False)
     for _ in range(rand_n):
         order = list(range(n)); rng.shuffle(order)
-        obj, ok = dispatch(order, trains, adj, cfg, links, base_usage)
+        obj, ok, sch = dispatch(order, trains, adj, cfg, links, base_usage)
         if obj < best_r[0]:
-            best_r = (obj, ok)
-    results[f"rand_best_of_{rand_n}"] = (best_r[0], best_r[1], time.time() - t0)
+            best_r = (obj, ok, order, sch)
+    results[f"rand_best_of_{rand_n}"] = (best_r[0], best_r[1], time.time() - t0, best_r[2] if len(best_r) > 2 else [], best_r[3] if len(best_r) > 3 else {})
     best = min(v[0] for v in results.values())
-    for name, (obj, ok, wall) in results.items():
+    bname = min(results, key=lambda k: results[k][0])
+    bobj, bok, _, border, bsch = results[bname]
+    if bok and bsch:                                  # Gate 1: export best rule's timetable
+        sdir = os.path.join(LAB, "results", "schedules"); os.makedirs(sdir, exist_ok=True)
+        import csv as _csv
+        with open(os.path.join(sdir, f"{instance_id}_B0.csv"), "w", newline="") as f:
+            w = _csv.writer(f); w.writerow(["instance_id","method","train_id","seq","from_node","to_node","link_id","enter_time","leave_time"])
+            for ti, segs in bsch.items():
+                lkmap = {lk["id"]: lk for lk in links}
+                for si, (fn, lid, en, lv) in enumerate(segs):
+                    tn = lkmap[lid]["b"] if lkmap[lid]["a"] == fn else lkmap[lid]["a"]
+                    w.writerow([instance_id, f"B0_{bname}", trains[ti]["id"], si, fn, tn, lid, en, lv])
+    for name, (obj, ok, wall, _o, _s) in results.items():
         append_record(records, RunRecord(
             instance_id=instance_id, method=f"B0_{name}",
             objective=obj if ok else float("nan"),

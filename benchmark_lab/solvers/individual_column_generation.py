@@ -69,8 +69,12 @@ def tdsp_priced(tr, adj, cfg, price_pref, dep_lo=None, dep_hi=None):
         occ += [(lid, b) for b in range(pt, cur[1] + HW) if b < T]
         cur = (pn, pt)
     dep = cur[1]                                  # origin node time = departure
+    segs = []; c2 = (d, arr)
+    while c2 in pred:
+        pn, pt, lid = pred[c2]
+        segs.append((pn, lid, pt, c2[1])); c2 = (pn, pt)
     occ = sorted(set(occ))
-    return best[(d, arr)], abs(arr - tr["intended"]), arr, occ, dep
+    return best[(d, arr)], abs(arr - tr["intended"]), arr, occ, dep, segs[::-1]
 
 
 def solve_master(cols, ntrains, caps, integer=False, time_limit=120):
@@ -127,18 +131,18 @@ def run(d, instance_id, iters, records):
     # init columns: free-flow path per train + B0-fcfs dispatched feasible set
     cols, seen = [], set()
 
-    def add_col(k, cost, occ):
+    def add_col(k, cost, occ, segs=None):
         key = (k, tuple(occ))                   # FULL occupancy key: a truncated key false-positively
         if key in seen:                         # deduped distinct columns -> premature "convergence"
             return False                        # with an INVALID (too-high) "LP bound"
-        seen.add(key); cols.append(dict(train=k, cost=cost, occ=occ)); return True
+        seen.add(key); cols.append(dict(train=k, cost=cost, occ=occ, segs=segs)); return True
 
     base_usage = {lk["id"]: np.zeros(T, dtype=np.int64) for lk in links}
     for (lid, b) in mow_cells:
         base_usage[lid][b] = 10**6                       # saturate MOW cells for the init dispatch
     for k, tr in enumerate(trains):
         r = tdsp_priced(tr, adj, cfg, None)
-        add_col(k, r[1], r[3])
+        add_col(k, r[1], r[3], r[5])
     # a feasible incumbent set via sequential dispatch (fcfs)
     order = sorted(range(len(trains)), key=lambda i: trains[i]["entry"])
     pre = {lid: np.zeros(T + 1) for lid in base_usage}     # zero-blocked prefixes
@@ -150,8 +154,8 @@ def run(d, instance_id, iters, records):
     for ti in order:
         r = tdsp_hard(trains[ti], adj, cfg, prefixes)
         if r:
-            arr, occ = r
-            add_col(ti, abs(arr - trains[ti]["intended"]), sorted(set(occ)))
+            arr, occ, _segs = r
+            add_col(ti, abs(arr - trains[ti]["intended"]), sorted(set(occ)), _segs)
             for (lid, b) in set(occ):
                 usage[lid][b] += 1
             for lid in {l for (l, _) in occ}:
@@ -174,13 +178,25 @@ def run(d, instance_id, iters, records):
             r = tdsp_priced(tr, adj, cfg, price_pref)
             if r is None:
                 continue
-            cost_pr, dev, arr, occ, dep = r
+            cost_pr, dev, arr, occ, dep, psegs = r
             rc = cost_pr - pi[k]
-            if rc < -1e-7 and add_col(k, dev, occ):
+            if rc < -1e-7 and add_col(k, dev, occ, psegs):
                 added += 1
         if added == 0:
             break
-    int_obj, _ = solve_master(cols, len(trains), caps, integer=True)
+    int_obj, ires = solve_master(cols, len(trains), caps, integer=True)
+    if not np.isnan(int_obj) and getattr(ires, "x", None) is not None:   # Gate 1: export selection
+        sdir = os.path.join(LAB, "results", "schedules"); os.makedirs(sdir, exist_ok=True)
+        import csv as _csv
+        lkmap = {lk["id"]: lk for lk in links}
+        with open(os.path.join(sdir, f"{instance_id}_B5.csv"), "w", newline="") as f:
+            w = _csv.writer(f); w.writerow(["instance_id","method","train_id","seq","from_node","to_node","link_id","enter_time","leave_time"])
+            for j, xv in enumerate(ires.x):
+                if xv > 0.5 and cols[j].get("segs"):
+                    k = cols[j]["train"]
+                    for si, (fn, lid, en, lv) in enumerate(cols[j]["segs"]):
+                        tn = lkmap[lid]["b"] if lkmap[lid]["a"] == fn else lkmap[lid]["a"]
+                        w.writerow([instance_id, "B5_integer_rmp", trains[k]["id"], si, fn, tn, lid, en, lv])
     wall = time.time() - t0
     proven_lp = added == 0 if iters else False
     print(f"{instance_id}: LP LB={lp_obj:.2f} ({'converged' if proven_lp else 'iter cap'}, "

@@ -1,0 +1,17 @@
+instance_id,method,train_id,seq,from_node,to_node,link_id,enter_time,leave_time
+C1_L4_n4_seed1,B5_integer_rmp,T2,0,5,4,3,5,8
+C1_L4_n4_seed1,B5_integer_rmp,T2,1,4,3,2,8,11
+C1_L4_n4_seed1,B5_integer_rmp,T2,2,3,2,1,11,14
+C1_L4_n4_seed1,B5_integer_rmp,T2,3,2,1,0,14,17
+C1_L4_n4_seed1,B5_integer_rmp,T0,0,5,4,3,36,39
+C1_L4_n4_seed1,B5_integer_rmp,T0,1,4,3,2,39,42
+C1_L4_n4_seed1,B5_integer_rmp,T0,2,3,2,1,42,45
+C1_L4_n4_seed1,B5_integer_rmp,T0,3,2,1,0,45,48
+C1_L4_n4_seed1,B5_integer_rmp,T1,0,1,2,0,3,6
+C1_L4_n4_seed1,B5_integer_rmp,T1,1,2,3,4,6,14
+C1_L4_n4_seed1,B5_integer_rmp,T1,2,3,4,2,14,17
+C1_L4_n4_seed1,B5_integer_rmp,T1,3,4,5,3,17,20
+C1_L4_n4_seed1,B5_integer_rmp,T3,0,1,2,0,20,23
+C1_L4_n4_seed1,B5_integer_rmp,T3,1,2,3,1,23,26
+C1_L4_n4_seed1,B5_integer_rmp,T3,2,3,4,2,26,29
+C1_L4_n4_seed1,B5_integer_rmp,T3,3,4,5,3,29,32
