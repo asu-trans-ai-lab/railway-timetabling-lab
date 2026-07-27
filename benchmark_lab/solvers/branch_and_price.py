@@ -22,6 +22,7 @@ LAB = os.path.normpath(os.path.join(HERE, ".."))
 sys.path.insert(0, LAB); sys.path.insert(0, HERE)
 from record_schema import RunRecord, BnbStats, append_record
 from priority_heuristics import load, build_adj, tdsp as tdsp_hard
+from collections import defaultdict
 from individual_column_generation import tdsp_priced, solve_master
 
 EPS = 1e-7
@@ -44,23 +45,27 @@ class Pool:
         if key in self.seen:
             return False
         self.seen.add(key)
-        self.cols.append(dict(train=k, cost=cost, occ=occ, dep=dep, dummy=False))
+        self.cols.append(dict(train=k, cost=cost, occ=occ, dep=dep, dummy=False,
+                              lids=frozenset(l for (l, _) in occ)))
         return True
 
 
-def node_bound(pool, trains, adj, cfg, windows, max_cg_iters=60):
+def node_bound(pool, trains, adj, cfg, windows, max_cg_iters=60, banned=None):
     """CG to convergence under departure windows. Returns (lp, y_full, allowed_idx) or None."""
     T = cfg["T"]
     nk = len(trains)
     for it in range(max_cg_iters):
         allowed = [j for j, c in enumerate(pool.cols)
-                   if c["dummy"] or windows[c["train"]][0] <= c["dep"] <= windows[c["train"]][1]]
+                   if c["dummy"] or (windows[c["train"]][0] <= c["dep"] <= windows[c["train"]][1]
+                       and not (banned and banned.get(c["train"]) and
+                                (c["lids"] & banned[c["train"]])))]
         have = {pool.cols[j]["train"] for j in allowed if not pool.cols[j]["dummy"]}
         # ensure every train has a column in-window (zero-dual pricing)
         miss_added = False
         for k in range(nk):
             if k not in have:
-                r = tdsp_priced(trains[k], adj, cfg, None, windows[k][0], windows[k][1])
+                r = tdsp_priced(trains[k], adj, cfg, None, windows[k][0], windows[k][1],
+                                (banned or {}).get(k))
                 if r is None:
                     return None                       # window infeasible -> fathom
                 if pool.add(k, r[1], r[3], r[4]):
@@ -79,7 +84,8 @@ def node_bound(pool, trains, adj, cfg, windows, max_cg_iters=60):
         pref = {lid: np.concatenate(([0.0], np.cumsum(a))) for lid, a in lam_arr.items()}
         added = 0
         for k in range(nk):
-            r = tdsp_priced(trains[k], adj, cfg, pref, windows[k][0], windows[k][1])
+            r = tdsp_priced(trains[k], adj, cfg, pref, windows[k][0], windows[k][1],
+                            (banned or {}).get(k))
             if r is None:
                 continue
             if r[0] - pi[k] < -EPS and pool.add(k, r[1], r[3], r[4]):
@@ -94,7 +100,7 @@ def node_status(y, sub):
     'stalled' = fractional but no train separable by departure (identical deps, different paths) —
     departure-window branching cannot split it; reported honestly, not fathomed as proven."""
     val = 0.0; integral = True
-    cand = None
+    cand = None; rcand = None
     bytrain = {}
     for j, c in enumerate(sub):
         bytrain.setdefault(c["train"], []).append((y[j], c))
@@ -109,16 +115,28 @@ def node_status(y, sub):
             deps = sorted({c["dep"] for (_, c) in real})
             if len(deps) > 1 and cand is None:
                 cand = (k, deps[len(deps) // 2 - 1])
+            if len(deps) <= 1 and rcand is None and len(real) > 1:
+                base = real[0][1]["lids"]
+                for (_, c) in real[1:]:
+                    diff = (c["lids"] ^ base)
+                    if diff:
+                        rcand = (k, min(diff)); break
     if integral:
         return ("integral", val)
     if cand is not None:
         return ("branch", cand[0], cand[1])
+    if rcand is not None:
+        return ("route", rcand[0], rcand[1])
     return ("stalled", None)
 
 
 def run(d, instance_id, node_budget, time_limit, records, cg_iters=60):
     links, trains, mow, cfg = load(d)
     adj = build_adj(links)
+    par = defaultdict(list)
+    for lk in links:
+        par[frozenset((lk["a"], lk["b"]))].append(lk["id"])
+    lk_ends = {lk["id"]: frozenset((lk["a"], lk["b"])) for lk in links}
     nk = len(trains)
     t0 = time.time()
     pool = Pool(nk)                                    # includes phase-1 dummies
@@ -126,7 +144,7 @@ def run(d, instance_id, node_budget, time_limit, records, cg_iters=60):
         r = tdsp_priced(tr, adj, cfg, None)
         pool.add(k, r[1], r[3], r[4])
     root_win = {k: (trains[k]["entry"], trains[k]["entry"] + cfg["slack"]) for k in range(nk)}
-    rb = node_bound(pool, trains, adj, cfg, root_win, cg_iters)
+    rb = node_bound(pool, trains, adj, cfg, root_win, cg_iters, {})
     if rb is None:
         raise RuntimeError("root infeasible")
     root_lp = rb[0]; root_conv = rb[3]
@@ -144,19 +162,19 @@ def run(d, instance_id, node_budget, time_limit, records, cg_iters=60):
         UB = iv
     if not root_conv:
         root_lp = float("-inf")                        # unconverged root: claim nothing
-    heap = [(root_lp, 0, 0, root_win)]
+    heap = [(root_lp, 0, 0, root_win, {})]
     nodes = proc = pruned_b = pruned_inf = stalled = 0; stalled_lps = []
     best_traj, inc_traj = [], [(round(time.time() - t0, 2), UB)]
     LB = root_lp; ttf = float("nan"); depth_max = 0; nid = 0
     while heap and proc < node_budget and (time.time() - t0) < time_limit:
-        bound, depth, _, windows = heapq.heappop(heap)
+        bound, depth, _, windows, banned = heapq.heappop(heap)
         LB = bound
         best_traj.append((round(time.time() - t0, 2), round(bound, 3)))
         if bound >= UB - 1e-6:
             pruned_b += 1
             LB = UB
             break                                      # best-first: everything else is >= bound
-        nb = node_bound(pool, trains, adj, cfg, windows, cg_iters)
+        nb = node_bound(pool, trains, adj, cfg, windows, cg_iters, banned)
         proc += 1
         if nb is None:
             pruned_inf += 1; continue
@@ -174,8 +192,20 @@ def run(d, instance_id, node_budget, time_limit, records, cg_iters=60):
                 if np.isnan(ttf):
                     ttf = time.time() - t0
             continue
-        if st[0] == "stalled":                         # departure-inseparable fractional node:
-            stalled += 1; stalled_lps.append(lp)       # cannot split -> its subtree stays unresolved
+        if st[0] == "route":                           # Gate 4: route branching (use-L vs avoid-L,
+            k, L = st[1], st[2]                        # complete for parallel-alternative choice)
+            sibs = frozenset(par[lk_ends[L]]) - {L}
+            if not sibs:                               # no parallel alternative: genuinely stalled
+                stalled += 1; stalled_lps.append(lp); continue
+            bA = dict(banned); bA[k] = (bA.get(k) or frozenset()) | {L}          # avoid L
+            bB = dict(banned); bB[k] = (bB.get(k) or frozenset()) | sibs         # use L (ban siblings)
+            for bb in (bA, bB):
+                nid += 1; nodes += 1
+                heapq.heappush(heap, (lp, depth + 1, nid, dict(windows), bb))
+                depth_max = max(depth_max, depth + 1)
+            continue
+        if st[0] == "stalled":                         # inseparable by departure AND route:
+            stalled += 1; stalled_lps.append(lp)       # subtree stays unresolved (honest)
             continue
         _, frac_k, theta = st
         lo, hi = windows[frac_k]
@@ -183,7 +213,7 @@ def run(d, instance_id, node_budget, time_limit, records, cg_iters=60):
         for w in ((lo, theta), (theta + 1, hi)):
             cw = dict(windows); cw[frac_k] = w
             nid += 1; nodes += 1
-            heapq.heappush(heap, (lp, depth + 1, nid, cw))
+            heapq.heappush(heap, (lp, depth + 1, nid, cw, dict(banned)))
             depth_max = max(depth_max, depth + 1)
         if proc % 25 == 0:                             # periodic incumbent from the enriched pool
             iv = rmp_incumbent()

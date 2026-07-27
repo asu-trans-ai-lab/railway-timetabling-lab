@@ -107,6 +107,19 @@ enumeration is not a joint Bellman recursion and does not yet test the central c
 4. **Precedence-complete B&P**: add i≺_r j vs j≺_r i branching (pricing must enforce it); departure
    windows remain the first-level rule.
 5. **Generator expansion**: C3/C4/grid with full ground-truth manifests.
+
+**Gate progress (2026-07 session 3):**
+- **Gate 3 core / Task #8 DONE**: `solvers/pair_exact.py` — provably EXACT pair oracle by exhaustive
+  enumeration within the ini windows (guard-railed; B7 role; doubles as certified pair pricer hook).
+  New bounded-window opposing-pair instance `G_pair_seed36` (slack 40, maxwait 20 via new generator
+  knobs --slack/--maxwait).
+- **Gate 2 PASSED on G_pair_seed36**: B7 exhaustive = B4 CP-SAT = B2 MILP (windows fully covered, so
+  unrestricted here) = **3.0**, all proven; B7 and B4 timetables independently VALIDATED.
+- **Gate 4 PARTIAL**: route branching implemented (stalled nodes branch avoid-L vs use-L = ban parallel
+  siblings; complete for parallel-alternative route choice; pricing enforces bans via `banned` in
+  tdsp_priced). seed1 rerun: 12 stalls REMAIN — diagnosis: fractional columns share links AND departure,
+  differing only in siding dwell profile. NEXT INCREMENT: resource-TIME branching (k enters L before
+  theta vs >= theta) via time-windowed link bans (fasttrain-style Restrictions in tdsp_priced).
 Paper interpretation until gates pass: individual CG exposes measurable gaps, branching closes them on
 small cases, and the restricted group pricer does not yet demonstrate an advantage — motivating the
 joint-state oracle and the controlled quadratic ablation.

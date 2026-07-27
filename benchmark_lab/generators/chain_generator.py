@@ -40,7 +40,7 @@ def travel(length, smult):
     return max(1, int(length * 60.0 / v + 1.0))
 
 
-def generate(out, segments, trains, sidings, spread, opposing, seed, horizon=720, family="c1"):
+def generate(out, segments, trains, sidings, spread, opposing, seed, horizon=720, family="c1", slack=600, maxwait=120):
     rng = random.Random(seed)
     os.makedirs(out, exist_ok=True)
     os.makedirs(os.path.join(out, "summary_log"), exist_ok=True)
@@ -89,8 +89,8 @@ def generate(out, segments, trains, sidings, spread, opposing, seed, horizon=720
     with open(os.path.join(out, "FTSettings.ini"), "w") as f:
         f.write("[optimization]\nOptimizationHorizon=%d\nMinuteDivision=1\n"
                 "[lagrangian]\nMaxNumberOfLRIterations=10\nMinimumStepSize=0.01\n"
-                "NumberOfIterationsWithMemory=5\nMaxTrainWaitingTime=120\n"
-                "MaxSlackTimeAtDeparture=600\nSafetyHeadway=3\n" % horizon)
+                "NumberOfIterationsWithMemory=5\nMaxTrainWaitingTime=%d\n"
+                "MaxSlackTimeAtDeparture=%d\nSafetyHeadway=3\n" % (horizon, maxwait, slack))
     # serial resource schedule: one train in the corridor at a time (guaranteed feasible)
     clear = 0; serial = []
     for t in tr:
@@ -139,11 +139,13 @@ if __name__ == "__main__":
     ap.add_argument("--seed", type=int, default=1)
     ap.add_argument("--horizon", type=int, default=720)
     ap.add_argument("--family", default="c1", choices=["c1", "c2"])
+    ap.add_argument("--slack", type=int, default=600)
+    ap.add_argument("--maxwait", type=int, default=120)
     ap.add_argument("--solve", action="store_true", help="prove exact optimum via fasttrain --bnb")
     ap.add_argument("--unified", action="store_true", help="also emit unified dialect")
     a = ap.parse_args()
     sid = [int(x) for x in a.sidings.split(",") if x.strip()]
-    mf = generate(a.out, a.segments, a.trains, sid, a.spread, a.opposing, a.seed, a.horizon, a.family)
+    mf = generate(a.out, a.segments, a.trains, sid, a.spread, a.opposing, a.seed, a.horizon, a.family, a.slack, a.maxwait)
     print(f"generated {mf['family']} seed={mf['seed']}: {a.trains} trains, {a.segments} segments, "
           f"sidings {sid}, UB_serial={mf['UB_serial']}")
     if a.solve:

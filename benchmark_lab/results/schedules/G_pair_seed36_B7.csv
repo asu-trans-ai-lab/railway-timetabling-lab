@@ -1,0 +1,9 @@
+instance_id,method,train_id,seq,from_node,to_node,link_id,enter_time,leave_time
+G_pair_seed36,B7_pair_exact,T0,0,5,4,3,5,8
+G_pair_seed36,B7_pair_exact,T0,1,4,3,2,8,11
+G_pair_seed36,B7_pair_exact,T0,2,3,2,1,11,14
+G_pair_seed36,B7_pair_exact,T0,3,2,1,0,14,17
+G_pair_seed36,B7_pair_exact,T1,0,1,2,0,5,8
+G_pair_seed36,B7_pair_exact,T1,1,2,3,4,8,14
+G_pair_seed36,B7_pair_exact,T1,2,3,4,2,14,17
+G_pair_seed36,B7_pair_exact,T1,3,4,5,3,17,20

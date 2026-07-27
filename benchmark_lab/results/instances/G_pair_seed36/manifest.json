@@ -1,0 +1,41 @@
+{
+  "family": "C1_single_track",
+  "seed": 36,
+  "segments": 4,
+  "trains": 2,
+  "sidings": [
+    2
+  ],
+  "release_spread": 6.0,
+  "opposing_ratio": 0.5,
+  "horizon": 240,
+  "speeds": [
+    1.0,
+    0.75
+  ],
+  "entries": {
+    "T0": 5,
+    "T1": 5
+  },
+  "freeflow_arrivals": {
+    "T0": 17,
+    "T1": 17
+  },
+  "serial_schedule": [
+    {
+      "id": "T0",
+      "depart": 5,
+      "arrive": 17,
+      "deviation": 0
+    },
+    {
+      "id": "T1",
+      "depart": 20,
+      "arrive": 32,
+      "deviation": 15
+    }
+  ],
+  "UB_serial": 15,
+  "exact_optimum": null,
+  "exact_proven": false
+}
