@@ -1,0 +1,111 @@
+{
+  "family": "C1_single_track",
+  "seed": 12,
+  "segments": 10,
+  "trains": 10,
+  "sidings": [
+    2,
+    4,
+    6,
+    8
+  ],
+  "release_spread": 24.0,
+  "opposing_ratio": 0.5,
+  "horizon": 720,
+  "speeds": [
+    1.0,
+    0.75
+  ],
+  "entries": {
+    "T1": 3,
+    "T2": 8,
+    "T6": 10,
+    "T4": 14,
+    "T0": 15,
+    "T5": 15,
+    "T9": 16,
+    "T3": 19,
+    "T8": 19,
+    "T7": 21
+  },
+  "freeflow_arrivals": {
+    "T1": 33,
+    "T2": 38,
+    "T6": 40,
+    "T4": 44,
+    "T0": 45,
+    "T5": 45,
+    "T9": 46,
+    "T3": 49,
+    "T8": 49,
+    "T7": 51
+  },
+  "serial_schedule": [
+    {
+      "id": "T1",
+      "depart": 3,
+      "arrive": 33,
+      "deviation": 0
+    },
+    {
+      "id": "T2",
+      "depart": 36,
+      "arrive": 66,
+      "deviation": 28
+    },
+    {
+      "id": "T6",
+      "depart": 69,
+      "arrive": 99,
+      "deviation": 59
+    },
+    {
+      "id": "T4",
+      "depart": 102,
+      "arrive": 132,
+      "deviation": 88
+    },
+    {
+      "id": "T0",
+      "depart": 135,
+      "arrive": 165,
+      "deviation": 120
+    },
+    {
+      "id": "T5",
+      "depart": 168,
+      "arrive": 198,
+      "deviation": 153
+    },
+    {
+      "id": "T9",
+      "depart": 201,
+      "arrive": 231,
+      "deviation": 185
+    },
+    {
+      "id": "T3",
+      "depart": 234,
+      "arrive": 264,
+      "deviation": 215
+    },
+    {
+      "id": "T8",
+      "depart": 267,
+      "arrive": 297,
+      "deviation": 248
+    },
+    {
+      "id": "T7",
+      "depart": 300,
+      "arrive": 330,
+      "deviation": 279
+    }
+  ],
+  "UB_serial": 1375,
+  "exact_optimum": null,
+  "exact_proven": false,
+  "best_known_ub": 189.0,
+  "best_known_lb": 110.0,
+  "exact_source": "B4_cp_sat 300s: UB 189.0 / LB 110.0 NOT proven \u2014 open instance"
+}

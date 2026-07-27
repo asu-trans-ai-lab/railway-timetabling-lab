@@ -1,0 +1,311 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\newtheorem{proposition}{Proposition}
+\newtheorem{remark}{Remark}
+\newcommand{\rss}{\mathrm{R}}
+\title{\bf Lagrangian Branch-and-Bound for $N$-Track Railway Timetabling,\\
+with Compressed-Response Branch Screening:\\
+Implementation and an Honest Evaluation}
+\author{Transportation+AI Lab \\ \small (working draft --- $N$-track results, companion to the single-track paper)}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We report a faithful, portable reimplementation of the Meng--Zhou (2014) $N$-track
+space-time Lagrangian relaxation (LR) for railway timetabling, wrap it in an exact LR-based
+branch-and-bound (B\&B) using the train-segment \emph{enumeration} branching of Zhou and
+Zhong (2005), accelerate the per-train shortest path with an exact heap-free dynamic program,
+and then ask --- with deliberate honesty --- whether low-rank \emph{primal/dual response
+screening} (SVD and tensor) can choose branches as well as strong branching. Four findings.
+\textbf{(i)} The clean LR reproduces the published bounds on RAS Data Set~3 (lower bound
+$1785\!\to\!2279$, upper bound $3803$, gap $\approx\!40\%$). \textbf{(ii)} The LR-based B\&B
+is exact: on a hand-checkable instance it proves the optimum (gap $0$), and the
+segment-enumeration split (commit one train's segment, let LR offset the others) proves it in
+$19$ nodes versus $51$ for a single-cell split; the branch-\emph{selection} criterion is a
+free, swappable heuristic that changes only tree size. \textbf{(iii)} The time-expanded graph
+is a DAG, so a single increasing-time sweep replaces Dijkstra and cuts the root LR from
+$7.31$\,s to $2.48$\,s ($\sim\!2.9\times$) with identical shortest-path costs; an
+\emph{approximate} path is inadmissible because it would invalidate the LR lower bound.
+\textbf{(iv)} Branch screening: at a single root node, an SVD compressed-response score over
+the primal flow (resp.\ dual prices) contains the strong-branching choice perfectly
+(Containment@1$=1$, resp.\ rank correlation $+0.70$); \emph{but this does not replicate
+across nodes} --- over six B\&B nodes no unsupervised SVD or tensor score beats a random or
+pseudo-cost baseline, mirroring the single-track result that only a \emph{learned} screen
+transfers. Finally, we show the optimality gap is limited by \emph{bound tightness, not
+compute}: faster nodes do not lift the global lower bound above the root LR value, which
+motivates a stronger relaxation (cuts, or an ADMM consensus bound) rather than more
+node throughput.
+\end{abstract}
+
+\section{Introduction}
+Railway timetabling assigns each train a conflict-free trajectory over shared time--space
+resources (track segments, sidings, junctions) subject to running times, dwell, meet--pass
+order, and link capacity. The Meng--Zhou (2014) formulation casts this as a cumulative-flow
+space-time network and dualizes the link-capacity constraints, decomposing the problem into
+per-train time-dependent shortest paths priced by Lagrangian multipliers. The relaxation is
+strong and cheap, but it leaves an integrality (duality) gap; closing it requires
+branch-and-bound, whose cost is dominated by two things: the per-node bound (many shortest
+paths) and the choice of \emph{which} conflict to branch on.
+
+This paper has two aims, and we are explicit that the second produces a partly negative
+result. The first is engineering: build a clean, portable, exactness-preserving LR-based
+B\&B that reproduces the literature and actually runs on the RAS instances. The second is
+scientific: test whether the low-rank structure of the solver's \emph{response field} ---
+the primal flows and dual prices it emits at each node --- can screen branching candidates,
+so that expensive strong-branching child solves are spent only where they matter. We test
+primal screening, dual screening, their SVD compressions, and a tensor (CP/HOSVD) fusion of
+the two, against full strong branching, on real RAS data.
+
+\paragraph{Contributions.}
+\begin{enumerate}\itemsep1pt
+\item A standard-C++17, MFC-free reimplementation of the Meng--Zhou FastTrain LR that
+reproduces the published lower/upper bounds (\S\ref{sec:lr}).
+\item An exact LR-based B\&B with per-train time-windowed restrictions, warm-started node
+bounds, segment-enumeration branching (Zhou--Zhong 2005), best-first search, and a
+\emph{separation of the sound disjunction from the heuristic selection criterion}
+(\S\ref{sec:bnb}).
+\item A heap-free exact DAG shortest path with a $\sim\!2.9\times$ speedup and a precise
+statement of why approximate paths are inadmissible (\S\ref{sec:dag}).
+\item An honest primal/dual/SVD/tensor branch-screening study: a striking single-node result
+that \emph{fails to replicate} across nodes, and the diagnosis that the robust screen must be
+learned, not unsupervised (\S\ref{sec:screen}).
+\item The finding that the gap is bound-limited, not compute-limited, with the implied next
+step (\S\ref{sec:gap}).
+\end{enumerate}
+
+\section{The $N$-track LR and its faithful reproduction}\label{sec:lr}
+\paragraph{Model.} Each train $f$ has an origin, destination, entry time, speed multiplier,
+and intended arrival. The link run time is $\tau = \max\!\big(1, \lfloor \ell\cdot 60/(v\cdot
+s) + 1\rfloor\big)$ for length $\ell$, directional speed $v$, multiplier $s$. A traversal
+occupies link cells $[\text{enter},\,\text{exit}+h)$ for headway $h$; capacity is one train
+per (link, time) cell (zero during maintenance windows). The objective is the total absolute
+arrival deviation $\sum_f |\text{arr}_f - \text{intended}_f|$. Dwell is allowed only on
+siding links; departure carries a free slack window. Dualizing the per-cell capacity
+constraints with prices $\rho_{l,t}\ge 0$ decomposes the Lagrangian into per-train
+time-dependent shortest paths whose arc cost is the prefix-sum of $\rho$ over the occupied
+window plus the destination-arc deviation. The bound is
+$\mathrm{LB}=\sum_f \min\text{-cost}_f - \sum_{l,t}\rho_{l,t}$; a priority-rule heuristic
+gives a feasible upper bound.
+
+\paragraph{Reproduction.} On RAS Data Set~3 ($85$ nodes, $97$ links, $40$ trains, horizon
+$1440$, headway $3$), $10$ subgradient iterations give the trajectory in
+Table~\ref{tab:lr}. The bounds match the original MFC C++ (LB $1844\!\to\!2359$, UB
+$\sim\!4153$) and the published \texttt{summary.xlsx} (LB $\approx 1923$, best UB
+$\approx 3471$, gap $\approx 45\%$) in magnitude and dynamics; residual differences are the
+integer-bin ``$+1$'' run-time truncation and a single-pass priority heuristic.
+
+\begin{table}[h]\centering
+\caption{Faithful LR on RAS Set~3 (clean C++17, $10$ subgradient iterations).}
+\label{tab:lr}
+\begin{tabular}{lccc}
+\toprule
+ & free-flow & iter 1 & iter 10 (best) \\
+\midrule
+lower bound & $1785$ & $1785$ & $\mathbf{2279}$ \\
+upper bound & --- & $4787$ & $\mathbf{3803}$ \\
+gap & --- & $62.7\%$ & $\mathbf{40.1\%}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{LR-based branch-and-bound}\label{sec:bnb}
+The LR alone cannot close the $40\%$ gap; we wrap it in best-first B\&B.
+
+\paragraph{Node and bound.} A node carries per-train time-windowed \emph{restrictions}
+$R$ (link $l$ forbidden to train $f$ during $[t_0,t_1)$), enforced inside the shortest path:
+a traversal whose occupancy window intersects a forbidden window is skipped. The node bound
+re-runs the subgradient LR under $R$, warm-started from the parent's multipliers, and returns
+$(\mathrm{LB}, \mathrm{UB}, \text{primal})$. The root call reproduces Table~\ref{tab:lr}
+exactly, confirming the wrap is behavior-preserving.
+
+\paragraph{Branching = sound disjunction $+$ heuristic selection.} We deliberately separate
+two concerns.
+\emph{The disjunction} (sound, invariant) follows Zhou--Zhong (2005): pick a violated
+capacity cell $(l,t^*)$ with conflicting trains $i,j$, and \textbf{fix one train's segment on
+$l$ while the other yields}. The two children are the meet/pass \emph{orders} ($i$-first vs
+$j$-first); on block-occupancy single track they are exhaustive (two trains on a unit-capacity
+link cannot overlap, so one whole occupancy window precedes the other), so the union of the
+children covers every feasible schedule and the search stays exact. A single-cell split
+(forbid one train from $(l,t^*)$ only) is the always-valid fallback.
+\emph{The selection} (heuristic, swappable) is \emph{which} conflict to fix; it changes the
+tree's size, never correctness. We implement most-violated, earliest, latest, a dual score
+(\S\ref{sec:screen}), and a top-$K$ dual-screened strong-branching oracle.
+
+\paragraph{Exactness and node counts.} On a hand-checkable native instance ($3$ trains, one
+corridor, headway $1$, optimum $=12$, arrivals $9,13,17$), the B\&B exhausts the tree and
+proves the optimum (gap $0.00\%$). The segment enumeration proves it in $\mathbf{19}$ nodes
+versus $\mathbf{51}$ for the single-cell split ($\sim\!2.7\times$ fewer), since each segment
+branch advances a whole occupancy window and lets the LR offset the rest. The selection
+criterion is also a real lever: under the cell split, the \emph{latest}-conflict rule needs
+$19$ nodes versus $51$ for most-violated/earliest --- ``first thing first'' is demonstrably
+not best, and any criterion keeps the proof valid.
+
+\paragraph{Scaling.} On RAS Set~3 the B\&B closes the gap from the UB side: five nodes take
+the gap $40.1\%\!\to\!31.2\%$ (LB $2279\!\to\!2348$, UB $3803\!\to\!3412$). Per-node cost
+(a full LR) is the bottleneck; \S\ref{sec:dag} and the speed knobs below address it.
+
+\paragraph{Per-node speed.} Asymmetric LR depth (a converged root, few warm-started child
+iterations), computing the UB heuristic once per node rather than per iteration, and a
+wall-clock budget together give $\sim\!8\times$ more nodes in fixed time ($66$ nodes / $220$\,s
+versus $20$ / $540$\,s).
+
+\section{An exact, faster shortest path}\label{sec:dag}
+Every arc of the time-expanded graph strictly increases time (run time $\ge 1$), so the graph
+is a DAG and a single sweep in increasing time order computes exact shortest paths without a
+priority queue ($O(\text{states}+\text{arcs})$). This cuts the RAS root LR from $7.31$\,s to
+$2.48$\,s ($\sim\!2.9\times$) at identical shortest-path \emph{costs} (the free-flow baseline
+and the first two LR iterations match the Dijkstra bounds to the decimal across all $40$
+trains; the toy still proves optimum $12$). The two implementations may pick different
+\emph{equal-cost} paths on ties, so the subgradient trajectory and final root bounds differ
+slightly --- standard LR degeneracy, both valid. We keep the classical Dijkstra as a
+verification fallback.
+
+\begin{remark}[Why not an approximate DP?]
+The LR lower bound is valid only if each per-train subproblem is solved to optimality (or to a
+valid lower bound). A greedy/heuristic path returns a \emph{too-expensive} route, so
+$\mathrm{LB}=\text{trip}-\sum\rho$ becomes an over-estimate and B\&B fathoming becomes
+unsound. Admissible accelerations are therefore exact (DAG DP, A$^\star$) or valid
+\emph{relaxations} (coarser time grid rounded down; dropping dwell/headway) --- never a
+greedy shortest path.
+\end{remark}
+
+\section{Branch screening: primal, dual, SVD, tensor}\label{sec:screen}
+At a B\&P node of the space-time LP, a candidate action splits one fractional train's
+departure-time columns at a threshold $\theta$ (left $=$ early, right $=$ late). Full strong
+branching solves both child LPs for every candidate; we ask whether a \emph{cheap} score
+(parent side, no child solve) contains the strong-branching choice.
+
+\paragraph{Scores.} For a column $p$ let its dual exposure be $\sum_{c\in p}\rho_c$ and its
+primal exposure be $\sum_{c\in p}(\mathrm{H}x)_c$ (flow through its cells). The
+gradient-weighted scores are
+\[
+\text{dual-gw}(a)=\text{frac}(a)\,\big|\overline{\rho\text{-load}}(\text{left})-\overline{\rho\text{-load}}(\text{right})\big|,
+\]
+and \text{primal-gw} identically with primal exposure. The \emph{compressed-response} score
+projects each action's response signature $b_a$ (frac-weighted left$-$right cell occupancy)
+onto a rank-$r$ subspace of the response field and weights by the gradient
+$g$ ($\rho$ for dual, flow for primal):
+$\;\text{svd-cr}(a)=\big|\,b_a^\top U_r U_r^\top g\,\big|$, the realized form of
+$\sum_i \sigma_i (u_i^\top\nabla S)(v_i^\top b_a)$. The \emph{tensor} score stacks the two
+channels into $\rss[\text{action},\text{cell},\{\text{primal},\text{dual}\}]$ and scores the
+gradient-weighted reconstruction from a Tucker (HOSVD) or CP-ALS low-rank fit, fusing primal
+and dual through a shared action/cell subspace.
+
+\paragraph{Single root node: striking but fragile.} On the RAS Set~3 LP root ($20$
+candidates, $112$ fractional, response-field rank-$9$ at $95\%$ energy), the SVD scores excel
+(Table~\ref{tab:root}): \textbf{primal-SVD contains the strong-branching best exactly}
+(Containment@1$=1$, rank gap $0$) and \textbf{dual-SVD has the best rank correlation}
+($+0.70$), while the raw gradient-weighted scores are weak ($-0.07$, $+0.39$) --- compression
+is the enabler. Both contain the best within $K=5$ ($4\times$ fewer child LP solves);
+pseudo-cost contains it in neither.
+
+\begin{table}[h]\centering
+\caption{Single root node (RAS Set~3 LP, $20$ candidates). Striking --- but see
+Table~\ref{tab:multi}.}
+\label{tab:root}
+\begin{tabular}{lccc}
+\toprule
+ & Contain@1 & Contain@5 & Spearman \\
+\midrule
+primal-gw   & $0$ & $0$ & $-0.07$ \\
+dual-gw     & $0$ & $0$ & $+0.39$ \\
+\textbf{primal-SVD} & $\mathbf{1}$ & $\mathbf{1}$ & $+0.28$ \\
+\textbf{dual-SVD}   & $0$ & $\mathbf{1}$ & $\mathbf{+0.70}$ \\
+pseudo-cost & $0$ & $0$ & $-0.64$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Multiple nodes: it does not replicate.} Walking six B\&B nodes (descending by the
+strong-branching best, $48$ candidate rows, $96$ child solves) and adding the tensor scores
+gives Table~\ref{tab:multi}. \emph{No screening method robustly beats the baselines.} A random
+score already attains Containment@1$=0.33$ and @5$=0.83$ (eight-candidate sets make top-1 a
+one-in-eight shot), pseudo-cost wins Containment@1 ($0.67$, though with a negative Spearman:
+it pins top-1 but inverts the rest), and every SVD/tensor rank correlation is near zero. The
+striking single-node result was an $n\!=\!1$ artifact.
+
+\begin{table}[h]\centering
+\caption{Multiple B\&B nodes (RAS Set~3, $6$ nodes, $8$ candidates each). The single-node
+signal vanishes.}
+\label{tab:multi}
+\begin{tabular}{lccc}
+\toprule
+ & Contain@1 & Contain@5 & Spearman \\
+\midrule
+primal-gw    & $0.33$ & $0.83$ & $+0.08$ \\
+dual-gw      & $0.17$ & $0.50$ & $+0.08$ \\
+primal-SVD   & $0.17$ & $0.67$ & $+0.02$ \\
+dual-SVD     & $0.33$ & $0.67$ & $+0.12$ \\
+tensor-HOSVD & $0.17$ & $0.67$ & $-0.02$ \\
+tensor-CP    & $0.17$ & $0.83$ & $+0.06$ \\
+pseudo-cost  & $\mathbf{0.67}$ & $0.67$ & $-0.47$ \\
+random       & $0.33$ & $0.83$ & $+0.11$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Interpretation.} This is the same lesson the single-track study reached: an
+\emph{unsupervised} spectral/compressed score is not a robust branch screen; only a
+\emph{learned}, gradient-aware model transferred there (gradient boosting / reduced-rank
+regression contained the strong-branching action in the top-$5$ on $92\%$ of nodes and beat
+pseudo-cost out-of-sample). The per-node response tensor is genuinely low multilinear rank
+(metric mode rank one), so the structure is real --- but extracting a screening signal from it
+needs supervision, not an unsupervised projection. We also note low statistical power (six
+nodes, eight candidates): this is \emph{weak evidence against}, not a clean refutation. The
+honest conclusion is that the robust $N$-track screen must be a learned transfer model over the
+primal$+$dual$+$tensor features, which is our next experiment.
+
+\section{Where the gap actually is}\label{sec:gap}
+Using the $\sim\!3\times$ faster path to afford more and deeper nodes (six nodes, dual
+selection, six warm child iterations) does \emph{not} change the picture: the gap stays
+$\approx\!36\%$ and, crucially, \textbf{the global lower bound never lifts above the root LR
+value} ($\approx\!2300$); the gap closes only from the upper-bound side (incumbent
+$3803\!\to\!3561$). The reason is structural, not computational: the LR dual bound is
+inherently loose here (the published bound itself plateaus $\approx\!2359$ against a best UB
+$\approx\!3471$), and forbidding one train's segment per node barely raises that node's bound,
+so best-first keeps a frontier pinned near the root. \emph{Faster nodes buy more nodes, not a
+tighter bound.} The implied levers are therefore on the bound: a crossing-conflict / enhanced
+lower bound (which cut nodes $7.5\%\!\to\!35.6\%$ on single track), branching that fixes a
+bottleneck resource's full ordering at once, or a tighter relaxation entirely --- the
+cumulative-flow LP master or an ADMM consensus bound that iteratively fixes train variables.
+Branch screening helps the selection/UB side; the lower-bound side needs a stronger
+relaxation.
+
+\section{Conclusions and next steps}
+We delivered an exact, portable, reproducible $N$-track LR-based B\&B with segment-enumeration
+branching and a $\sim\!3\times$ faster exact shortest path, and we evaluated primal/dual/SVD/
+tensor branch screening without spin: a single-node success that did not survive a multi-node
+test, consistent with the single-track finding that only a \emph{learned} screen transfers.
+The optimality gap is bound-limited, not compute-limited. Two next steps follow directly:
+(1)~a learned transfer screen over the primal$+$dual$+$tensor features, trained on some
+nodes/instances and tested out-of-sample against strong branching; and (2)~a stronger per-node
+relaxation (cuts or an ADMM consensus bound) to lift the global lower bound, which is the only
+thing that will close the gap.
+
+\paragraph{Reproducibility.} All results come from the handoff package
+(\texttt{train\_scheduling/FTT\_handoff}): the C++ LR/B\&B (\texttt{n\_track/fasttrain.cpp};
+build \texttt{g++ -O2 -std=c++17 -static}; run \texttt{--bnb [--split segment|cell]
+[--branch most-violated|earliest|latest|dual|strong] [--sp dag|dijkstra] [--child-iters N]
+[--time S]}), the LP/screening (\texttt{nt\_spacetime.py}, \texttt{nt\_screen.py}), the
+multi-node tensor screening (\texttt{nt\_tensor.py}), and the data
+(\texttt{data/RAS\_set3\_native}, \texttt{data/toy\_native}, \texttt{data/arc\_format\_*}).
+The single-track engine and screening live in \texttt{single\_track/}.
+
+\paragraph{References.} Meng, L. and Zhou, X. (2014), \emph{Simultaneous train rerouting and
+rescheduling on an N-track network: A model reformulation with network-based cumulative flow
+variables}, Transportation Research Part B. \quad Zhou, X. and Zhong, M. (2005),
+\emph{Bicriteria train scheduling for high-speed passenger railroad planning applications},
+European Journal of Operational Research. \quad Zhou, X. and Zhong, M. (2007),
+\emph{Single-track train timetabling with guaranteed optimality: Branch-and-bound algorithms
+with enhanced lower bounds}, Transportation Research Part B.
+
+\end{document}

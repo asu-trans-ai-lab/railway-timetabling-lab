@@ -1,0 +1,69 @@
+instance_id,method,objective,best_lower_bound,best_upper_bound,relative_gap,feasible,optimality_proven,time_to_first_feasible,total_runtime,nodes,columns,pricing_calls,dp_labels,hard_conflicts,seed,config,notes
+toy_native,B0_fcfs,12.0,-inf,12.0,nan,True,False,nan,0.0009992122650146484,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+toy_native,B0_edd,12.0,-inf,12.0,nan,True,False,nan,0.0009996891021728516,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+toy_native,B0_minslack,12.0,-inf,12.0,nan,True,False,nan,0.0010025501251220703,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+toy_native,B0_class,12.0,-inf,12.0,nan,True,False,nan,0.0009989738464355469,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+toy_native,B0_conflict,12.0,-inf,12.0,nan,True,False,nan,0.0,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+toy_native,B0_rand_best_of_5,12.0,-inf,12.0,nan,True,False,nan,0.0029993057250976562,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+toy_native,B2_time_indexed_milp,12.0,-inf,12.0,nan,True,False,nan,0.024400949478149414,1,0,0,0,0,-1,"{""pad"": 60, ""smax"": 15}","HiGHS RESTRICTED model (UB only): toward-dest arcs, pad=60, smax=15; MOW enforced"
+toy_native,B4_cp_sat,12.0,12.0,12.0,0.0,True,True,nan,0.011013984680175781,0,0,0,0,0,-1,"{""time_limit"": 180.0}",OR-Tools CP-SAT job-shop; NoOverlap per link; corridor-chain routing
+toy_native,B5_individual_cg,12.0,12.0,12.0,0.0,True,False,nan,0.03908395767211914,0,25,24,0,0,-1,"{""iters"": 60}",exact pricing converged; LP path bound 12.00; integer RMP (no branching yet = B6)
+toy_native,B6_branch_and_price,12.0,12.0,12.0,0.0,True,True,nan,0.034998416900634766,0,30,0,0,0,-1,"{""nodes"": 200, ""time"": 150.0}",departure-window branching; root LP 12.00; stalled nodes 0
+C1_L4_n4_seed1,B0_fcfs,51.0,-inf,51.0,nan,True,False,nan,0.17846274375915527,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L4_n4_seed1,B0_edd,51.0,-inf,51.0,nan,True,False,nan,0.18209099769592285,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L4_n4_seed1,B0_minslack,51.0,-inf,51.0,nan,True,False,nan,0.18634271621704102,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L4_n4_seed1,B0_class,29.0,-inf,29.0,nan,True,False,nan,0.141831636428833,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+C1_L4_n4_seed1,B0_conflict,29.0,-inf,29.0,nan,True,False,nan,0.15503549575805664,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+C1_L4_n4_seed1,B0_rand_best_of_5,35.0,-inf,35.0,nan,True,False,nan,0.8644793033599854,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L4_n4_seed1,B2_time_indexed_milp,29.0,-inf,29.0,nan,True,False,nan,4.647794246673584,0,0,0,0,0,-1,"{""pad"": 60, ""smax"": 15}","HiGHS RESTRICTED model (UB only): toward-dest arcs, pad=60, smax=15; MOW enforced"
+C1_L4_n4_seed1,B4_cp_sat,29.0,29.0,29.0,0.0,True,True,nan,0.024518966674804688,639,0,0,0,0,-1,"{""time_limit"": 180.0}",OR-Tools CP-SAT job-shop; NoOverlap per link; corridor-chain routing
+C1_L4_n4_seed1,B5_individual_cg,42.0,23.75,42.0,0.43452380952380953,True,False,nan,4.546804666519165,0,62,76,0,0,-1,"{""iters"": 60}",exact pricing converged; LP path bound 23.75; integer RMP (no branching yet = B6)
+C1_L4_n4_seed1,B6_branch_and_price,29.0,29.0,29.0,0.0,True,True,26.310644149780273,115.81378674507141,185,605,0,0,0,-1,"{""nodes"": 200, ""time"": 150.0}",departure-window branching; root LP 23.75; stalled nodes 12
+C1_L4_n4_seed2,B0_fcfs,21.0,-inf,21.0,nan,True,False,nan,0.14412808418273926,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+C1_L4_n4_seed2,B0_edd,21.0,-inf,21.0,nan,True,False,nan,0.1486198902130127,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+C1_L4_n4_seed2,B0_minslack,21.0,-inf,21.0,nan,True,False,nan,0.1490650177001953,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+C1_L4_n4_seed2,B0_class,36.0,-inf,36.0,nan,True,False,nan,0.1595754623413086,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L4_n4_seed2,B0_conflict,36.0,-inf,36.0,nan,True,False,nan,0.15738892555236816,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L4_n4_seed2,B0_rand_best_of_5,21.0,-inf,21.0,nan,True,False,nan,0.7538132667541504,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+C1_L4_n4_seed2,B2_time_indexed_milp,20.0,-inf,20.0,nan,True,False,nan,1.5643129348754883,1,0,0,0,0,-1,"{""pad"": 60, ""smax"": 15}","HiGHS RESTRICTED model (UB only): toward-dest arcs, pad=60, smax=15; MOW enforced"
+C1_L4_n4_seed2,B4_cp_sat,20.0,20.0,20.0,0.0,True,True,nan,0.024007320404052734,205,0,0,0,0,-1,"{""time_limit"": 180.0}",OR-Tools CP-SAT job-shop; NoOverlap per link; corridor-chain routing
+C1_L4_n4_seed2,B5_individual_cg,20.0,20.0,20.0,0.0,True,False,nan,3.347912311553955,0,43,52,0,0,-1,"{""iters"": 60}",exact pricing converged; LP path bound 20.00; integer RMP (no branching yet = B6)
+C1_L4_n4_seed2,B6_branch_and_price,20.0,20.0,20.0,0.0,True,True,nan,2.7499032020568848,0,49,0,0,0,-1,"{""nodes"": 200, ""time"": 150.0}",departure-window branching; root LP 20.00; stalled nodes 0
+C1_L6_n6_seed3,B0_fcfs,93.0,-inf,93.0,nan,True,False,nan,0.4377753734588623,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L6_n6_seed3,B0_edd,93.0,-inf,93.0,nan,True,False,nan,0.37056899070739746,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L6_n6_seed3,B0_minslack,93.0,-inf,93.0,nan,True,False,nan,0.3761320114135742,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L6_n6_seed3,B0_class,87.0,-inf,87.0,nan,True,False,nan,0.37215161323547363,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L6_n6_seed3,B0_conflict,99.0,-inf,99.0,nan,True,False,nan,0.36962461471557617,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L6_n6_seed3,B0_rand_best_of_5,75.0,-inf,75.0,nan,True,False,nan,1.5761818885803223,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+C1_L6_n6_seed3,B2_time_indexed_milp,63.0,-inf,63.0,nan,True,False,nan,37.96725845336914,1,0,0,0,0,-1,"{""pad"": 60, ""smax"": 15}","HiGHS RESTRICTED model (UB only): toward-dest arcs, pad=60, smax=15; MOW enforced"
+C1_L6_n6_seed3,B4_cp_sat,57.0,57.0,57.0,0.0,True,True,nan,0.724602222442627,38128,0,0,0,0,-1,"{""time_limit"": 180.0}",OR-Tools CP-SAT job-shop; NoOverlap per link; corridor-chain routing
+C1_L6_n6_seed3,B5_individual_cg,69.0,50.99999999999999,69.0,0.2608695652173914,True,False,nan,8.962842226028442,0,89,90,0,0,-1,"{""iters"": 60}",exact pricing converged; LP path bound 51.00; integer RMP (no branching yet = B6)
+C1_L6_n6_seed3,B6_branch_and_price,57.0,51.0,57.0,0.10526315789473684,True,False,85.91561198234558,150.86483240127563,51,528,0,0,0,-1,"{""nodes"": 200, ""time"": 150.0}",departure-window branching; root LP 51.00; stalled nodes 0
+C1_L8_n8_seed11,B0_fcfs,186.0,-inf,186.0,nan,True,False,nan,1.015573263168335,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L8_n8_seed11,B0_edd,186.0,-inf,186.0,nan,True,False,nan,0.9046518802642822,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L8_n8_seed11,B0_minslack,186.0,-inf,186.0,nan,True,False,nan,0.8903946876525879,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L8_n8_seed11,B0_class,242.0,-inf,242.0,nan,True,False,nan,0.7633094787597656,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L8_n8_seed11,B0_conflict,204.0,-inf,204.0,nan,True,False,nan,0.7604515552520752,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L8_n8_seed11,B0_rand_best_of_5,170.0,-inf,170.0,nan,True,False,nan,3.9880475997924805,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+C1_L8_n8_seed11,B4_cp_sat,138.0,102.0,138.0,0.2608695652173913,True,False,nan,180.02636170387268,1373114,0,0,0,0,-1,"{""time_limit"": 180.0}",OR-Tools CP-SAT job-shop; NoOverlap per link; corridor-chain routing
+C1_L8_n8_seed11,B5_individual_cg,186.0,-inf,186.0,nan,True,False,nan,74.60630369186401,0,468,480,0,0,-1,"{""iters"": 60}",exact pricing NOT converged; LP path bound 106.76; integer RMP (no branching yet = B6)
+C1_L8_n8_seed11,B6_branch_and_price,inf,-inf,inf,nan,False,False,nan,156.4669599533081,2,855,0,0,0,-1,"{""nodes"": 200, ""time"": 150.0}",departure-window branching; root LP 106.00; stalled nodes 0 | LB RETRACTED: node CG iter-capped (unconverged) — not a valid bound
+C1_L10_n10_seed12,B0_fcfs,355.0,-inf,355.0,nan,True,False,nan,1.5438802242279053,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L10_n10_seed12,B0_edd,355.0,-inf,355.0,nan,True,False,nan,1.5040602684020996,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L10_n10_seed12,B0_minslack,355.0,-inf,355.0,nan,True,False,nan,1.5141282081604004,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L10_n10_seed12,B0_class,328.0,-inf,328.0,nan,True,False,nan,1.347961664199829,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L10_n10_seed12,B0_conflict,317.0,-inf,317.0,nan,True,False,nan,1.359644889831543,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L10_n10_seed12,B0_rand_best_of_5,210.0,-inf,210.0,nan,True,False,nan,6.310795068740845,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+C1_L10_n10_seed12,B4_cp_sat,189.0,106.0,189.0,0.43915343915343913,True,False,nan,180.25142192840576,1073860,0,0,0,0,-1,"{""time_limit"": 180.0}",OR-Tools CP-SAT job-shop; NoOverlap per link; corridor-chain routing
+C1_L10_n10_seed12,B5_individual_cg,278.99999999999824,-inf,278.99999999999824,nan,True,False,nan,205.78941297531128,0,612,600,0,0,-1,"{""iters"": 60}",exact pricing NOT converged; LP path bound 184.30; integer RMP (no branching yet = B6)
+C1_L10_n10_seed12,B6_branch_and_price,inf,-inf,inf,nan,False,False,nan,151.31783270835876,2,785,0,0,0,-1,"{""nodes"": 200, ""time"": 150.0}",departure-window branching; root LP 184.02; stalled nodes 0 | LB RETRACTED: node CG iter-capped (unconverged) — not a valid bound
+C1_L12_n12_seed13,B0_fcfs,568.0,-inf,568.0,nan,True,False,nan,1.3872311115264893,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L12_n12_seed13,B0_edd,568.0,-inf,568.0,nan,True,False,nan,1.4129278659820557,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L12_n12_seed13,B0_minslack,568.0,-inf,568.0,nan,True,False,nan,1.5194532871246338,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L12_n12_seed13,B0_class,646.0,-inf,646.0,nan,True,False,nan,1.5390682220458984,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L12_n12_seed13,B0_conflict,484.0,-inf,484.0,nan,True,False,nan,1.4668323993682861,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+C1_L12_n12_seed13,B0_rand_best_of_5,570.0,-inf,570.0,nan,True,False,nan,7.140325307846069,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L12_n12_seed13,B4_cp_sat,388.0,155.0,388.0,0.6005154639175257,True,False,nan,180.02991271018982,1384185,0,0,0,0,-1,"{""time_limit"": 180.0}",OR-Tools CP-SAT job-shop; NoOverlap per link; corridor-chain routing
+C1_L12_n12_seed13,B5_individual_cg,568.0,-inf,568.0,nan,True,False,nan,175.77643632888794,0,742,720,0,0,-1,"{""iters"": 60}",exact pricing NOT converged; LP path bound 300.78; integer RMP (no branching yet = B6)
+C1_L12_n12_seed13,B6_branch_and_price,inf,-inf,inf,nan,False,False,nan,192.5783064365387,0,744,0,0,0,-1,"{""nodes"": 200, ""time"": 150.0}",departure-window branching; root LP 293.24; stalled nodes 0 | LB RETRACTED: node CG iter-capped (unconverged) — not a valid bound
+C1_L8_n8_seed11,B6_branch_and_price,inf,104.99999999999999,inf,nan,False,False,nan,420.20545506477356,11,1415,0,0,0,-1,"{""nodes"": 60, ""time"": 420.0}",departure-window branching; root LP 105.00; stalled nodes 0

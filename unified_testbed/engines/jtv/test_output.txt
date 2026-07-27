@@ -1,0 +1,21 @@
+F.                                                                       [100%]
+=================================== FAILURES ===================================
+______________________ test_single_and_joint_feasibility _______________________
+
+    def test_single_and_joint_feasibility():
+        net = build_line_network(5)
+        agents = [
+            Agent(0, 0, 4, 0, 10, (ServiceTask(0, 1, 1),)),
+            Agent(1, 4, 0, 0, 10, (ServiceTask(0, 3, 1),)),
+        ]
+        singles = [single_agent_dp(net, a) for a in agents]
+        assert all(p is not None for p in singles)
+        assert conflict_keys(singles)
+        joint = joint_group_dp(net, agents)
+>       assert joint is not None
+E       assert None is not None
+
+tests/test_core.py:16: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_core.py::test_single_and_joint_feasibility - assert None is not None
+1 failed, 1 passed in 0.32s

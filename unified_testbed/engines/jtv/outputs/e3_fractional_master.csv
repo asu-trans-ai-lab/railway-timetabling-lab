@@ -1,0 +1,5 @@
+model,objective,nodes
+individual_LP,1.5,0
+individual_integer,2.0,0
+group_LP,2.0,0
+group_integer,2.0,0

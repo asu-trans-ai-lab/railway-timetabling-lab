@@ -1,0 +1,4 @@
+from,to,length,speed_ft,speed_tf,capacity,link_type,bidir
+1,2,2,60,60,1,1,1
+2,3,2,60,60,1,1,1
+3,4,2,60,60,1,1,1

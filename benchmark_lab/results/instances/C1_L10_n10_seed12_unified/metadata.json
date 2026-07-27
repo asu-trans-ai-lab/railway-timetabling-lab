@@ -1,0 +1,13 @@
+{
+  "name": "C1_L10_n10_seed12_unified",
+  "family": "converted native FastTrain",
+  "n_nodes": 59,
+  "n_arcs": 104,
+  "n_agents": 10,
+  "source": "C:\\source_codes\\0_source_code_new\\compressed_bcp\\Timetabling_project\\train_scheduling\\benchmark_lab\\results\\instances\\C1_L10_n10_seed12",
+  "caveats": [
+    "v0: class-average speed (per-train smult not honored per link)",
+    "v0: 0 cap>=2 cells mapped to non-exclusive resource_id=-1",
+    "MOW windows not converted"
+  ]
+}

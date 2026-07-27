@@ -1,0 +1,126 @@
+{
+  "family": "C1_single_track",
+  "seed": 13,
+  "segments": 12,
+  "trains": 12,
+  "sidings": [
+    3,
+    6,
+    9
+  ],
+  "release_spread": 28.0,
+  "opposing_ratio": 0.5,
+  "horizon": 720,
+  "speeds": [
+    1.0,
+    0.75
+  ],
+  "entries": {
+    "T4": 3,
+    "T5": 5,
+    "T2": 6,
+    "T3": 6,
+    "T8": 7,
+    "T6": 12,
+    "T7": 17,
+    "T0": 19,
+    "T11": 20,
+    "T10": 22,
+    "T1": 23,
+    "T9": 24
+  },
+  "freeflow_arrivals": {
+    "T4": 39,
+    "T5": 41,
+    "T2": 42,
+    "T3": 42,
+    "T8": 43,
+    "T6": 48,
+    "T7": 53,
+    "T0": 55,
+    "T11": 56,
+    "T10": 58,
+    "T1": 59,
+    "T9": 60
+  },
+  "serial_schedule": [
+    {
+      "id": "T4",
+      "depart": 3,
+      "arrive": 39,
+      "deviation": 0
+    },
+    {
+      "id": "T5",
+      "depart": 42,
+      "arrive": 78,
+      "deviation": 37
+    },
+    {
+      "id": "T2",
+      "depart": 81,
+      "arrive": 117,
+      "deviation": 75
+    },
+    {
+      "id": "T3",
+      "depart": 120,
+      "arrive": 156,
+      "deviation": 114
+    },
+    {
+      "id": "T8",
+      "depart": 159,
+      "arrive": 195,
+      "deviation": 152
+    },
+    {
+      "id": "T6",
+      "depart": 198,
+      "arrive": 234,
+      "deviation": 186
+    },
+    {
+      "id": "T7",
+      "depart": 237,
+      "arrive": 273,
+      "deviation": 220
+    },
+    {
+      "id": "T0",
+      "depart": 276,
+      "arrive": 312,
+      "deviation": 257
+    },
+    {
+      "id": "T11",
+      "depart": 315,
+      "arrive": 351,
+      "deviation": 295
+    },
+    {
+      "id": "T10",
+      "depart": 354,
+      "arrive": 390,
+      "deviation": 332
+    },
+    {
+      "id": "T1",
+      "depart": 393,
+      "arrive": 429,
+      "deviation": 370
+    },
+    {
+      "id": "T9",
+      "depart": 432,
+      "arrive": 468,
+      "deviation": 408
+    }
+  ],
+  "UB_serial": 2446,
+  "exact_optimum": null,
+  "exact_proven": false,
+  "best_known_ub": 388.0,
+  "best_known_lb": 164.0,
+  "exact_source": "B4_cp_sat 300s: UB 388.0 / LB 164.0 NOT proven \u2014 open instance"
+}

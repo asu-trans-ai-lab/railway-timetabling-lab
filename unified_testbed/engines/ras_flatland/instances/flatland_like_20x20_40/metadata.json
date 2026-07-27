@@ -1,0 +1,8 @@
+{
+  "name": "flatland_like_20x20_40",
+  "family": "Flatland-like grid",
+  "n_nodes": 320,
+  "n_arcs": 640,
+  "n_agents": 40,
+  "notes": "Sparse 20x20 rail grid with switches, exclusive cells, and mixed speeds."
+}

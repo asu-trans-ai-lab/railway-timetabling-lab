@@ -1,0 +1,13 @@
+agent_id,start_node,target_node,earliest_departure,preferred_arrival,latest_arrival,move_interval,train_class,wait_cost,tardiness_cost,prox_weight,spacing_weight,desired_spacing
+0,43,44,3,41,162,1,freight,0.0,1.0,1.0,0.0,0.0
+1,45,46,5,43,164,1,freight,0.0,1.0,1.0,0.0,0.0
+2,47,48,6,44,165,1,freight,0.0,1.0,1.0,0.0,0.0
+3,49,50,6,44,165,1,freight,0.0,1.0,1.0,0.0,0.0
+4,51,52,7,45,166,1,freight,0.0,1.0,1.0,0.0,0.0
+5,53,54,12,50,171,1,freight,0.0,1.0,1.0,0.0,0.0
+6,55,56,17,55,176,1,freight,0.0,1.0,1.0,0.0,0.0
+7,57,58,19,57,178,1,freight,0.0,1.0,1.0,0.0,0.0
+8,59,60,20,58,179,1,freight,0.0,1.0,1.0,0.0,0.0
+9,61,62,22,60,181,1,freight,0.0,1.0,1.0,0.0,0.0
+10,63,64,23,61,182,1,freight,0.0,1.0,1.0,0.0,0.0
+11,65,66,24,62,183,1,freight,0.0,1.0,1.0,0.0,0.0

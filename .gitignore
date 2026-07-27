@@ -1,0 +1,26 @@
+# binaries & archives (rebuild: g++ -O2 -std=c++17 -static; zips are packaging artifacts)
+*.exe
+*.zip
+*.o
+
+# python / latex / editor debris
+__pycache__/
+*.pyc
+.pytest_cache/
+*.aux
+*.log
+*.out
+*.synctex.gz
+
+# derived run directories (regenerate via run_pipeline.py / wrap_existing.py)
+benchmark_lab/results/b7_*/
+unified_testbed/engines/*/results/verify_win/
+unified_testbed/engines/*/results/toy_native/
+unified_testbed/engines/*/results/c1_seed1/
+unified_testbed/engines/*/results/ras_set3_*/
+
+# solver scratch outputs inside instances (inputs + manifests ARE tracked)
+FTT_handoff/data/*/summary_log/
+FTT_handoff/data/*/internal_timetable/
+benchmark_lab/results/instances/*/summary_log/
+benchmark_lab/results/instances/*/internal_timetable/

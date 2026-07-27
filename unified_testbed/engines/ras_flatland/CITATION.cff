@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "If you use this prototype, please cite the associated working paper."
+title: "Conflict-Localized Quadratic Joint Timetabling Benchmark"
+type: software
+version: 0.1.0
+authors:
+  - family-names: Zhou
+    given-names: Xuesong (Simon)
+license: MIT

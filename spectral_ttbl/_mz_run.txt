@@ -1,0 +1,11 @@
+
+====================================================================
+  MENG-ZHOU FAST-TRAIN (faithful)  links=97 trains=40 horizon=1440 headway=3
+  free-flow total arrival-deviation (iter-0 LB) = 1785   (target LB~1923)
+====================================================================
+  iter        LB        UB    gap%  maxviol    step
+     0      1785      4049    55.9        4   1.000
+     1      1785      4049    55.9        6   0.500
+     2      1785      4049    55.9        6   0.333
+
+  BEST  LB=1785  UB=4049  gap=55.9% (target LB~1923, UB~3471)

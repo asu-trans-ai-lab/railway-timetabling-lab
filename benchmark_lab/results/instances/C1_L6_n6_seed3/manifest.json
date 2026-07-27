@@ -1,0 +1,75 @@
+{
+  "family": "C1_single_track",
+  "seed": 3,
+  "segments": 6,
+  "trains": 6,
+  "sidings": [
+    2,
+    4
+  ],
+  "release_spread": 15.0,
+  "opposing_ratio": 0.5,
+  "horizon": 720,
+  "speeds": [
+    1.0,
+    0.75
+  ],
+  "entries": {
+    "T2": 0,
+    "T4": 3,
+    "T5": 7,
+    "T0": 8,
+    "T1": 9,
+    "T3": 12
+  },
+  "freeflow_arrivals": {
+    "T2": 18,
+    "T4": 21,
+    "T5": 25,
+    "T0": 26,
+    "T1": 27,
+    "T3": 30
+  },
+  "serial_schedule": [
+    {
+      "id": "T2",
+      "depart": 0,
+      "arrive": 18,
+      "deviation": 0
+    },
+    {
+      "id": "T4",
+      "depart": 21,
+      "arrive": 39,
+      "deviation": 18
+    },
+    {
+      "id": "T5",
+      "depart": 42,
+      "arrive": 60,
+      "deviation": 35
+    },
+    {
+      "id": "T0",
+      "depart": 63,
+      "arrive": 81,
+      "deviation": 55
+    },
+    {
+      "id": "T1",
+      "depart": 84,
+      "arrive": 102,
+      "deviation": 75
+    },
+    {
+      "id": "T3",
+      "depart": 105,
+      "arrive": 123,
+      "deviation": 93
+    }
+  ],
+  "UB_serial": 276,
+  "exact_optimum": 57.0,
+  "exact_proven": true,
+  "exact_source": "B4_cp_sat PROVEN 57 (0.8s, 39945 branches); fasttrain LR-B&B cross-check: incumbent 57 = optimum but LB stuck 36.3 after 6441 nodes/540s (LR bound weak here)"
+}

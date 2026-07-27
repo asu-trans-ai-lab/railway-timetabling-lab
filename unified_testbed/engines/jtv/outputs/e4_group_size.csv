@@ -1,0 +1,5 @@
+Kmax,feasible,hard_conflicts,generated_states,scanned_transitions,objective
+1,True,1,756,1216,16.4
+2,True,2,2754,7682,19.4
+3,True,2,14431,63692,18.15
+4,True,0,90019,698465,19.9

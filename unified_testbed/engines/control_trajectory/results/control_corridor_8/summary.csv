@@ -1,0 +1,2 @@
+instance,n_nodes,n_arcs,n_agents,horizon,initial_conflicts,final_conflicts,initial_objective,final_objective,control_iterations,control_actions,accepted_actions,rejected_actions,resource_price_l1,reduced_states,reduced_transitions,screened_candidates,reduced_wall_s,full_states_sampled,full_transitions_sampled,full_wall_s,full_comparisons,exact_objective_matches,max_objective_gap,budget,rho,price_step,precedence_weight
+control_corridor_8,48,80,8,19,4,0,64.9,64.9,1,4,4,0,1,2140,6760,432,0.000763462,5568,15576,0.003108153,4,4,0,6,0.18,0.25,0.75

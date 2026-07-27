@@ -1,0 +1,7 @@
+train_id,origin,dest,dir,TOB,length,hazmat,speed_mult,entry,cost_stop,cost_early,cost_run,intended_arrival
+T2,1,7,1,0,0,0,1.0,0,0,0,0,18
+T4,7,1,0,0,0,0,1.0,3,0,0,0,21
+T5,1,7,1,0,0,0,0.75,7,0,0,0,25
+T0,7,1,0,0,0,0,1.0,8,0,0,0,26
+T1,7,1,0,0,0,0,0.75,9,0,0,0,27
+T3,7,1,0,0,0,0,0.75,12,0,0,0,30

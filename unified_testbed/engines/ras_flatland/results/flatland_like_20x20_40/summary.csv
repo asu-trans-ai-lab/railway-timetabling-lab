@@ -1,0 +1,2 @@
+instance,n_nodes,n_arcs,n_agents,horizon,initial_hard_conflicts,final_hard_conflicts,interaction_components,solved_joint_groups,failed_joint_groups,reduced_states,reduced_transitions,screened_candidates,reduced_wall_s,full_states_sampled,full_transitions_sampled,full_wall_s,budget,rho,coupling_radius
+flatland_like_20x20_40,320,640,40,69,20,0,20,20,0,233407,513786,0,0.045308131,233407,513786,0.045722225,40,0.1,0

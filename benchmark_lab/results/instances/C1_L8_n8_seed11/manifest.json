@@ -1,0 +1,94 @@
+{
+  "family": "C1_single_track",
+  "seed": 11,
+  "segments": 8,
+  "trains": 8,
+  "sidings": [
+    2,
+    4,
+    6
+  ],
+  "release_spread": 20.0,
+  "opposing_ratio": 0.5,
+  "horizon": 720,
+  "speeds": [
+    1.0,
+    0.75
+  ],
+  "entries": {
+    "T7": 0,
+    "T5": 6,
+    "T1": 9,
+    "T3": 10,
+    "T0": 11,
+    "T2": 11,
+    "T4": 15,
+    "T6": 16
+  },
+  "freeflow_arrivals": {
+    "T7": 24,
+    "T5": 30,
+    "T1": 33,
+    "T3": 34,
+    "T0": 35,
+    "T2": 35,
+    "T4": 39,
+    "T6": 40
+  },
+  "serial_schedule": [
+    {
+      "id": "T7",
+      "depart": 0,
+      "arrive": 24,
+      "deviation": 0
+    },
+    {
+      "id": "T5",
+      "depart": 27,
+      "arrive": 51,
+      "deviation": 21
+    },
+    {
+      "id": "T1",
+      "depart": 54,
+      "arrive": 78,
+      "deviation": 45
+    },
+    {
+      "id": "T3",
+      "depart": 81,
+      "arrive": 105,
+      "deviation": 71
+    },
+    {
+      "id": "T0",
+      "depart": 108,
+      "arrive": 132,
+      "deviation": 97
+    },
+    {
+      "id": "T2",
+      "depart": 135,
+      "arrive": 159,
+      "deviation": 124
+    },
+    {
+      "id": "T4",
+      "depart": 162,
+      "arrive": 186,
+      "deviation": 147
+    },
+    {
+      "id": "T6",
+      "depart": 189,
+      "arrive": 213,
+      "deviation": 173
+    }
+  ],
+  "UB_serial": 678,
+  "exact_optimum": null,
+  "exact_proven": false,
+  "best_known_ub": 138.0,
+  "best_known_lb": 105.0,
+  "exact_source": "UB 138 (CP-SAT 300s); LB 105 (B6 root path-LP, CG CONVERGED @200 iters) \u2014 open"
+}

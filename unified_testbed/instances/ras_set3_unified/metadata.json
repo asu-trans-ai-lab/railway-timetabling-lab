@@ -1,0 +1,13 @@
+{
+  "name": "ras_set3_unified",
+  "family": "converted native FastTrain",
+  "n_nodes": 380,
+  "n_arcs": 704,
+  "n_agents": 40,
+  "source": "C:\\source_codes\\0_source_code_new\\compressed_bcp\\Timetabling_project\\train_scheduling\\FTT_handoff\\data\\RAS_set3_native",
+  "caveats": [
+    "v0: class-average speed (per-train smult not honored per link)",
+    "v0: 0 cap>=2 cells mapped to non-exclusive resource_id=-1",
+    "MOW windows not converted"
+  ]
+}

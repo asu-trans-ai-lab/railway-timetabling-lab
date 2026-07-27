@@ -1,0 +1,70 @@
+{
+  "E2_dual_oscillation": {
+    "lr_final_conflicts": 1,
+    "lr_total_variation": 39.24817048719324,
+    "lr_priority_flips": 0,
+    "joint_conflicts": 0,
+    "joint_generated_states": 879,
+    "joint_scanned_transitions": 2359,
+    "joint_objective": 9.7
+  },
+  "E3_fractional_master": {
+    "individual_lp": 1.5,
+    "individual_integer": 2.0,
+    "individual_integrality_gap": 0.5,
+    "individual_fractional_variable_ratio": 1.0,
+    "group_lp": 2.0,
+    "group_integer": 2.0,
+    "group_integrality_gap": 0.0,
+    "individual_mip_nodes": 0,
+    "group_mip_nodes": 0
+  },
+  "E4_group_size": {
+    "1": {
+      "feasible": true,
+      "hard_conflicts": 1,
+      "generated_states": 756,
+      "scanned_transitions": 1216,
+      "objective": 16.4
+    },
+    "2": {
+      "feasible": true,
+      "hard_conflicts": 2,
+      "generated_states": 2754,
+      "scanned_transitions": 7682,
+      "objective": 19.4
+    },
+    "3": {
+      "feasible": true,
+      "hard_conflicts": 2,
+      "generated_states": 14431,
+      "scanned_transitions": 63692,
+      "objective": 18.15
+    },
+    "4": {
+      "feasible": true,
+      "hard_conflicts": 0,
+      "generated_states": 90019,
+      "scanned_transitions": 698465,
+      "objective": 19.9
+    }
+  },
+  "M1_M3_column_generation": {
+    "M1": {
+      "objective": 8.2,
+      "iterations": 1,
+      "columns": 12
+    },
+    "M2": {
+      "objective": 9.7,
+      "iterations": 1,
+      "columns": 1
+    },
+    "M3": {
+      "objective": 9.7,
+      "iterations": 9,
+      "columns": 9,
+      "quadratic_candidates": 8
+    }
+  }
+}

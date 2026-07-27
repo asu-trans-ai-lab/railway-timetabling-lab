@@ -1,0 +1,91 @@
+instance_id,method,objective,best_lower_bound,best_upper_bound,relative_gap,feasible,optimality_proven,time_to_first_feasible,total_runtime,nodes,columns,pricing_calls,dp_labels,hard_conflicts,seed,config,notes
+toy_native,B1_lr_fasttrain,12.0,10.7,12.0,0.10833333333333339,True,False,nan,0.024492979049682617,0,0,0,0,0,-1,"{""sp"": ""dag"", ""iters"": ""ini""}",subgradient LR; UB=priority rule (feasible)
+RAS_set3_native,B1_lr_fasttrain,3580.0,2237.2,3580.0,0.3750837988826816,True,False,nan,3.826768398284912,0,0,0,0,0,-1,"{""sp"": ""dag"", ""iters"": ""ini""}",subgradient LR; UB=priority rule (feasible)
+toy_native,B3_lr_bnb_segment,12.0,12.0,12.0,0.0,True,True,nan,0.02171468734741211,23,0,0,0,0,-1,"{""args"": [""--gap"", ""0""]}",exact segment-enum B&B (PROVEN OPTIMAL — tree exhausted)
+RAS_set3_native,B3_lr_bnb_segment,3374.0,2261.8,3374.0,0.3296384113811499,True,False,nan,51.93374252319336,20,0,0,0,0,-1,"{""args"": [""--nodes"", ""20"", ""--time"", ""120"", ""--branch"", ""dual""]}",budgeted (node budget)
+toy_native,B7_full_joint_dp,nan,-inf,inf,nan,True,False,nan,0.13012075424194336,0,0,0,6525,0,-1,"{""args"": [""--budget=6"", ""--rho=0.18"", ""--radius=0"", ""--max-group=3"", ""--full-limit=3"", ""--max-rounds=10""]}",corridor+full verify init_conflicts=30
+jtv_e3_oddcycle,B5_individual_master,2.0,1.5,2.0,0.25,True,True,nan,nan,0,0,0,0,0,-1,,LP=1.5 integer=2.0 gap=0.5 (100% fractional LP)
+jtv_e3_oddcycle,P1_group_supercolumn_master,2.0,2.0,2.0,0.0,True,True,nan,nan,0,0,0,0,0,-1,,group LP=2.0 = integer -> gap 0 (convexification)
+jtv_pair,B5_individual_cg,8.2,-inf,8.2,nan,True,False,nan,nan,0,12,1,0,0,-1,,jtv M1 (individual columns; capacity-infeasible pair remains)
+jtv_pair,P1_group_supercolumn_cg,9.7,-inf,9.7,nan,True,False,nan,nan,0,1,1,0,0,-1,,jtv M2 hard-feasible group column = joint optimum
+jtv_pair,P2_quadratic_companion_cg,9.7,-inf,9.7,nan,True,False,nan,nan,0,9,9,0,0,-1,,jtv M3; quadratic candidates=8
+C1_L4_n4_seed1,B0_fcfs,51.0,-inf,51.0,nan,True,False,nan,4.579379320144653,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L4_n4_seed1,B0_edd,51.0,-inf,51.0,nan,True,False,nan,5.201985597610474,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L4_n4_seed1,B0_minslack,51.0,-inf,51.0,nan,True,False,nan,6.325155735015869,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L4_n4_seed1,B0_class,29.0,-inf,29.0,nan,True,False,nan,6.863417863845825,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+C1_L4_n4_seed1,B0_conflict,29.0,-inf,29.0,nan,True,False,nan,7.512878656387329,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+C1_L4_n4_seed1,B0_rand_best_of_10,35.0,-inf,35.0,nan,True,False,nan,56.27258348464966,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L4_n4_seed2,B0_fcfs,21.0,-inf,21.0,nan,True,False,nan,4.9607093334198,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L4_n4_seed2,B0_edd,21.0,-inf,21.0,nan,True,False,nan,4.636677980422974,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L4_n4_seed2,B0_minslack,21.0,-inf,21.0,nan,True,False,nan,3.670549154281616,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L4_n4_seed2,B0_class,36.0,-inf,36.0,nan,True,False,nan,6.245610952377319,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L4_n4_seed2,B0_conflict,36.0,-inf,36.0,nan,True,False,nan,4.8290016651153564,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L4_n4_seed2,B0_rand_best_of_10,20.0,-inf,20.0,nan,True,False,nan,58.059786558151245,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+C1_L4_n4_seed1,B2_time_indexed_milp,29.0,29.0,29.0,0.0,True,True,nan,8.920607566833496,0,0,0,0,0,-1,"{""pad"": 60, ""smax"": 15}","HiGHS; restrictions: toward-dest arcs, pad=60, smax=15"
+C1_L4_n4_seed2,B2_time_indexed_milp,20.0,20.0,20.0,0.0,True,True,nan,2.7102808952331543,1,0,0,0,0,-1,"{""pad"": 60, ""smax"": 15}","HiGHS; restrictions: toward-dest arcs, pad=60, smax=15"
+toy_native,B2_time_indexed_milp,12.0,12.0,12.0,0.0,True,True,nan,0.04101371765136719,1,0,0,0,0,-1,"{""pad"": 60, ""smax"": 15}","HiGHS; restrictions: toward-dest arcs, pad=60, smax=15"
+C1_L4_n4_seed1,B0_fcfs,51.0,-inf,51.0,nan,True,False,nan,0.25014376640319824,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L4_n4_seed1,B0_edd,51.0,-inf,51.0,nan,True,False,nan,0.22971343994140625,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L4_n4_seed1,B0_minslack,51.0,-inf,51.0,nan,True,False,nan,0.3781092166900635,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L4_n4_seed1,B0_class,29.0,-inf,29.0,nan,True,False,nan,0.15615057945251465,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+C1_L4_n4_seed1,B0_conflict,29.0,-inf,29.0,nan,True,False,nan,0.19178271293640137,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+C1_L4_n4_seed1,B0_rand_best_of_10,35.0,-inf,35.0,nan,True,False,nan,2.3018980026245117,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L4_n4_seed2,B0_fcfs,21.0,-inf,21.0,nan,True,False,nan,0.17876243591308594,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L4_n4_seed2,B0_edd,21.0,-inf,21.0,nan,True,False,nan,0.17901849746704102,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L4_n4_seed2,B0_minslack,21.0,-inf,21.0,nan,True,False,nan,0.23996257781982422,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L4_n4_seed2,B0_class,36.0,-inf,36.0,nan,True,False,nan,0.19598746299743652,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L4_n4_seed2,B0_conflict,36.0,-inf,36.0,nan,True,False,nan,0.35735273361206055,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L4_n4_seed2,B0_rand_best_of_10,20.0,-inf,20.0,nan,True,False,nan,3.0084121227264404,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+C1_L6_n6_seed3,B0_fcfs,93.0,-inf,93.0,nan,True,False,nan,0.5871813297271729,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L6_n6_seed3,B0_edd,93.0,-inf,93.0,nan,True,False,nan,0.7248611450195312,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L6_n6_seed3,B0_minslack,93.0,-inf,93.0,nan,True,False,nan,0.7755389213562012,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L6_n6_seed3,B0_class,87.0,-inf,87.0,nan,True,False,nan,0.5621089935302734,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L6_n6_seed3,B0_conflict,99.0,-inf,99.0,nan,True,False,nan,0.6695249080657959,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L6_n6_seed3,B0_rand_best_of_10,69.0,-inf,69.0,nan,True,False,nan,5.690859079360962,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+toy_native,B0_fcfs,12.0,-inf,12.0,nan,True,False,nan,0.0010046958923339844,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+toy_native,B0_edd,12.0,-inf,12.0,nan,True,False,nan,0.0,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+toy_native,B0_minslack,12.0,-inf,12.0,nan,True,False,nan,0.0014541149139404297,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+toy_native,B0_class,12.0,-inf,12.0,nan,True,False,nan,0.0010058879852294922,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+toy_native,B0_conflict,12.0,-inf,12.0,nan,True,False,nan,0.0,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+toy_native,B0_rand_best_of_10,12.0,-inf,12.0,nan,True,False,nan,0.009511709213256836,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+RAS_set3_native,B0_fcfs,3730.0,-inf,3730.0,nan,True,False,nan,47.91866445541382,0,0,0,0,0,-1,,sequential residual-capacity insertion
+RAS_set3_native,B0_edd,3992.0,-inf,3992.0,nan,True,False,nan,45.61205244064331,0,0,0,0,0,-1,,sequential residual-capacity insertion
+RAS_set3_native,B0_minslack,4049.0,-inf,4049.0,nan,True,False,nan,36.58050775527954,0,0,0,0,0,-1,,sequential residual-capacity insertion
+RAS_set3_native,B0_class,3526.0,-inf,3526.0,nan,True,False,nan,49.05546283721924,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+RAS_set3_native,B0_conflict,4283.0,-inf,4283.0,nan,True,False,nan,43.935901403427124,0,0,0,0,0,-1,,sequential residual-capacity insertion
+RAS_set3_native,B0_rand_best_of_5,3693.0,-inf,3693.0,nan,True,False,nan,228.03189182281494,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L4_n4_seed1,B4_cp_sat,29.0,29.0,29.0,0.0,True,True,nan,0.025997638702392578,488,0,0,0,0,-1,"{""time_limit"": 120.0}",OR-Tools CP-SAT job-shop; NoOverlap per link; corridor-chain routing
+C1_L4_n4_seed2,B4_cp_sat,20.0,20.0,20.0,0.0,True,True,nan,0.012009382247924805,205,0,0,0,0,-1,"{""time_limit"": 120.0}",OR-Tools CP-SAT job-shop; NoOverlap per link; corridor-chain routing
+toy_native,B4_cp_sat,12.0,12.0,12.0,0.0,True,True,nan,0.006000041961669922,6,0,0,0,0,-1,"{""time_limit"": 120.0}",OR-Tools CP-SAT job-shop; NoOverlap per link; corridor-chain routing
+C1_L6_n6_seed3,B4_cp_sat,57.0,57.0,57.0,0.0,True,True,nan,0.7646188735961914,39945,0,0,0,0,-1,"{""time_limit"": 120.0}",OR-Tools CP-SAT job-shop; NoOverlap per link; corridor-chain routing
+toy_native,B5_individual_cg,12.0,12.0,12.0,0.0,True,False,nan,0.017002344131469727,0,5,3,0,0,-1,"{""iters"": 40}",exact pricing converged; LP path bound 12.00; integer RMP (no branching yet = B6)
+C1_L4_n4_seed1,B5_individual_cg,51.0,51.0,51.0,0.0,True,False,nan,0.6060466766357422,0,7,4,0,0,-1,"{""iters"": 40}",exact pricing converged; LP path bound 51.00; integer RMP (no branching yet = B6)
+C1_L4_n4_seed2,B5_individual_cg,21.0,21.0,21.0,0.0,True,False,nan,0.6137452125549316,0,7,4,0,0,-1,"{""iters"": 40}",exact pricing converged; LP path bound 21.00; integer RMP (no branching yet = B6)
+toy_native,B5_individual_cg,12.0,12.0,12.0,0.0,True,False,nan,0.012390613555908203,0,5,3,0,0,-1,"{""iters"": 40}",exact pricing converged; LP path bound 12.00; integer RMP (no branching yet = B6)
+C1_L4_n4_seed1,B5_individual_cg,51.0,51.0,51.0,0.0,True,False,nan,0.6507775783538818,0,7,4,0,0,-1,"{""iters"": 40}",exact pricing converged; LP path bound 51.00; integer RMP (no branching yet = B6)
+toy_native,B5_individual_cg,12.0,12.0,12.0,0.0,True,False,nan,0.011731624603271484,0,5,3,0,0,-1,"{""iters"": 60}",exact pricing converged; LP path bound 12.00; integer RMP (no branching yet = B6)
+C1_L4_n4_seed1,B5_individual_cg,51.0,51.0,51.0,0.0,True,False,nan,0.44731688499450684,0,7,4,0,0,-1,"{""iters"": 60}",exact pricing converged; LP path bound 51.00; integer RMP (no branching yet = B6)
+C1_L4_n4_seed2,B5_individual_cg,21.0,21.0,21.0,0.0,True,False,nan,0.48172950744628906,0,7,4,0,0,-1,"{""iters"": 60}",exact pricing converged; LP path bound 21.00; integer RMP (no branching yet = B6)
+C1_L6_n6_seed3,B5_individual_cg,93.0,93.0,93.0,0.0,True,False,nan,1.154951572418213,0,11,6,0,0,-1,"{""iters"": 60}",exact pricing converged; LP path bound 93.00; integer RMP (no branching yet = B6)
+toy_native,B5_individual_cg,12.0,12.0,12.0,0.0,True,False,nan,0.047530174255371094,0,25,24,0,0,-1,"{""iters"": 80}",exact pricing converged; LP path bound 12.00; integer RMP (no branching yet = B6)
+C1_L4_n4_seed1,B5_individual_cg,42.0,23.75,42.0,0.43452380952380953,True,False,nan,4.547112941741943,0,62,76,0,0,-1,"{""iters"": 80}",exact pricing converged; LP path bound 23.75; integer RMP (no branching yet = B6)
+C1_L4_n4_seed2,B5_individual_cg,20.0,20.0,20.0,0.0,True,False,nan,3.2199385166168213,0,43,52,0,0,-1,"{""iters"": 80}",exact pricing converged; LP path bound 20.00; integer RMP (no branching yet = B6)
+C1_L6_n6_seed3,B5_individual_cg,69.0,50.99999999999999,69.0,0.2608695652173914,True,False,nan,10.484378337860107,0,89,90,0,0,-1,"{""iters"": 80}",exact pricing converged; LP path bound 51.00; integer RMP (no branching yet = B6)
+toy_native,B5_individual_cg,12.0,12.0,12.0,0.0,True,False,nan,0.03800034523010254,0,25,24,0,0,-1,"{""iters"": 40}",exact pricing converged; LP path bound 12.00; integer RMP (no branching yet = B6)
+toy_native,B6_branch_and_price,12.0,12.0,12.0,0.0,True,True,nan,0.03551197052001953,0,30,0,0,0,-1,"{""nodes"": 400, ""time"": 120.0}",departure-window branching; root LP 12.00
+toy_native,B6_branch_and_price,12.0,12.0,12.0,0.0,True,True,nan,0.03400015830993652,0,30,0,0,0,-1,"{""nodes"": 400, ""time"": 120.0}",departure-window branching; root LP 12.00
+C1_L8_n8_seed11,B4_cp_sat,138.0,106.0,138.0,0.2318840579710145,True,False,nan,300.03709053993225,2796267,0,0,0,0,-1,"{""time_limit"": 300.0}",OR-Tools CP-SAT job-shop; NoOverlap per link; corridor-chain routing
+C1_L4_n4_seed1,B6_branch_and_price,100018.0,26.0,100018.0,0.9997400467915775,True,False,nan,57.0249559879303,400,170,0,0,0,-1,"{""nodes"": 400, ""time"": 120.0}",departure-window branching; root LP 23.75
+C1_L4_n4_seed1,B2_time_indexed_milp,29.0,-inf,29.0,nan,True,False,nan,4.566277980804443,0,0,0,0,0,-1,"{""pad"": 60, ""smax"": 15}","HiGHS RESTRICTED model (UB only): toward-dest arcs, pad=60, smax=15; MOW enforced"
+C1_L4_n4_seed1,B4_cp_sat,29.0,29.0,29.0,0.0,True,True,nan,0.025002241134643555,398,0,0,0,0,-1,"{""time_limit"": 120}",OR-Tools CP-SAT job-shop; NoOverlap per link; corridor-chain routing
+toy_native,B4_cp_sat,12.0,12.0,12.0,0.0,True,True,nan,0.004999876022338867,2,0,0,0,0,-1,"{""time_limit"": 120}",OR-Tools CP-SAT job-shop; NoOverlap per link; corridor-chain routing
+C1_L4_n4_seed1,B0_fcfs,51.0,-inf,51.0,nan,True,False,nan,0.18002867698669434,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L4_n4_seed1,B0_edd,51.0,-inf,51.0,nan,True,False,nan,0.16902637481689453,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L4_n4_seed1,B0_minslack,51.0,-inf,51.0,nan,True,False,nan,0.16552233695983887,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L4_n4_seed1,B0_class,29.0,-inf,29.0,nan,True,False,nan,0.13102245330810547,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+C1_L4_n4_seed1,B0_conflict,29.0,-inf,29.0,nan,True,False,nan,0.13374567031860352,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+C1_L4_n4_seed1,B0_rand_best_of_10,35.0,-inf,35.0,nan,True,False,nan,1.6158702373504639,0,0,0,0,0,-1,,sequential residual-capacity insertion
+C1_L10_n10_seed12,B4_cp_sat,189.0,110.0,189.0,0.41798941798941797,True,False,nan,300.0376024246216,2461552,0,0,0,0,-1,"{""time_limit"": 300.0}",OR-Tools CP-SAT job-shop; NoOverlap per link; corridor-chain routing
+C1_L4_n4_seed1,B6_branch_and_price,29.0,29.0,29.0,0.0,True,True,26.57091999053955,109.38226222991943,185,605,0,0,0,-1,"{""nodes"": 300, ""time"": 120.0}",departure-window branching; root LP 23.75; stalled nodes 12
+C1_L12_n12_seed13,B4_cp_sat,388.0,164.0,388.0,0.5773195876288659,True,False,nan,300.050918340683,2280965,0,0,0,0,-1,"{""time_limit"": 300.0}",OR-Tools CP-SAT job-shop; NoOverlap per link; corridor-chain routing
+C2_L6_n8_seed21,B4_cp_sat,43.0,39.0,43.0,0.09302325581395349,True,False,nan,120.02364754676819,1539824,0,0,0,0,-1,"{""time_limit"": 120.0}",OR-Tools CP-SAT job-shop; NoOverlap per link; corridor-chain routing

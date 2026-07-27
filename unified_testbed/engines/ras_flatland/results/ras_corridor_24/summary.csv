@@ -1,0 +1,2 @@
+instance,n_nodes,n_arcs,n_agents,horizon,initial_hard_conflicts,final_hard_conflicts,interaction_components,solved_joint_groups,failed_joint_groups,reduced_states,reduced_transitions,screened_candidates,reduced_wall_s,full_states_sampled,full_transitions_sampled,full_wall_s,budget,rho,coupling_radius
+ras_corridor_24,192,336,24,53,16,0,8,8,0,1834788,5470096,4436,0.592087408,0,0,0,40,0.1,0

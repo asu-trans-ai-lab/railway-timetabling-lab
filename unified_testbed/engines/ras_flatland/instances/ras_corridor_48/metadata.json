@@ -1,0 +1,8 @@
+{
+  "name": "ras_corridor_48",
+  "family": "RAS-style corridor",
+  "n_nodes": 416,
+  "n_arcs": 736,
+  "n_agents": 48,
+  "notes": "Sixteen local three-train timetable components; 48 trains."
+}

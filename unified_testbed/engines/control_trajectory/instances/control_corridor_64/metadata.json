@@ -1,0 +1,7 @@
+{
+  "name": "control_corridor_64",
+  "description": "Disconnected meet/pass communities for coordination-agent and trajectory-agent testing",
+  "agents": 64,
+  "expected_components": 32,
+  "off_network_staging": true
+}

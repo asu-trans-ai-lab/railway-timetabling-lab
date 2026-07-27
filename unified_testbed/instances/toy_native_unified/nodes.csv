@@ -1,0 +1,17 @@
+node_id,x,y,resource_id,kind
+0,0,0,-1,station
+1,3,0,-1,station
+2,6,0,-1,station
+3,9,0,-1,station
+4,1,0,-1,track
+5,2,0,-1,track
+6,4,0,-1,track
+7,5,0,-1,track
+8,7,0,-1,track
+9,8,0,-1,track
+10,1,0,-1,private_start
+11,10,0,-1,private_goal
+12,1,0,-1,private_start
+13,10,0,-1,private_goal
+14,1,0,-1,private_start
+15,10,0,-1,private_goal

@@ -1,0 +1,13 @@
+{
+  "name": "toy_native_unified",
+  "family": "converted native FastTrain",
+  "n_nodes": 16,
+  "n_arcs": 24,
+  "n_agents": 3,
+  "source": "C:\\source_codes\\0_source_code_new\\compressed_bcp\\Timetabling_project\\train_scheduling\\FTT_handoff\\data\\toy_native",
+  "caveats": [
+    "v0: class-average speed (per-train smult not honored per link)",
+    "v0: 0 cap>=2 cells mapped to non-exclusive resource_id=-1",
+    "MOW windows not converted"
+  ]
+}

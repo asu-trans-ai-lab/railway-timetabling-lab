@@ -1,0 +1,5 @@
+round,group_id,agents,group_size,priority_agent,budget,rho,conflicts_before,conflicts_after,accepted,reduced_feasible,full_feasible,reduced_states,reduced_transitions,screened,full_states,full_transitions,reduced_objective,full_objective,reduced_wall_s,full_wall_s
+0,0,0|1,2,0,6,0.18,4,3,1,1,1,550,1705,108,1441,3943,14.04,14.04,0.000213156,0.00045186
+0,1,2|3,2,2,6,0.18,3,2,1,1,1,520,1675,108,1343,3845,14.49,14.49,0.000175039,0.00164823
+0,2,4|5,2,4,6,0.18,2,1,1,1,1,550,1705,108,1441,3943,14.04,14.04,0.000202421,0.000600642
+0,3,6|7,2,6,6,0.18,1,0,1,1,1,520,1675,108,1343,3845,14.49,14.49,0.000172846,0.000407425

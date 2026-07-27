@@ -1,0 +1,59 @@
+{
+  "family": "C1_single_track",
+  "seed": 2,
+  "segments": 4,
+  "trains": 4,
+  "sidings": [
+    2
+  ],
+  "release_spread": 10.0,
+  "opposing_ratio": 0.5,
+  "horizon": 720,
+  "speeds": [
+    1.0,
+    0.75
+  ],
+  "entries": {
+    "T1": 0,
+    "T3": 3,
+    "T2": 7,
+    "T0": 9
+  },
+  "freeflow_arrivals": {
+    "T1": 12,
+    "T3": 15,
+    "T2": 19,
+    "T0": 21
+  },
+  "serial_schedule": [
+    {
+      "id": "T1",
+      "depart": 0,
+      "arrive": 12,
+      "deviation": 0
+    },
+    {
+      "id": "T3",
+      "depart": 15,
+      "arrive": 27,
+      "deviation": 12
+    },
+    {
+      "id": "T2",
+      "depart": 30,
+      "arrive": 42,
+      "deviation": 23
+    },
+    {
+      "id": "T0",
+      "depart": 45,
+      "arrive": 57,
+      "deviation": 36
+    }
+  ],
+  "UB_serial": 71,
+  "exact_optimum": 20.0,
+  "exact_proven": true,
+  "exact_nodes": 609,
+  "exact_wall_s": 23.59
+}

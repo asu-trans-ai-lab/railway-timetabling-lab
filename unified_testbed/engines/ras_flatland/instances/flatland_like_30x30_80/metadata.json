@@ -1,0 +1,8 @@
+{
+  "name": "flatland_like_30x30_80",
+  "family": "Flatland-like grid",
+  "n_nodes": 640,
+  "n_arcs": 1280,
+  "n_agents": 80,
+  "notes": "Sparse 30x30 rail grid with 80 mixed-speed trains."
+}

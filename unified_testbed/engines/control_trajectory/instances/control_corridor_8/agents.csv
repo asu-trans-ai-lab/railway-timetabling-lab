@@ -1,0 +1,9 @@
+agent_id,start_node,goal_node,release,preferred_arrival,deadline,movement_interval,train_class,wait_cost,tardy_cost,prox_weight,spacing_weight,desired_spacing
+0,0,1,0,10,18,1,express,0.2,1.0,1.0,0.2,2.0
+1,2,3,0,10,18,1,regional,0.25,1.2,1.0,0.2,2.0
+2,12,13,1,11,19,1,express,0.2,1.0,1.0,0.2,2.0
+3,14,15,1,11,19,1,regional,0.25,1.2,1.0,0.2,2.0
+4,24,25,0,10,18,1,express,0.2,1.0,1.0,0.2,2.0
+5,26,27,0,10,18,1,regional,0.25,1.2,1.0,0.2,2.0
+6,36,37,1,11,19,1,express,0.2,1.0,1.0,0.2,2.0
+7,38,39,1,11,19,1,regional,0.25,1.2,1.0,0.2,2.0
