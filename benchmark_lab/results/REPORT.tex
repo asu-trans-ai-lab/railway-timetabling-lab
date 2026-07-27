@@ -21,7 +21,7 @@ branch-and-price with departure-window branching, and P1 group-supercolumn CG. A
 common reporting record; every bound is validity-checked against generator ground truth. Headlines:
 the exact-equivalence gate passes with three independent exact solvers agreeing on every proven
 instance; the individual-path LP shows a real 18.1\% integrality gap that a full-component group
-supercolumn closes to zero; branch-and-price closes the same gap by branching; instances with
+supercolumn closes to zero; branch-and-price reaches $[26,29]$ but cannot certify seed1 with departure-window branching alone (12 departure-inseparable subtrees) --- precedence branching is required; instances with
 8--12 trains remain open with certified intervals. Two claims made earlier in development were
 retracted when convergence checks failed --- the retractions are part of this report.
 \end{abstract}
@@ -44,7 +44,7 @@ C1\_L6\_n6\_seed3 & 6 & 276 & \textbf{57} & proven (CP-SAT 0.7s; LR-B\&B incumbe
 C1\_L8\_n8\_seed11 & 8 & 678 & $[\mathbf{105},\,\mathbf{138}]$ & OPEN \\
 C1\_L10\_n10\_seed12 & 10 & 1375 & $[106,\,189]$ & OPEN \\
 C1\_L12\_n12\_seed13 & 12 & 2446 & $[155,\,388]$ & OPEN \\
-C2\_L6\_n8\_seed21 (double track) & 8 & 544 & $[39,\,43]$ & open (120 s probe) \\
+C2\_L6\_n8\_seed21 (double track) & 8 & 544 & \textbf{49} & proven (0.1 s, after direction fix) \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -68,7 +68,7 @@ seed1 & B2 MILP & 29 & --- & (restricted) & 4.6 \\
 seed1 & B3 LR-B\&B & 29 & 29 & yes (1385 nodes) & 55.7 \\
 seed1 & B4 CP-SAT & 29 & 29 & yes & 0.0 \\
 seed1 & B5 CG & 42 & \textbf{23.75} & LP converged & 4.5 \\
-seed1 & B6 B\&P & 29 & 29 & \textbf{yes (185 nodes)} & 115.8 \\
+seed1 & B6 B\&P & 29 & 26 & no (12 stalled subtrees) & 164.9 \\
 \midrule
 seed2 & B4 CP-SAT & 20 & 20 & yes & 0.0 \\
 seed2 & B5 CG / B6 B\&P & 20 & 20.00 & LP tight / root & 3--4 \\
@@ -111,12 +111,12 @@ designed pair joint DP (PLAN \S5b). On seed3, split $[3,3]$ groups add essential
 For $n\in\{8,10,12\}$ no method proves optimality in budget. Certified intervals come from CP-SAT
 UBs and, for $n=8$, a \emph{converged} B\&P root LP (105 $>$ CP-SAT's 102). Two development-time
 claims were retracted by convergence checks and are recorded in the ledger: (a) three B\&P node
-bounds on the open tier (node CG iteration-capped $\Rightarrow$ not valid bounds); (b) the seed3
+bounds on the open tier (node CG iteration-capped $\Rightarrow$ not valid bounds); (b) the seed1 B\&P ``proof'' (stalled subtrees had been discarded; honest result $[26,29]$, unproven); (c) the seed3
 ``75\% gap closed'' group-LP reading (an unconverged restricted value, 55.50, that fell to 51.17
 under deeper pricing). Restricted-master values are meaningful only at pricing convergence.
 
 \section{Topology probe (C2)}
-Eight trains on the same corridor length: single track $[105,138]$ vs double track $[39,43]$ ---
+Eight trains on the same corridor length: single track $[105,138]$ vs double track \textbf{49 (proven)} (an earlier interval $[39,43]$ was INVALID: the CP-SAT model could traverse one-way tracks backward; fixed and re-proven) ---
 the interaction-density lever the C2/CM experiment family will sweep.
 
 \section{Timetable views (seed1, proven optimum)}

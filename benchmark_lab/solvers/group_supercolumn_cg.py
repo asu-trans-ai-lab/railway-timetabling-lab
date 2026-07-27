@@ -159,6 +159,8 @@ def run(d, instance_id, iters, records, maxg=3):
         if added == 0:
             break
     int_obj, _ = solve_master(cols, len(groups), {}, integer=True)
+    if not np.isnan(int_obj) and int_obj >= BIGC / 2:
+        int_obj = float("nan")                        # artificial column active => NOT a feasible timetable
     wall = time.time() - t0
     nreal = sum(1 for c in cols if not c.get("dummy"))
     dummy_active = lp is not None and lp >= BIGC / 2

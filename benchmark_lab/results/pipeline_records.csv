@@ -18,7 +18,7 @@ C1_L4_n4_seed1,B0_rand_best_of_5,35.0,-inf,35.0,nan,True,False,nan,0.86447930335
 C1_L4_n4_seed1,B2_time_indexed_milp,29.0,-inf,29.0,nan,True,False,nan,4.647794246673584,0,0,0,0,0,-1,"{""pad"": 60, ""smax"": 15}","HiGHS RESTRICTED model (UB only): toward-dest arcs, pad=60, smax=15; MOW enforced"
 C1_L4_n4_seed1,B4_cp_sat,29.0,29.0,29.0,0.0,True,True,nan,0.024518966674804688,639,0,0,0,0,-1,"{""time_limit"": 180.0}",OR-Tools CP-SAT job-shop; NoOverlap per link; corridor-chain routing
 C1_L4_n4_seed1,B5_individual_cg,42.0,23.75,42.0,0.43452380952380953,True,False,nan,4.546804666519165,0,62,76,0,0,-1,"{""iters"": 60}",exact pricing converged; LP path bound 23.75; integer RMP (no branching yet = B6)
-C1_L4_n4_seed1,B6_branch_and_price,29.0,29.0,29.0,0.0,True,True,26.310644149780273,115.81378674507141,185,605,0,0,0,-1,"{""nodes"": 200, ""time"": 150.0}",departure-window branching; root LP 23.75; stalled nodes 12
+C1_L4_n4_seed1,B6_branch_and_price,29.0,26.0,29.0,0.10344827586206896,True,False,26.310644149780273,164.9,185,605,0,0,0,-1,"{""nodes"": 200, ""time"": 150.0}","departure-window branching; root LP 23.75; CORRECTED per external review: 12 stalled subtrees block certification -> LB 26, NOT proven (29 stays proven via B2/B3/B4)"
 C1_L4_n4_seed2,B0_fcfs,21.0,-inf,21.0,nan,True,False,nan,0.14412808418273926,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
 C1_L4_n4_seed2,B0_edd,21.0,-inf,21.0,nan,True,False,nan,0.1486198902130127,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
 C1_L4_n4_seed2,B0_minslack,21.0,-inf,21.0,nan,True,False,nan,0.1490650177001953,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)

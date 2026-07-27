@@ -73,7 +73,8 @@ def solve_instance(d, instance_id, time_limit, records):
         m.Add(enters[0] <= tr["entry"] + cfg["slack"])
         for i in range(len(chain) - 1):
             u, v = chain[i], chain[i + 1]
-            cands = par_links[frozenset((u, v))]
+            cands = [lk for lk in par_links[frozenset((u, v))]
+                     if lk["a"] == u or lk["bidir"]]        # direction filter: one-way links forward only
             assert cands, (u, v)
             pres = []
             for lk in cands:

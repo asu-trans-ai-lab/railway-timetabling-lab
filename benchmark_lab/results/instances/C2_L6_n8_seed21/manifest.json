@@ -85,9 +85,9 @@
     }
   ],
   "UB_serial": 544,
-  "exact_optimum": null,
-  "exact_proven": false,
-  "best_known_ub": 43.0,
-  "best_known_lb": 39.0,
-  "exact_source": "B4_cp_sat 120s: UB 43 / LB 39 not proven"
+  "exact_optimum": 49.0,
+  "exact_proven": true,
+  "best_known_ub": 49.0,
+  "best_known_lb": 49.0,
+  "exact_source": "B4_cp_sat OPTIMAL 49 (0.1s) AFTER one-way direction fix; earlier [39,43] INVALID (backward traversal of one-way tracks)"
 }

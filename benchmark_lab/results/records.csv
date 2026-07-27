@@ -89,3 +89,5 @@ C1_L10_n10_seed12,B4_cp_sat,189.0,110.0,189.0,0.41798941798941797,True,False,nan
 C1_L4_n4_seed1,B6_branch_and_price,29.0,29.0,29.0,0.0,True,True,26.57091999053955,109.38226222991943,185,605,0,0,0,-1,"{""nodes"": 300, ""time"": 120.0}",departure-window branching; root LP 23.75; stalled nodes 12
 C1_L12_n12_seed13,B4_cp_sat,388.0,164.0,388.0,0.5773195876288659,True,False,nan,300.050918340683,2280965,0,0,0,0,-1,"{""time_limit"": 300.0}",OR-Tools CP-SAT job-shop; NoOverlap per link; corridor-chain routing
 C2_L6_n8_seed21,B4_cp_sat,43.0,39.0,43.0,0.09302325581395349,True,False,nan,120.02364754676819,1539824,0,0,0,0,-1,"{""time_limit"": 120.0}",OR-Tools CP-SAT job-shop; NoOverlap per link; corridor-chain routing
+C1_L4_n4_seed1,B6_branch_and_price,29.0,26.0,29.0,0.10344827586206896,True,False,37.10517406463623,164.92278289794922,185,605,0,0,0,-1,"{""nodes"": 400, ""time"": 240.0}",departure-window branching; root LP 23.75; stalled nodes 12
+C2_L6_n8_seed21,B4_cp_sat,49.0,49.0,49.0,0.0,True,True,nan,0.10975527763366699,8760,0,0,0,0,-1,"{""time_limit"": 150.0}",OR-Tools CP-SAT job-shop; NoOverlap per link; corridor-chain routing

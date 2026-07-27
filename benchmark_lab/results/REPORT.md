@@ -21,7 +21,7 @@ One row per method per instance; all numbers from `pipeline_records.csv` (common
 | B2_time_indexed_milp | 29 | — | no | 0 | 0 | 4.6 |
 | B4_cp_sat | 29 | 29 | YES | 639 | 0 | 0 |
 | B5_individual_cg | 42 | 23.75 | no | 0 | 62 | 4.5 |
-| B6_branch_and_price | 29 | 29 | YES | 185 | 605 | 115.8 |
+| B6_branch_and_price | 29 | 26 | no | 185 | 605 | 164.9 |
 | P1_group_supercolumn_cg | 30 | — | no | 0 | 45 | 188.4 |
 | P1_group_supercolumn_cg | 29 | — | no | 0 | 1 | 114.7 |
 

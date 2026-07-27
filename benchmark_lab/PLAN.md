@@ -82,6 +82,35 @@ benchmark blocks; service uses the frozen progress+frontier completion encoding)
   (locs, rems); validate on a 2-train C1 instance vs the CP-SAT optimum before ANY bound claim.
   Until then P1 stays honestly labeled "restricted group LP (order-enum pricing)".
 
+## 5c. External evaluation (2026-07) — accepted findings + gate plan
+An independent review of the packaged lab confirmed the architecture and the classical ladder, and
+found real defects (all verified in our code and fixed): **(a)** B6 could declare LB=UB "proven" on an
+empty heap while stalled/unconverged subtrees had been discarded — seed1's B&P "proof" carried 12
+stalled nodes and is RETRACTED as a standalone proof (29 remains proven by B2/B3/B4); fixed: stalled
+subtrees keep their parent bounds, block certification, and cap the global LB. **(b)** P1 could record
+an ACTIVE artificial column (objective ~1e5) as a feasible UB; fixed: dummy-active ⇒ infeasible, no UB.
+**(c)** B4 grouped parallel links by unordered node pair and could traverse one-way C2 tracks backward;
+fixed with a direction filter (C2 bounds re-run). Also accepted: B6's departure-window branching is
+finite and pricing-compatible but NOT complete for same-departure route fractionality; P1's order
+enumeration is not a joint Bellman recursion and does not yet test the central contribution.
+**Verdict adopted:** classical benchmark section is emerging; proposed-method results are NOT ready.
+
+**Gate plan (next sessions, in order):**
+1. **Common schedule contract + independent validator** — every solver exports `schedule.csv` /
+   `resource_occupation.csv` / `solver_iterations.csv`; a separate validator checks continuity, travel
+   times, windows, conflicts, headways, MOW, direction, completion. No `hard_conflicts=0` claim without
+   it. Visualizer reads the same contract (today it regenerates a B0 schedule internally).
+2. **Exact-equivalence gate re-run under the validator** (2–4 trains): objective equality AND
+   independently validated feasibility for B2/B3/B4/B6/B7.
+3. **True pair joint DP** for P1 (state (x_i, ell_i, q_i, x_j, ell_j, q_j, sigma_ij); validate vs
+   B2/B4 before any bound claim), then corridor reduction and quadratic valuation on top.
+4. **Precedence-complete B&P**: add i≺_r j vs j≺_r i branching (pricing must enforce it); departure
+   windows remain the first-level rule.
+5. **Generator expansion**: C3/C4/grid with full ground-truth manifests.
+Paper interpretation until gates pass: individual CG exposes measurable gaps, branching closes them on
+small cases, and the restricted group pricer does not yet demonstrate an advantage — motivating the
+joint-state oracle and the controlled quadratic ablation.
+
 ## 6. Visualization (`visualization/`, every solver exports the same schedule format)
 A time–space timetable (paths, stations, sidings, waits, overtakes, conflicts, incumbent vs relaxation,
 branch decisions) · B resource–time occupancy (use, capacity, violations, LR prices, branch constraints)

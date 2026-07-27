@@ -145,7 +145,7 @@ def run(d, instance_id, node_budget, time_limit, records, cg_iters=60):
     if not root_conv:
         root_lp = float("-inf")                        # unconverged root: claim nothing
     heap = [(root_lp, 0, 0, root_win)]
-    nodes = proc = pruned_b = pruned_inf = stalled = 0
+    nodes = proc = pruned_b = pruned_inf = stalled = 0; stalled_lps = []
     best_traj, inc_traj = [], [(round(time.time() - t0, 2), UB)]
     LB = root_lp; ttf = float("nan"); depth_max = 0; nid = 0
     while heap and proc < node_budget and (time.time() - t0) < time_limit:
@@ -162,7 +162,7 @@ def run(d, instance_id, node_budget, time_limit, records, cg_iters=60):
             pruned_inf += 1; continue
         lp, y, allowed, conv = nb
         if not conv:
-            stalled += 1; continue                     # unconverged CG: no valid bound, no branching
+            stalled += 1; stalled_lps.append(bound); continue   # discarded subtree: parent bound kept
         if lp >= UB - 1e-6:
             pruned_b += 1; continue
         sub = [pool.cols[j] for j in allowed]
@@ -175,7 +175,7 @@ def run(d, instance_id, node_budget, time_limit, records, cg_iters=60):
                     ttf = time.time() - t0
             continue
         if st[0] == "stalled":                         # departure-inseparable fractional node:
-            stalled += 1                               # cannot split -> leave UNPROVEN, honest
+            stalled += 1; stalled_lps.append(lp)       # cannot split -> its subtree stays unresolved
             continue
         _, frac_k, theta = st
         lo, hi = windows[frac_k]
@@ -192,10 +192,13 @@ def run(d, instance_id, node_budget, time_limit, records, cg_iters=60):
                 inc_traj.append((round(time.time() - t0, 2), UB))
                 if np.isnan(ttf):
                     ttf = time.time() - t0
-    if not heap and proc < node_budget:
-        LB = UB                                        # tree exhausted -> proven
+    blocking = [v for v in stalled_lps if v < UB - 1e-6]   # unresolved subtrees below UB
+    if not heap and proc < node_budget and not blocking:
+        LB = UB                                        # tree exhausted, nothing unresolved -> proven
+    if blocking:
+        LB = min(LB, min(blocking))                    # unresolved subtrees cap the valid global LB
     wall = time.time() - t0
-    proven = abs(UB - LB) < 1e-6
+    proven = abs(UB - LB) < 1e-6 and not blocking
     gap = (UB - LB) / max(1.0, abs(UB)) if UB < float("inf") else float("nan")
     print(f"{instance_id}: B&P LB={LB:.2f} UB={UB:.1f} gap={100*gap:.1f}% proven={proven} "
           f"root_lp={root_lp:.2f} nodes={proc} cols={len(pool.cols)} wall={wall:.1f}s")
