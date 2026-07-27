@@ -63,12 +63,14 @@ def solve_instance(d, instance_id, time_limit, records):
                 lo, hi = int(st), min(cfg["T"], _math.ceil(en))
                 if hi > lo:
                     link_ivs[lk["id"]].append(m.NewIntervalVar(lo, hi - lo, hi, f"mow_{lk['id']}_{lo}"))
+    model_vars = {}; enters_all = []; leaves_all = []
     for k, tr in enumerate(trains):
         chain = station_chain(adj, tr["o"], tr["dd"])
         if not chain:
             raise RuntimeError(f"no route for train {tr['id']}")
         enters = [m.NewIntVar(0, HMAX, f"en_{k}_{i}") for i in range(len(chain) - 1)]
         leaves = [m.NewIntVar(0, HMAX, f"lv_{k}_{i}") for i in range(len(chain) - 1)]
+        enters_all.append(enters); leaves_all.append(leaves)
         m.Add(enters[0] >= tr["entry"])
         m.Add(enters[0] <= tr["entry"] + cfg["slack"])
         for i in range(len(chain) - 1):
@@ -82,6 +84,7 @@ def solve_instance(d, instance_id, time_limit, records):
                 tau = tt_bins(lk, ab, tr["smult"])
                 mw = cfg["maxwait"] if lk["ltype"] == 4 else 0
                 b = m.NewBoolVar(f"use_{k}_{i}_{lk['id']}")
+                model_vars[(k, i, lk["id"])] = b
                 dwell = m.NewIntVar(0, mw, f"dw_{k}_{i}_{lk['id']}")
                 m.Add(leaves[i] == enters[i] + dwell + tau).OnlyEnforceIf(b)
                 # occupancy interval [enter, leave + HW) on this machine, present iff chosen
@@ -117,6 +120,24 @@ def solve_instance(d, instance_id, time_limit, records):
     lb = solver.BestObjectiveBound() if ok else float("-inf")
     print(f"{instance_id}: CP-SAT {solver.StatusName(status)}  obj={obj:.1f} LB={lb:.1f} "
           f"branches={solver.NumBranches()} wall={wall:.1f}s")
+    if ok:                                            # Gate 1: export the timetable for INDEPENDENT validation
+        sdir = os.path.join(LAB, "results", "schedules"); os.makedirs(sdir, exist_ok=True)
+        import csv as _csv
+        with open(os.path.join(sdir, f"{instance_id}_B4.csv"), "w", newline="") as f:
+            w = _csv.writer(f)
+            w.writerow(["instance_id", "method", "train_id", "seq", "from_node", "to_node",
+                        "link_id", "enter_time", "leave_time"])
+            for k, tr in enumerate(trains):
+                chain = station_chain(adj, tr["o"], tr["dd"])
+                for i in range(len(chain) - 1):
+                    u, v = chain[i], chain[i + 1]
+                    for lk in par_links[frozenset((u, v))]:
+                        if lk["a"] != u and not lk["bidir"]:
+                            continue
+                        bvar = model_vars.get((k, i, lk["id"]))
+                        if bvar is not None and solver.Value(bvar):
+                            w.writerow([instance_id, "B4_cp_sat", tr["id"], i, u, v, lk["id"],
+                                        solver.Value(enters_all[k][i]), solver.Value(leaves_all[k][i])])
     append_record(records, RunRecord(
         instance_id=instance_id, method="B4_cp_sat", objective=obj,
         best_lower_bound=lb, best_upper_bound=obj if ok else float("inf"),
