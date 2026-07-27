@@ -118,8 +118,10 @@ enumeration is not a joint Bellman recursion and does not yet test the central c
 - **Gate 4 PARTIAL**: route branching implemented (stalled nodes branch avoid-L vs use-L = ban parallel
   siblings; complete for parallel-alternative route choice; pricing enforces bans via `banned` in
   tdsp_priced). seed1 rerun: 12 stalls REMAIN — diagnosis: fractional columns share links AND departure,
-  differing only in siding dwell profile. NEXT INCREMENT: resource-TIME branching (k enters L before
-  theta vs >= theta) via time-windowed link bans (fasttrain-style Restrictions in tdsp_priced).
+  differing only in siding dwell profile. resource-TIME branching IMPLEMENTED (entry-window bans in tdsp_priced + column filtering by segs).
+  **GATE 4 COMPLETE: seed1 B&P LB=UB=29 PROVEN standalone, 0 stalls, 225 nodes** — the three-rule
+  family (departure-window + route + resource-time) is COMPLETE for corridor structure: a schedule
+  is determined by (dep, route, dwell profile), and any column difference is separable by one rule.
 Paper interpretation until gates pass: individual CG exposes measurable gaps, branching closes them on
 small cases, and the restricted group pricer does not yet demonstrate an advantage — motivating the
 joint-state oracle and the controlled quadratic ablation.

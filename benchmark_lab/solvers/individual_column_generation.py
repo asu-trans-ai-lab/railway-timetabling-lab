@@ -27,7 +27,7 @@ from record_schema import RunRecord, append_record
 from priority_heuristics import load, tt_bins, build_adj, dispatch, tdsp as tdsp_hard
 
 
-def tdsp_priced(tr, adj, cfg, price_pref, dep_lo=None, dep_hi=None, banned=None):
+def tdsp_priced(tr, adj, cfg, price_pref, dep_lo=None, dep_hi=None, banned=None, twin=None):
     """exact tdsp minimizing |arr-intended| + sum price over occupied cells.
     price_pref: {link_id: prefix array over T+1} (None -> zero prices).
     dep_lo/dep_hi: optional departure-window restriction (B6 branching constraint).
@@ -51,6 +51,8 @@ def tdsp_priced(tr, adj, cfg, price_pref, dep_lo=None, dep_hi=None, banned=None)
         for (m, lk, ab) in adj[n]:
             if banned and lk["id"] in banned:
                 continue
+            if twin and lk["id"] in twin and any(a <= t < bq for (a, bq) in twin[lk["id"]]):
+                continue                                  # resource-time ban: entry to link at t forbidden
             ttb = tt_bins(lk, ab, sm)
             mw = MW if lk["ltype"] == 4 else 0
             pre = price_pref.get(lk["id"]) if price_pref else None

@@ -14,3 +14,5 @@ G_pair_seed36,B7_pair_exact,3.0,3.0,3.0,0.0,True,True,nan,0.021445512771606445,0
 G_pair_seed36,B4_cp_sat,3.0,3.0,3.0,0.0,True,True,nan,0.01099848747253418,13,0,0,0,0,-1,"{""time_limit"": 60.0}",OR-Tools CP-SAT job-shop; NoOverlap per link; corridor-chain routing
 G_pair_seed36,B2_time_indexed_milp,3.0,-inf,3.0,nan,True,False,nan,1.1094601154327393,1,0,0,0,0,-1,"{""pad"": 40, ""smax"": 20}","HiGHS RESTRICTED model (UB only): toward-dest arcs, pad=40, smax=20; MOW enforced"
 C1_L4_n4_seed1,B6_branch_and_price,29.0,26.0,29.0,0.10344827586206896,True,False,40.183088064193726,158.00458240509033,185,620,0,0,0,-1,"{""nodes"": 500, ""time"": 240.0}",departure-window branching; root LP 23.75; stalled nodes 12
+C1_L4_n4_seed1,B6_branch_and_price,28.999999999999932,28.999999999999932,28.999999999999932,0.0,True,True,38.92163944244385,193.51257061958313,225,687,0,0,0,-1,"{""nodes"": 600, ""time"": 420.0}",departure-window branching; root LP 23.75; stalled nodes 0
+toy_native,B6_branch_and_price,12.0,12.0,12.0,0.0,True,True,nan,0.07000088691711426,0,30,0,0,0,-1,"{""nodes"": 400, ""time"": 300}",departure-window branching; root LP 12.00; stalled nodes 0
