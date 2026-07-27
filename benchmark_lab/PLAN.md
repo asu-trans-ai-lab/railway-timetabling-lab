@@ -96,7 +96,7 @@ enumeration is not a joint Bellman recursion and does not yet test the central c
 **Verdict adopted:** classical benchmark section is emerging; proposed-method results are NOT ready.
 
 **Gate plan (next sessions, in order):**
-1. **Common schedule contract + independent validator** — every solver exports `schedule.csv` /
+1. **CORE DONE - Common schedule contract + independent validator** (`validate_schedule.py`): checks 1-8 (continuity, travel times, no-node-wait, departure window, DIRECTION, capacity/headway/MOW, horizon, objective recompute); B4 exports `results/schedules/<inst>_B4.csv`; all four proven optima independently VALIDATED (toy 12, seed1 29, seed3 57, C2 49 - the C2 check confirms the direction fix end-to-end); tamper test rejected (exit 1). REMAINING: B0/B5/B6/P1 exports, pipeline wiring, visualizer reading the contract. Original scope: — every solver exports `schedule.csv` /
    `resource_occupation.csv` / `solver_iterations.csv`; a separate validator checks continuity, travel
    times, windows, conflicts, headways, MOW, direction, completion. No `hard_conflicts=0` claim without
    it. Visualizer reads the same contract (today it regenerates a B0 schedule internally).
