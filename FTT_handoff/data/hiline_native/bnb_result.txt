@@ -1,0 +1,3 @@
+B&B done: nodes=1389 branched=1389  LB=175.7  UB=2855.0  gap=93.85%  600.0s  (time limit)
+incumbent arrivals: 257 328 786 771 797 878 1046 1083 485 439 518 1261 ...
+incumbent timetable exported: ../data/hiline_native/internal_timetable/incumbent_timetable.csv

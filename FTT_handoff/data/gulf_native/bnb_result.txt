@@ -1,0 +1,3 @@
+B&B done: nodes=1445 branched=1445  LB=230.8  UB=2001149.0  gap=99.99%  600.2s  (time limit)
+incumbent arrivals: 377 -1 1077 1149 1057 1171 418 642 675 -1 1245 1383
+incumbent timetable exported: ../data/gulf_native/internal_timetable/incumbent_timetable.csv

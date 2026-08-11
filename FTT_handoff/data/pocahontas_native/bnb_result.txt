@@ -1,0 +1,3 @@
+B&B done: nodes=232 branched=119  LB=205.2  UB=206.0  gap=0.40%  422.3s  (gap target)
+incumbent arrivals: 861 981 1102 1223 1219 1464 1488 1439 878 1015 1197 1240 ...
+incumbent timetable exported: ../data/pocahontas_native/internal_timetable/incumbent_timetable.csv

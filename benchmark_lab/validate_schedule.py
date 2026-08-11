@@ -34,7 +34,8 @@ def validate(native_dir, sched_csv, expect_obj=None):
     bytrain = defaultdict(list)
     for r in rows:
         bytrain[r["train_id"]].append(r)
-    usage = defaultdict(int)
+    usage = defaultdict(set)     # (link,bin) -> {train_id}: one physical train = one occupancy,
+                                 # even when a folded (hold-and-reverse) trajectory covers a cell twice
     total_dev = 0.0
     if set(bytrain) != set(tr_by_id):
         errs.append(f"train set mismatch: schedule has {sorted(bytrain)} vs instance {sorted(tr_by_id)}")
@@ -76,7 +77,12 @@ def validate(native_dir, sched_csv, expect_obj=None):
             if lv + HW - 1 >= T:
                 errs.append(f"{tid} seq{si}: occupancy exceeds horizon")                          # check 7
             for b in range(en, lv + HW):
-                usage[(lid, b)] += 1
+                usage[(lid, b)].add(tid)
+            if cfg.get("monotone"):                                                            # check 9
+                tr = next((t for t in trains if t["id"] == tid), None)
+                if tr and ((int(r["to_node"]) > int(r["from_node"])) != (tr["dd"] > tr["o"])):
+                    errs.append(f"{tid} seq{si}: reverse move {r['from_node']}->{r['to_node']} "
+                                f"(MonotoneRouting=1 forbids reversing)")
             prev_leave, prev_to = lv, tn
         if segs and prev_to != tr["dd"]:
             errs.append(f"{tid}: ends at {prev_to}, destination is {tr['dd']}")
@@ -89,7 +95,8 @@ def validate(native_dir, sched_csv, expect_obj=None):
             if {lk["a"], lk["b"]} == {A, B}:
                 for b in range(int(st), min(T, math.ceil(en))):
                     mow_zero.add((lk["id"], b))
-    for (lid, b), u in usage.items():
+    for (lid, b), trns in usage.items():
+        u = len(trns)                                     # distinct trains, not schedule rows
         cap = 0 if (lid, b) in mow_zero else lk_by_id[lid]["cap"]
         if u > cap:
             errs.append(f"capacity violation link {lid} bin {b}: {u} > {cap}")

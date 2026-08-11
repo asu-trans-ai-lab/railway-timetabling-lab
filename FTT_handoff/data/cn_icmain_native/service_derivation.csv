@@ -1,0 +1,12 @@
+direction,block_type,class,cars_70d,cars_per_train,trains_per_70d,trains_per_day
+EB,Automobile,M,338,90,3.8,0.05
+EB,Grain,G,262,120,2.2,0.03
+EB,Intermodal,Z,2981,150,19.9,0.28
+EB,Merchandise,M,1338,100,13.4,0.19
+WB,Automobile,M,170,90,1.9,0.03
+WB,Coal,G,50,120,0.4,0.01
+WB,Grain,G,80,120,0.7,0.01
+WB,Intermodal,Z,5067,150,33.8,0.48
+WB,Merchandise,M,1057,100,10.6,0.15
+EB,TOTAL,,,,,0.56
+WB,TOTAL,,,,,0.68

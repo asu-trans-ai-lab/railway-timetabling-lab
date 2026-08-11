@@ -1,0 +1,3 @@
+B&B done: nodes=659 branched=659  LB=231.4  UB=3001093.0  gap=99.99%  600.4s  (time limit)
+incumbent arrivals: -1 -1 -1 1813 1838 439 762 966 1262 1357
+incumbent timetable exported: ../data/moffat_native/internal_timetable/incumbent_timetable.csv

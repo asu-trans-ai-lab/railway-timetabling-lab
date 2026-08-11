@@ -1,0 +1,3 @@
+B&B done: nodes=798 branched=798  LB=153.2  UB=364.0  gap=57.91%  900.2s  (time limit)
+incumbent arrivals: 222 353 296 388 398 462 479 562 520 612 692 689 ...
+incumbent timetable exported: ../data/panhandle_native/internal_timetable/incumbent_timetable.csv

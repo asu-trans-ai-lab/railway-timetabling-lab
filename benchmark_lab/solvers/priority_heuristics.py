@@ -62,7 +62,8 @@ def load(d):
                minute=max(1, int(kv.get("optimization.minutedivision", 1))),
                maxwait=int(kv.get("lagrangian.maxtrainwaitingtime", 120)),
                slack=int(kv.get("lagrangian.maxslacktimeatdeparture", 1200)),
-               headway=int(kv.get("lagrangian.safetyheadway", 3)))
+               headway=int(kv.get("lagrangian.safetyheadway", 3)),
+               monotone=int(kv.get("optimization.monotonerouting", 0)))
     cfg["T"] = cfg["horizon"] * cfg["minute"]
     return links, trains, mow, cfg
 
@@ -105,6 +106,8 @@ def tdsp(tr, adj, cfg, blockedpre):
         if n == d:
             arr = t; break
         for (m, lk, ab) in adj[n]:
+            if cfg.get("monotone") and ((m > n) != (d > o)):
+                continue                       # corridor: trains never reverse (no folded holds)
             ttb = tt_bins(lk, ab, sm)
             mw = MW if lk["ltype"] == 4 else 0
             pre = blockedpre.get(lk["id"]) if blockedpre is not None else None
@@ -152,8 +155,8 @@ def dispatch(order, trains, adj, cfg, links, base_usage):
         scheds[ti] = _segs
         total += abs(arr - tr["intended"])
         touched = set()
-        for (lid, b) in occ:
-            usage[lid][b] += 1; touched.add(lid)
+        for (lid, b) in set(occ):      # dedupe: a folded (hold-and-reverse) trajectory may cover
+            usage[lid][b] += 1; touched.add(lid)   # the same cell twice; one train = one occupancy
         for lid in touched:                       # refresh prefixes only for changed links
             blk = (usage[lid] >= cap[lid]).astype(np.int64)
             pre[lid] = np.concatenate(([0], np.cumsum(blk)))

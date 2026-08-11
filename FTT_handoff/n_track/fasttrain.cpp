@@ -47,6 +47,11 @@ struct Settings {
     int horizon = 1440, interval = 1, minute = 1, paths = 10, maxiter = 10;
     int mem = 5, maxwait = 120, slack = 1200, headway = 3;
     double minstep = 0.01;
+    // MonotoneRouting=1 (corridor instances): a train may only move toward its destination
+    // in node-index order — no hold-and-reverse ("folded") trajectories. This makes the SP's
+    // dual cost equal its deduped occupancy, so the LR lower bound is exact w.r.t. the same
+    // feasibility semantics the validator enforces. Leave 0 for general networks (RAS Set 3).
+    bool monotone = false;
 };
 
 // ---------------------------------------------------------------- B&B branching restrictions (B1)
@@ -69,6 +74,7 @@ struct Solution {
     double dev = 0;                        // Σ|arr−intended| of this primal
     int maxviol = 0;                       // max over cells of usage−cap
     vector<int> ubArr;                     // arrivals of the best feasible priority-rule UB at this node
+    vector<vector<pair<int,int>>> ubOcc;   // [nTrain] occupied cells of that UB schedule (for export)
 };
 
 static vector<string> split(const string& s, char d) {
@@ -109,6 +115,7 @@ static map<int, int> num2idx;             // node number -> 0-based index
 static vector<int> idx2num;
 static int nNodes = 0, nL = 0, T = 0;
 static Settings cfg;
+static string g_dir = ".";                // data directory (for incumbent timetable export)
 // adjacency: node idx -> list of (to_idx, link_idx, a_to_b)
 static vector<vector<tuple<int, int, bool>>> adj;
 static vector<vector<double>> price;       // [nL][T]
@@ -197,6 +204,7 @@ static bool tdsp_dijkstra(const Train& tr, double& outCost, int& outArr,
         if (it.c > dist[id]) continue;
         if (it.n == tr.d) { arr = it.t; break; }
         for (auto& [m, li, ab] : adj[it.n]) {
+            if (cfg.monotone && ((m > it.n) != (tr.d > tr.o))) continue;   // corridor: no reversing
             const Link& L = links[li];
             int tt = travel(L, ab, tr.smult);
             int mw = (L.ltype == 4) ? cfg.maxwait : 0;
@@ -248,6 +256,7 @@ static bool tdsp_dag(const Train& tr, double& outCost, int& outArr,
             if (dn >= INF) continue;
             if (n == tr.d) continue;                          // absorbing destination (match Dijkstra)
             for (auto& [m, li, ab] : adj[n]) {
+                if (cfg.monotone && ((m > n) != (tr.d > tr.o))) continue;  // corridor: no reversing
                 const Link& L = links[li];
                 int tt = travel(L, ab, tr.smult);
                 int mw = (L.ltype == 4) ? cfg.maxwait : 0;
@@ -296,7 +305,8 @@ static void rebuild_prefix() {
 
 // ---------------------------------------------------------------- priority-rule UB
 static double priority_ub(const vector<double>& freeTravel, const vector<int>& curArr,
-                          const Restrictions& R, vector<int>* arrOut = nullptr) {
+                          const Restrictions& R, vector<int>* arrOut = nullptr,
+                          vector<vector<pair<int,int>>>* occOut = nullptr) {
     vector<vector<short>> resid = cap;                 // remaining capacity
     rebuild_prefix();                                  // not used (price irrelevant for UB), but keep pref valid
     vector<vector<double>> zero(nL, vector<double>(T, 0.0)); zero.swap(price); rebuild_prefix();
@@ -306,13 +316,17 @@ static double priority_ub(const vector<double>& freeTravel, const vector<int>& c
         double rb = freeTravel[b] > 0 ? (curArr[b] - trains[b].entry - freeTravel[b]) / freeTravel[b] : 0;
         return ra < rb; });
     if (arrOut) arrOut->assign(trains.size(), -1);
+    if (occOut) occOut->assign(trains.size(), {});
     double total = 0;
     for (int ti : order) {
         double c; int a; vector<pair<int,int>> occ;
-        if (!tdsp(trains[ti], c, a, &occ, &resid, &R[ti])) { total += MAXP; continue; }
+        if (!tdsp(trains[ti], c, a, &occ, &resid, &R[ti])) { total += MAXP;
+            fprintf(stderr, "[UB] train %s unroutable in residual capacity\n", trains[ti].id.c_str()); continue; }
         total += fabs(a - trains[ti].intended);
-        if (arrOut) (*arrOut)[ti] = a;
-        for (auto& [li, b] : occ) if (resid[li][b] > 0) resid[li][b]--;
+        sort(occ.begin(), occ.end()); occ.erase(unique(occ.begin(), occ.end()), occ.end());
+        if (arrOut) (*arrOut)[ti] = a;                     // dedupe: a folded (hold-and-reverse)
+        if (occOut) (*occOut)[ti] = occ;                   // path covers a cell twice; one train
+        for (auto& [li, b] : occ) if (resid[li][b] > 0) resid[li][b]--;   // = one occupancy
     }
     zero.swap(price); rebuild_prefix();                // restore prices
     return total;
@@ -347,14 +361,17 @@ static double bound_node(const Restrictions& R, int iters,
         }
         double priceSum = 0; int maxviol = INT_MIN;
         for (int i = 0; i < nL; i++) for (int t = 0; t < T; t++) {
-            if (price[i][t] <= 1e4) priceSum += price[i][t];
+            if (price[i][t] <= 1e4) priceSum += price[i][t] * cap[i][t];   // L(rho) subtracts rho*CAP:
+            // on the original all-cap-1 Meng-Zhou networks *1 was implicit; consolidated corridor
+            // blocks have cap 2-3, and omitting the factor inflated the LB (caught by LB>UB on harrod)
             maxviol = max(maxviol, usage[i][t] - cap[i][t]);
         }
         double lb = trip - priceSum; bestLB = max(bestLB, lb);
         if (last) {                                        // B5: UB heuristic only once per node (a full
             vector<int> ua;                                // train-pass) instead of every LR iteration
-            double ub = priority_ub(freeTravel, curArr, R, &ua);
-            if (ub < bestUB) { bestUB = ub; bestUBarr = ua; }
+            vector<vector<pair<int,int>>> uo;
+            double ub = priority_ub(freeTravel, curArr, R, &ua, solOut ? &uo : nullptr);
+            if (ub < bestUB) { bestUB = ub; bestUBarr = ua; if (solOut) solOut->ubOcc = std::move(uo); }
         }
         if (last && solOut) { solOut->usage = usage; solOut->maxviol = maxviol; }
         double step = max(cfg.minstep, 1.0 / (k + 1.0));
@@ -542,7 +559,7 @@ static void run_bnb(const BnbCfg& B, const vector<double>& freeTravel) {
     priority_queue<Node, vector<Node>, NodeCmp> open;
     open.push({emptyR, make_shared<vector<vector<double>>>(price), -INF});
     double globalUB = INF, globalLB = -INF;
-    vector<int> incumbent;
+    vector<int> incumbent; vector<vector<pair<int,int>>> incOcc;
     int nodes = 0, branched = 0; const char* stop = "(budget/gap stop)";
     printf("%6s %8s %10s %10s %10s %7s %6s %7s\n",
            "node", "nodeLB", "globalLB", "globalUB", "incV", "gap", "open", "secs");
@@ -558,9 +575,9 @@ static void run_bnb(const BnbCfg& B, const vector<double>& freeTravel) {
         double lb = bound_node(n.R, iters, freeTravel, ub, false, &sol);
         nodes++;
         if (!sol.routable) continue;                        // infeasible node -> fathom
-        if (ub < globalUB) { globalUB = ub; incumbent = sol.ubArr; }      // heuristic feasible incumbent
+        if (ub < globalUB) { globalUB = ub; incumbent = sol.ubArr; incOcc = sol.ubOcc; }  // heuristic feasible incumbent
         if (sol.maxviol <= 0 && sol.dev < globalUB) {       // relaxed primal is itself feasible -> exact
-            globalUB = sol.dev; incumbent = sol.arr; }
+            globalUB = sol.dev; incumbent = sol.arr; incOcc = sol.occ; }
         double gap = (globalUB < 1e17 && globalLB > -1e17) ? (globalUB - globalLB) / globalUB : 1.0;
         if (nodes <= 20 || nodes % 25 == 0) {
             printf("%6d %8.1f ", nodes, lb);
@@ -589,6 +606,28 @@ static void run_bnb(const BnbCfg& B, const vector<double>& freeTravel) {
         if (incumbent.size() > 12) printf(" ...");
         printf("\n");
     }
+    // Export the incumbent's per-train link occupancies (maximal consecutive-minute runs per link)
+    // for time-space plotting: train_id,link,from,to,t_first,t_last  (window includes headway tail).
+    if (!incOcc.empty()) {
+        string path = g_dir + "/internal_timetable/incumbent_timetable.csv";
+        ofstream f(path);
+        f << "train_id,link,from_node,to_node,t_first,t_last,arrival,intended\n";
+        for (size_t i = 0; i < incOcc.size(); i++) {
+            auto cells = incOcc[i];
+            sort(cells.begin(), cells.end());
+            for (size_t k = 0; k < cells.size(); ) {
+                size_t j = k;
+                while (j + 1 < cells.size() && cells[j+1].first == cells[k].first
+                       && cells[j+1].second == cells[j].second + 1) j++;
+                const Link& L = links[cells[k].first];
+                f << trains[i].id << ',' << cells[k].first << ',' << idx2num[L.a] << ','
+                  << idx2num[L.b] << ',' << cells[k].second << ',' << cells[j].second << ','
+                  << (i < incumbent.size() ? incumbent[i] : -1) << ',' << trains[i].intended << "\n";
+                k = j + 1;
+            }
+        }
+        printf("incumbent timetable exported: %s\n", path.c_str());
+    }
 }
 
 // ---------------------------------------------------------------- LR driver
@@ -615,6 +654,7 @@ int main(int argc, char** argv) {
             g_useDag = (b != "dijkstra"); }
         else dir = a;
     }
+    g_dir = dir;
     auto kv = read_ini(dir + "/FTSettings.ini");
     cfg.horizon = ini_i(kv, "optimization.optimizationhorizon", 1440);
     cfg.minute  = max(1, ini_i(kv, "optimization.minutedivision", 1));
@@ -624,6 +664,7 @@ int main(int argc, char** argv) {
     cfg.maxwait = ini_i(kv, "lagrangian.maxtrainwaitingtime", 120) * cfg.minute;
     cfg.slack   = ini_i(kv, "lagrangian.maxslacktimeatdeparture", 1200) * cfg.minute;
     cfg.headway = ini_i(kv, "lagrangian.safetyheadway", 3) * cfg.minute;
+    cfg.monotone = ini_i(kv, "optimization.monotonerouting", 0) != 0;
     if (cfg.maxiter > 200) cfg.maxiter = 40;           // shipped ini has 10000; cap for a finite run
     T = cfg.horizon * cfg.minute;
 

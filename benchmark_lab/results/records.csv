@@ -91,3 +91,328 @@ C1_L12_n12_seed13,B4_cp_sat,388.0,164.0,388.0,0.5773195876288659,True,False,nan,
 C2_L6_n8_seed21,B4_cp_sat,43.0,39.0,43.0,0.09302325581395349,True,False,nan,120.02364754676819,1539824,0,0,0,0,-1,"{""time_limit"": 120.0}",OR-Tools CP-SAT job-shop; NoOverlap per link; corridor-chain routing
 C1_L4_n4_seed1,B6_branch_and_price,29.0,26.0,29.0,0.10344827586206896,True,False,37.10517406463623,164.92278289794922,185,605,0,0,0,-1,"{""nodes"": 400, ""time"": 240.0}",departure-window branching; root LP 23.75; stalled nodes 12
 C2_L6_n8_seed21,B4_cp_sat,49.0,49.0,49.0,0.0,True,True,nan,0.10975527763366699,8760,0,0,0,0,-1,"{""time_limit"": 150.0}",OR-Tools CP-SAT job-shop; NoOverlap per link; corridor-chain routing
+transcon_clovis_native,B0_fcfs,nan,-inf,inf,nan,False,False,nan,11.318697452545166,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native,B0_edd,nan,-inf,inf,nan,False,False,nan,12.184455394744873,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native,B0_minslack,nan,-inf,inf,nan,False,False,nan,13.223290205001831,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native,B0_class,nan,-inf,inf,nan,False,False,nan,10.205308437347412,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native,B0_conflict,nan,-inf,inf,nan,False,False,nan,8.089391231536865,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native,B0_rand_best_of_10,nan,-inf,inf,nan,False,False,nan,101.74924898147583,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+transcon_clovis_native,B0_fcfs,nan,-inf,inf,nan,False,False,nan,23.136329174041748,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native,B0_edd,nan,-inf,inf,nan,False,False,nan,21.406165599822998,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native,B0_minslack,nan,-inf,inf,nan,False,False,nan,23.624225616455078,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native,B0_class,nan,-inf,inf,nan,False,False,nan,18.73500967025757,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native,B0_conflict,nan,-inf,inf,nan,False,False,nan,15.573216199874878,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native,B0_rand_best_of_10,nan,-inf,inf,nan,False,False,nan,170.4618809223175,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+transcon_clovis_native,B0_fcfs,nan,-inf,inf,nan,False,False,nan,39.34910178184509,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native,B0_edd,1379.0,-inf,1379.0,nan,True,False,nan,41.883803606033325,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+transcon_clovis_native,B0_minslack,nan,-inf,inf,nan,False,False,nan,37.808770179748535,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native,B0_class,nan,-inf,inf,nan,False,False,nan,33.84390592575073,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native,B0_conflict,nan,-inf,inf,nan,False,False,nan,20.31535768508911,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native,B0_rand_best_of_10,nan,-inf,inf,nan,False,False,nan,265.2144796848297,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native,B0_fcfs,nan,-inf,inf,nan,False,False,nan,38.743390798568726,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native,B0_edd,1379.0,-inf,1379.0,nan,True,False,nan,38.325440883636475,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+transcon_clovis_native,B0_minslack,nan,-inf,inf,nan,False,False,nan,36.896681785583496,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native,B0_class,nan,-inf,inf,nan,False,False,nan,35.91574740409851,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native,B0_conflict,nan,-inf,inf,nan,False,False,nan,21.46037769317627,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native,B0_rand_best_of_10,nan,-inf,inf,nan,False,False,nan,185.68861055374146,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native,B4_cp_sat,645.0,31.0,645.0,0.951937984496124,True,False,nan,180.13882851600647,163016,0,0,0,0,-1,"{""time_limit"": 180.0}",OR-Tools CP-SAT job-shop; NoOverlap per link; corridor-chain routing
+hiline_native,B0_fcfs,nan,-inf,inf,nan,False,False,nan,14.171546936035156,0,0,0,0,0,-1,,sequential residual-capacity insertion
+hiline_native,B0_edd,nan,-inf,inf,nan,False,False,nan,13.895912647247314,0,0,0,0,0,-1,,sequential residual-capacity insertion
+hiline_native,B0_minslack,nan,-inf,inf,nan,False,False,nan,18.10614824295044,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+hiline_native,B0_class,nan,-inf,inf,nan,False,False,nan,15.646843194961548,0,0,0,0,0,-1,,sequential residual-capacity insertion
+hiline_native,B0_conflict,nan,-inf,inf,nan,False,False,nan,8.619516372680664,0,0,0,0,0,-1,,sequential residual-capacity insertion
+hiline_native,B0_rand_best_of_5,nan,-inf,inf,nan,False,False,nan,40.20802140235901,0,0,0,0,0,-1,,sequential residual-capacity insertion
+moffat_native,B0_fcfs,nan,-inf,inf,nan,False,False,nan,11.815544605255127,0,0,0,0,0,-1,,sequential residual-capacity insertion
+moffat_native,B0_edd,nan,-inf,inf,nan,False,False,nan,11.966450691223145,0,0,0,0,0,-1,,sequential residual-capacity insertion
+moffat_native,B0_minslack,nan,-inf,inf,nan,False,False,nan,11.610350847244263,0,0,0,0,0,-1,,sequential residual-capacity insertion
+moffat_native,B0_class,nan,-inf,inf,nan,False,False,nan,10.246030569076538,0,0,0,0,0,-1,,sequential residual-capacity insertion
+moffat_native,B0_conflict,nan,-inf,inf,nan,False,False,nan,11.326566696166992,0,0,0,0,0,-1,,sequential residual-capacity insertion
+moffat_native,B0_rand_best_of_5,nan,-inf,inf,nan,False,False,nan,53.56299448013306,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+cpkc_midcon_native,B0_fcfs,nan,-inf,inf,nan,False,False,nan,6.315192461013794,0,0,0,0,0,-1,,sequential residual-capacity insertion
+cpkc_midcon_native,B0_edd,nan,-inf,inf,nan,False,False,nan,6.600851058959961,0,0,0,0,0,-1,,sequential residual-capacity insertion
+cpkc_midcon_native,B0_minslack,nan,-inf,inf,nan,False,False,nan,10.240870237350464,0,0,0,0,0,-1,,sequential residual-capacity insertion
+cpkc_midcon_native,B0_class,nan,-inf,inf,nan,False,False,nan,6.081161975860596,0,0,0,0,0,-1,,sequential residual-capacity insertion
+cpkc_midcon_native,B0_conflict,nan,-inf,inf,nan,False,False,nan,2.966381549835205,0,0,0,0,0,-1,,sequential residual-capacity insertion
+cpkc_midcon_native,B0_rand_best_of_5,nan,-inf,inf,nan,False,False,nan,20.869455575942993,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+panhandle_native,B0_fcfs,1938.0,-inf,1938.0,nan,True,False,nan,32.7329466342926,0,0,0,0,0,-1,,sequential residual-capacity insertion
+panhandle_native,B0_edd,nan,-inf,inf,nan,False,False,nan,31.785773992538452,0,0,0,0,0,-1,,sequential residual-capacity insertion
+panhandle_native,B0_minslack,nan,-inf,inf,nan,False,False,nan,33.861024379730225,0,0,0,0,0,-1,,sequential residual-capacity insertion
+panhandle_native,B0_class,436.0,-inf,436.0,nan,True,False,nan,27.68714714050293,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+panhandle_native,B0_conflict,nan,-inf,inf,nan,False,False,nan,25.5013427734375,0,0,0,0,0,-1,,sequential residual-capacity insertion
+panhandle_native,B0_rand_best_of_5,971.0,-inf,971.0,nan,True,False,nan,141.9162631034851,0,0,0,0,0,-1,,sequential residual-capacity insertion
+prb_joint_native,B0_fcfs,nan,-inf,inf,nan,False,False,nan,29.18869638442993,0,0,0,0,0,-1,,sequential residual-capacity insertion
+prb_joint_native,B0_edd,641.0,-inf,641.0,nan,True,False,nan,29.68662714958191,0,0,0,0,0,-1,,sequential residual-capacity insertion
+prb_joint_native,B0_minslack,580.0,-inf,580.0,nan,True,False,nan,28.964646339416504,0,0,0,0,0,-1,,sequential residual-capacity insertion
+prb_joint_native,B0_class,nan,-inf,inf,nan,False,False,nan,23.034786462783813,0,0,0,0,0,-1,,sequential residual-capacity insertion
+prb_joint_native,B0_conflict,321.0,-inf,321.0,nan,True,False,nan,22.849050521850586,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+prb_joint_native,B0_rand_best_of_5,615.0,-inf,615.0,nan,True,False,nan,128.54817914962769,0,0,0,0,0,-1,,sequential residual-capacity insertion
+overland_native,B0_fcfs,504.0,-inf,504.0,nan,True,False,nan,25.058757781982422,0,0,0,0,0,-1,,sequential residual-capacity insertion
+overland_native,B0_edd,458.0,-inf,458.0,nan,True,False,nan,23.370201110839844,0,0,0,0,0,-1,,sequential residual-capacity insertion
+overland_native,B0_minslack,414.0,-inf,414.0,nan,True,False,nan,24.81773567199707,0,0,0,0,0,-1,,sequential residual-capacity insertion
+overland_native,B0_class,414.0,-inf,414.0,nan,True,False,nan,20.999746561050415,0,0,0,0,0,-1,,sequential residual-capacity insertion
+overland_native,B0_conflict,325.0,-inf,325.0,nan,True,False,nan,22.767357110977173,0,0,0,0,0,-1,,sequential residual-capacity insertion
+overland_native,B0_rand_best_of_5,177.0,-inf,177.0,nan,True,False,nan,100.67243218421936,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+gulf_native,B0_fcfs,nan,-inf,inf,nan,False,False,nan,15.141194581985474,0,0,0,0,0,-1,,sequential residual-capacity insertion
+gulf_native,B0_edd,nan,-inf,inf,nan,False,False,nan,15.039641380310059,0,0,0,0,0,-1,,sequential residual-capacity insertion
+gulf_native,B0_minslack,nan,-inf,inf,nan,False,False,nan,16.1799955368042,0,0,0,0,0,-1,,sequential residual-capacity insertion
+gulf_native,B0_class,nan,-inf,inf,nan,False,False,nan,14.536304235458374,0,0,0,0,0,-1,,sequential residual-capacity insertion
+gulf_native,B0_conflict,nan,-inf,inf,nan,False,False,nan,11.17534351348877,0,0,0,0,0,-1,,sequential residual-capacity insertion
+gulf_native,B0_rand_best_of_5,nan,-inf,inf,nan,False,False,nan,65.2096357345581,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+pocahontas_native,B0_fcfs,1222.0,-inf,1222.0,nan,True,False,nan,31.142080307006836,0,0,0,0,0,-1,,sequential residual-capacity insertion
+pocahontas_native,B0_edd,854.0,-inf,854.0,nan,True,False,nan,35.567718267440796,0,0,0,0,0,-1,,sequential residual-capacity insertion
+pocahontas_native,B0_minslack,528.0,-inf,528.0,nan,True,False,nan,50.03268003463745,0,0,0,0,0,-1,,sequential residual-capacity insertion
+pocahontas_native,B0_class,682.0,-inf,682.0,nan,True,False,nan,46.23211193084717,0,0,0,0,0,-1,,sequential residual-capacity insertion
+pocahontas_native,B0_conflict,684.0,-inf,684.0,nan,True,False,nan,44.567821979522705,0,0,0,0,0,-1,,sequential residual-capacity insertion
+pocahontas_native,B0_rand_best_of_5,442.0,-inf,442.0,nan,True,False,nan,199.16169214248657,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+cn_icmain_native,B0_fcfs,2438.0,-inf,2438.0,nan,True,False,nan,16.500942707061768,0,0,0,0,0,-1,,sequential residual-capacity insertion
+cn_icmain_native,B0_edd,2681.0,-inf,2681.0,nan,True,False,nan,16.20663857460022,0,0,0,0,0,-1,,sequential residual-capacity insertion
+cn_icmain_native,B0_minslack,nan,-inf,inf,nan,False,False,nan,14.226021766662598,0,0,0,0,0,-1,,sequential residual-capacity insertion
+cn_icmain_native,B0_class,nan,-inf,inf,nan,False,False,nan,12.291615962982178,0,0,0,0,0,-1,,sequential residual-capacity insertion
+cn_icmain_native,B0_conflict,nan,-inf,inf,nan,False,False,nan,12.920689344406128,0,0,0,0,0,-1,,sequential residual-capacity insertion
+cn_icmain_native,B0_rand_best_of_5,1910.0,-inf,1910.0,nan,True,False,nan,60.33398771286011,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+hiline_native,B0_fcfs,nan,-inf,inf,nan,False,False,nan,12.140197277069092,0,0,0,0,0,-1,,sequential residual-capacity insertion
+hiline_native,B0_edd,nan,-inf,inf,nan,False,False,nan,12.003057718276978,0,0,0,0,0,-1,,sequential residual-capacity insertion
+hiline_native,B0_minslack,4869.0,-inf,4869.0,nan,True,False,nan,13.839927434921265,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+hiline_native,B0_class,nan,-inf,inf,nan,False,False,nan,14.299017667770386,0,0,0,0,0,-1,,sequential residual-capacity insertion
+hiline_native,B0_conflict,nan,-inf,inf,nan,False,False,nan,10.663548469543457,0,0,0,0,0,-1,,sequential residual-capacity insertion
+hiline_native,B0_rand_best_of_5,nan,-inf,inf,nan,False,False,nan,51.55747938156128,0,0,0,0,0,-1,,sequential residual-capacity insertion
+gulf_native,B0_fcfs,nan,-inf,inf,nan,False,False,nan,12.370853662490845,0,0,0,0,0,-1,,sequential residual-capacity insertion
+gulf_native,B0_edd,nan,-inf,inf,nan,False,False,nan,12.677092552185059,0,0,0,0,0,-1,,sequential residual-capacity insertion
+gulf_native,B0_minslack,nan,-inf,inf,nan,False,False,nan,12.732950448989868,0,0,0,0,0,-1,,sequential residual-capacity insertion
+gulf_native,B0_class,nan,-inf,inf,nan,False,False,nan,12.0267014503479,0,0,0,0,0,-1,,sequential residual-capacity insertion
+gulf_native,B0_conflict,nan,-inf,inf,nan,False,False,nan,11.424826860427856,0,0,0,0,0,-1,,sequential residual-capacity insertion
+gulf_native,B0_rand_best_of_5,nan,-inf,inf,nan,False,False,nan,58.80767583847046,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+moffat_native,B0_fcfs,nan,-inf,inf,nan,False,False,nan,9.12348461151123,0,0,0,0,0,-1,,sequential residual-capacity insertion
+moffat_native,B0_edd,nan,-inf,inf,nan,False,False,nan,9.392334461212158,0,0,0,0,0,-1,,sequential residual-capacity insertion
+moffat_native,B0_minslack,nan,-inf,inf,nan,False,False,nan,8.344917297363281,0,0,0,0,0,-1,,sequential residual-capacity insertion
+moffat_native,B0_class,nan,-inf,inf,nan,False,False,nan,7.51533579826355,0,0,0,0,0,-1,,sequential residual-capacity insertion
+moffat_native,B0_conflict,nan,-inf,inf,nan,False,False,nan,7.1895270347595215,0,0,0,0,0,-1,,sequential residual-capacity insertion
+moffat_native,B0_rand_best_of_5,nan,-inf,inf,nan,False,False,nan,35.441264152526855,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+cpkc_midcon_native,B0_fcfs,nan,-inf,inf,nan,False,False,nan,5.151831865310669,0,0,0,0,0,-1,,sequential residual-capacity insertion
+cpkc_midcon_native,B0_edd,nan,-inf,inf,nan,False,False,nan,5.074270248413086,0,0,0,0,0,-1,,sequential residual-capacity insertion
+cpkc_midcon_native,B0_minslack,nan,-inf,inf,nan,False,False,nan,6.678394317626953,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+cpkc_midcon_native,B0_class,nan,-inf,inf,nan,False,False,nan,4.607707977294922,0,0,0,0,0,-1,,sequential residual-capacity insertion
+cpkc_midcon_native,B0_conflict,nan,-inf,inf,nan,False,False,nan,5.080509185791016,0,0,0,0,0,-1,,sequential residual-capacity insertion
+cpkc_midcon_native,B0_rand_best_of_5,nan,-inf,inf,nan,False,False,nan,23.048832893371582,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native,B0_fcfs,nan,-inf,inf,nan,False,False,nan,8.169239282608032,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native,B0_edd,1379.0,-inf,1379.0,nan,True,False,nan,8.637685775756836,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+transcon_clovis_native,B0_minslack,nan,-inf,inf,nan,False,False,nan,7.613254070281982,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native,B0_class,nan,-inf,inf,nan,False,False,nan,8.019090414047241,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native,B0_conflict,nan,-inf,inf,nan,False,False,nan,4.085960388183594,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native,B0_rand_best_of_5,nan,-inf,inf,nan,False,False,nan,27.63523554801941,0,0,0,0,0,-1,,sequential residual-capacity insertion
+hiline_native,B0_fcfs,nan,-inf,inf,nan,False,False,nan,4.988359212875366,0,0,0,0,0,-1,,sequential residual-capacity insertion
+hiline_native,B0_edd,nan,-inf,inf,nan,False,False,nan,5.363712787628174,0,0,0,0,0,-1,,sequential residual-capacity insertion
+hiline_native,B0_minslack,nan,-inf,inf,nan,False,False,nan,5.627166271209717,0,0,0,0,0,-1,,sequential residual-capacity insertion
+hiline_native,B0_class,nan,-inf,inf,nan,False,False,nan,4.404213905334473,0,0,0,0,0,-1,,sequential residual-capacity insertion
+hiline_native,B0_conflict,nan,-inf,inf,nan,False,False,nan,3.5513124465942383,0,0,0,0,0,-1,,sequential residual-capacity insertion
+hiline_native,B0_rand_best_of_5,nan,-inf,inf,nan,False,False,nan,13.590016603469849,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+prb_joint_native,B0_fcfs,nan,-inf,inf,nan,False,False,nan,10.595561981201172,0,0,0,0,0,-1,,sequential residual-capacity insertion
+prb_joint_native,B0_edd,641.0,-inf,641.0,nan,True,False,nan,10.651469945907593,0,0,0,0,0,-1,,sequential residual-capacity insertion
+prb_joint_native,B0_minslack,580.0,-inf,580.0,nan,True,False,nan,10.978212594985962,0,0,0,0,0,-1,,sequential residual-capacity insertion
+prb_joint_native,B0_class,nan,-inf,inf,nan,False,False,nan,8.063426971435547,0,0,0,0,0,-1,,sequential residual-capacity insertion
+prb_joint_native,B0_conflict,321.0,-inf,321.0,nan,True,False,nan,7.822919845581055,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+prb_joint_native,B0_rand_best_of_5,615.0,-inf,615.0,nan,True,False,nan,43.61401963233948,0,0,0,0,0,-1,,sequential residual-capacity insertion
+gulf_native,B0_fcfs,nan,-inf,inf,nan,False,False,nan,5.188507318496704,0,0,0,0,0,-1,,sequential residual-capacity insertion
+gulf_native,B0_edd,nan,-inf,inf,nan,False,False,nan,4.972263336181641,0,0,0,0,0,-1,,sequential residual-capacity insertion
+gulf_native,B0_minslack,nan,-inf,inf,nan,False,False,nan,4.316756248474121,0,0,0,0,0,-1,,sequential residual-capacity insertion
+gulf_native,B0_class,nan,-inf,inf,nan,False,False,nan,3.389863967895508,0,0,0,0,0,-1,,sequential residual-capacity insertion
+gulf_native,B0_conflict,nan,-inf,inf,nan,False,False,nan,3.3975772857666016,0,0,0,0,0,-1,,sequential residual-capacity insertion
+gulf_native,B0_rand_best_of_5,nan,-inf,inf,nan,False,False,nan,17.375104665756226,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+panhandle_native,B0_fcfs,1938.0,-inf,1938.0,nan,True,False,nan,13.111286163330078,0,0,0,0,0,-1,,sequential residual-capacity insertion
+panhandle_native,B0_edd,nan,-inf,inf,nan,False,False,nan,12.605765104293823,0,0,0,0,0,-1,,sequential residual-capacity insertion
+panhandle_native,B0_minslack,nan,-inf,inf,nan,False,False,nan,13.33093810081482,0,0,0,0,0,-1,,sequential residual-capacity insertion
+panhandle_native,B0_class,436.0,-inf,436.0,nan,True,False,nan,11.117501020431519,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+panhandle_native,B0_conflict,nan,-inf,inf,nan,False,False,nan,7.605621337890625,0,0,0,0,0,-1,,sequential residual-capacity insertion
+panhandle_native,B0_rand_best_of_5,1168.0,-inf,1168.0,nan,True,False,nan,48.15799140930176,0,0,0,0,0,-1,,sequential residual-capacity insertion
+overland_native,B0_fcfs,504.0,-inf,504.0,nan,True,False,nan,9.162400722503662,0,0,0,0,0,-1,,sequential residual-capacity insertion
+overland_native,B0_edd,458.0,-inf,458.0,nan,True,False,nan,8.800816059112549,0,0,0,0,0,-1,,sequential residual-capacity insertion
+overland_native,B0_minslack,414.0,-inf,414.0,nan,True,False,nan,9.612739086151123,0,0,0,0,0,-1,,sequential residual-capacity insertion
+overland_native,B0_class,414.0,-inf,414.0,nan,True,False,nan,7.593137741088867,0,0,0,0,0,-1,,sequential residual-capacity insertion
+overland_native,B0_conflict,325.0,-inf,325.0,nan,True,False,nan,8.219549655914307,0,0,0,0,0,-1,,sequential residual-capacity insertion
+overland_native,B0_rand_best_of_5,177.0,-inf,177.0,nan,True,False,nan,37.034387826919556,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+moffat_native,B0_fcfs,nan,-inf,inf,nan,False,False,nan,3.8137104511260986,0,0,0,0,0,-1,,sequential residual-capacity insertion
+moffat_native,B0_edd,nan,-inf,inf,nan,False,False,nan,3.7978572845458984,0,0,0,0,0,-1,,sequential residual-capacity insertion
+moffat_native,B0_minslack,nan,-inf,inf,nan,False,False,nan,3.945829391479492,0,0,0,0,0,-1,,sequential residual-capacity insertion
+moffat_native,B0_class,nan,-inf,inf,nan,False,False,nan,2.9903111457824707,0,0,0,0,0,-1,,sequential residual-capacity insertion
+moffat_native,B0_conflict,nan,-inf,inf,nan,False,False,nan,2.2117531299591064,0,0,0,0,0,-1,,sequential residual-capacity insertion
+moffat_native,B0_rand_best_of_5,nan,-inf,inf,nan,False,False,nan,11.956719636917114,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+cpkc_midcon_native,B0_fcfs,nan,-inf,inf,nan,False,False,nan,3.377532958984375,0,0,0,0,0,-1,,sequential residual-capacity insertion
+cpkc_midcon_native,B0_edd,nan,-inf,inf,nan,False,False,nan,3.158034563064575,0,0,0,0,0,-1,,sequential residual-capacity insertion
+cpkc_midcon_native,B0_minslack,nan,-inf,inf,nan,False,False,nan,3.089331865310669,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+cpkc_midcon_native,B0_class,nan,-inf,inf,nan,False,False,nan,1.98337984085083,0,0,0,0,0,-1,,sequential residual-capacity insertion
+cpkc_midcon_native,B0_conflict,nan,-inf,inf,nan,False,False,nan,1.7837579250335693,0,0,0,0,0,-1,,sequential residual-capacity insertion
+cpkc_midcon_native,B0_rand_best_of_5,nan,-inf,inf,nan,False,False,nan,8.784502744674683,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+cn_icmain_native,B0_fcfs,2438.0,-inf,2438.0,nan,True,False,nan,6.931851863861084,0,0,0,0,0,-1,,sequential residual-capacity insertion
+cn_icmain_native,B0_edd,2681.0,-inf,2681.0,nan,True,False,nan,6.871607780456543,0,0,0,0,0,-1,,sequential residual-capacity insertion
+cn_icmain_native,B0_minslack,nan,-inf,inf,nan,False,False,nan,6.107523441314697,0,0,0,0,0,-1,,sequential residual-capacity insertion
+cn_icmain_native,B0_class,nan,-inf,inf,nan,False,False,nan,4.651324033737183,0,0,0,0,0,-1,,sequential residual-capacity insertion
+cn_icmain_native,B0_conflict,nan,-inf,inf,nan,False,False,nan,4.178608417510986,0,0,0,0,0,-1,,sequential residual-capacity insertion
+cn_icmain_native,B0_rand_best_of_5,1910.0,-inf,1910.0,nan,True,False,nan,18.542766571044922,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+pocahontas_native,B0_fcfs,1222.0,-inf,1222.0,nan,True,False,nan,11.762547254562378,0,0,0,0,0,-1,,sequential residual-capacity insertion
+pocahontas_native,B0_edd,854.0,-inf,854.0,nan,True,False,nan,13.94329309463501,0,0,0,0,0,-1,,sequential residual-capacity insertion
+pocahontas_native,B0_minslack,528.0,-inf,528.0,nan,True,False,nan,19.4605233669281,0,0,0,0,0,-1,,sequential residual-capacity insertion
+pocahontas_native,B0_class,682.0,-inf,682.0,nan,True,False,nan,16.13240671157837,0,0,0,0,0,-1,,sequential residual-capacity insertion
+pocahontas_native,B0_conflict,695.0,-inf,695.0,nan,True,False,nan,14.87209177017212,0,0,0,0,0,-1,,sequential residual-capacity insertion
+pocahontas_native,B0_rand_best_of_5,442.0,-inf,442.0,nan,True,False,nan,72.31873726844788,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+transcon_clovis_native,B0_fcfs,nan,-inf,inf,nan,False,False,nan,8.979593753814697,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native,B0_edd,1379.0,-inf,1379.0,nan,True,False,nan,9.790532350540161,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+transcon_clovis_native,B0_minslack,nan,-inf,inf,nan,False,False,nan,8.491719961166382,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native,B0_class,nan,-inf,inf,nan,False,False,nan,10.862998008728027,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native,B0_conflict,nan,-inf,inf,nan,False,False,nan,8.716073751449585,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native,B0_rand_best_of_2,nan,-inf,inf,nan,False,False,nan,19.564107418060303,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native,B0_fcfs,nan,-inf,inf,nan,False,False,nan,14.845147132873535,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native,B0_edd,1379.0,-inf,1379.0,nan,True,False,nan,15.001795291900635,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+transcon_clovis_native,B0_minslack,nan,-inf,inf,nan,False,False,nan,12.756255149841309,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native,B0_class,nan,-inf,inf,nan,False,False,nan,12.381898641586304,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native,B0_conflict,nan,-inf,inf,nan,False,False,nan,6.143913507461548,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native,B0_rand_best_of_2,nan,-inf,inf,nan,False,False,nan,17.895662546157837,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native_fullday,B0_fcfs,nan,-inf,inf,nan,False,False,nan,23.348088026046753,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native_fullday,B0_edd,nan,-inf,inf,nan,False,False,nan,25.31259250640869,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native_fullday,B0_minslack,nan,-inf,inf,nan,False,False,nan,21.314315795898438,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native_fullday,B0_class,nan,-inf,inf,nan,False,False,nan,16.941349744796753,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native_fullday,B0_conflict,nan,-inf,inf,nan,False,False,nan,14.809833526611328,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native_fullday,B0_rand_best_of_2,nan,-inf,inf,nan,False,False,nan,25.24785280227661,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+hiline_native,B0_fcfs,nan,-inf,inf,nan,False,False,nan,8.52769923210144,0,0,0,0,0,-1,,sequential residual-capacity insertion
+hiline_native,B0_edd,nan,-inf,inf,nan,False,False,nan,8.924047946929932,0,0,0,0,0,-1,,sequential residual-capacity insertion
+hiline_native,B0_minslack,nan,-inf,inf,nan,False,False,nan,11.939839363098145,0,0,0,0,0,-1,,sequential residual-capacity insertion
+hiline_native,B0_class,nan,-inf,inf,nan,False,False,nan,8.13271164894104,0,0,0,0,0,-1,,sequential residual-capacity insertion
+hiline_native,B0_conflict,nan,-inf,inf,nan,False,False,nan,7.013149261474609,0,0,0,0,0,-1,,sequential residual-capacity insertion
+hiline_native,B0_rand_best_of_2,nan,-inf,inf,nan,False,False,nan,11.310994625091553,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+prb_joint_native,B0_fcfs,nan,-inf,inf,nan,False,False,nan,20.066209316253662,0,0,0,0,0,-1,,sequential residual-capacity insertion
+prb_joint_native,B0_edd,641.0,-inf,641.0,nan,True,False,nan,19.911471605300903,0,0,0,0,0,-1,,sequential residual-capacity insertion
+prb_joint_native,B0_minslack,580.0,-inf,580.0,nan,True,False,nan,21.209155559539795,0,0,0,0,0,-1,,sequential residual-capacity insertion
+prb_joint_native,B0_class,nan,-inf,inf,nan,False,False,nan,17.240845680236816,0,0,0,0,0,-1,,sequential residual-capacity insertion
+prb_joint_native,B0_conflict,321.0,-inf,321.0,nan,True,False,nan,15.21947431564331,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+prb_joint_native,B0_rand_best_of_2,820.0,-inf,820.0,nan,True,False,nan,35.581815004348755,0,0,0,0,0,-1,,sequential residual-capacity insertion
+gulf_native,B0_fcfs,nan,-inf,inf,nan,False,False,nan,8.34974455833435,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+gulf_native,B0_edd,nan,-inf,inf,nan,False,False,nan,8.85263705253601,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+gulf_native,B0_minslack,nan,-inf,inf,nan,False,False,nan,8.70499587059021,0,0,0,0,0,-1,,sequential residual-capacity insertion
+gulf_native,B0_class,nan,-inf,inf,nan,False,False,nan,5.296041250228882,0,0,0,0,0,-1,,sequential residual-capacity insertion
+gulf_native,B0_conflict,nan,-inf,inf,nan,False,False,nan,6.880905389785767,0,0,0,0,0,-1,,sequential residual-capacity insertion
+gulf_native,B0_rand_best_of_2,nan,-inf,inf,nan,False,False,nan,12.49023985862732,0,0,0,0,0,-1,,sequential residual-capacity insertion
+panhandle_native,B0_fcfs,1938.0,-inf,1938.0,nan,True,False,nan,21.41663146018982,0,0,0,0,0,-1,,sequential residual-capacity insertion
+panhandle_native,B0_edd,nan,-inf,inf,nan,False,False,nan,21.635127067565918,0,0,0,0,0,-1,,sequential residual-capacity insertion
+panhandle_native,B0_minslack,nan,-inf,inf,nan,False,False,nan,16.12468695640564,0,0,0,0,0,-1,,sequential residual-capacity insertion
+panhandle_native,B0_class,436.0,-inf,436.0,nan,True,False,nan,11.088298559188843,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+panhandle_native,B0_conflict,nan,-inf,inf,nan,False,False,nan,9.038036346435547,0,0,0,0,0,-1,,sequential residual-capacity insertion
+panhandle_native,B0_rand_best_of_2,1168.0,-inf,1168.0,nan,True,False,nan,33.79310417175293,0,0,0,0,0,-1,,sequential residual-capacity insertion
+overland_native,B0_fcfs,504.0,-inf,504.0,nan,True,False,nan,17.7970974445343,0,0,0,0,0,-1,,sequential residual-capacity insertion
+overland_native,B0_edd,458.0,-inf,458.0,nan,True,False,nan,16.26853084564209,0,0,0,0,0,-1,,sequential residual-capacity insertion
+overland_native,B0_minslack,414.0,-inf,414.0,nan,True,False,nan,15.519926309585571,0,0,0,0,0,-1,,sequential residual-capacity insertion
+overland_native,B0_class,414.0,-inf,414.0,nan,True,False,nan,13.144843578338623,0,0,0,0,0,-1,,sequential residual-capacity insertion
+overland_native,B0_conflict,325.0,-inf,325.0,nan,True,False,nan,8.48324966430664,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+overland_native,B0_rand_best_of_2,385.0,-inf,385.0,nan,True,False,nan,16.370636463165283,0,0,0,0,0,-1,,sequential residual-capacity insertion
+moffat_native,B0_fcfs,nan,-inf,inf,nan,False,False,nan,6.33152961730957,0,0,0,0,0,-1,,sequential residual-capacity insertion
+moffat_native,B0_edd,nan,-inf,inf,nan,False,False,nan,5.963047981262207,0,0,0,0,0,-1,,sequential residual-capacity insertion
+moffat_native,B0_minslack,nan,-inf,inf,nan,False,False,nan,6.487064599990845,0,0,0,0,0,-1,,sequential residual-capacity insertion
+moffat_native,B0_class,nan,-inf,inf,nan,False,False,nan,5.191289901733398,0,0,0,0,0,-1,,sequential residual-capacity insertion
+moffat_native,B0_conflict,nan,-inf,inf,nan,False,False,nan,3.508418560028076,0,0,0,0,0,-1,,sequential residual-capacity insertion
+moffat_native,B0_rand_best_of_2,nan,-inf,inf,nan,False,False,nan,6.896595239639282,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+cpkc_midcon_native,B0_fcfs,nan,-inf,inf,nan,False,False,nan,4.719641923904419,0,0,0,0,0,-1,,sequential residual-capacity insertion
+cpkc_midcon_native,B0_edd,nan,-inf,inf,nan,False,False,nan,5.078721761703491,0,0,0,0,0,-1,,sequential residual-capacity insertion
+cpkc_midcon_native,B0_minslack,nan,-inf,inf,nan,False,False,nan,5.616814613342285,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+cpkc_midcon_native,B0_class,nan,-inf,inf,nan,False,False,nan,3.315711498260498,0,0,0,0,0,-1,,sequential residual-capacity insertion
+cpkc_midcon_native,B0_conflict,nan,-inf,inf,nan,False,False,nan,2.933170795440674,0,0,0,0,0,-1,,sequential residual-capacity insertion
+cpkc_midcon_native,B0_rand_best_of_2,nan,-inf,inf,nan,False,False,nan,6.314581394195557,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+cn_icmain_native,B0_fcfs,2438.0,-inf,2438.0,nan,True,False,nan,12.785579204559326,0,0,0,0,0,-1,,sequential residual-capacity insertion
+cn_icmain_native,B0_edd,2681.0,-inf,2681.0,nan,True,False,nan,13.003308534622192,0,0,0,0,0,-1,,sequential residual-capacity insertion
+cn_icmain_native,B0_minslack,nan,-inf,inf,nan,False,False,nan,10.987326383590698,0,0,0,0,0,-1,,sequential residual-capacity insertion
+cn_icmain_native,B0_class,nan,-inf,inf,nan,False,False,nan,7.4471330642700195,0,0,0,0,0,-1,,sequential residual-capacity insertion
+cn_icmain_native,B0_conflict,nan,-inf,inf,nan,False,False,nan,5.737206220626831,0,0,0,0,0,-1,,sequential residual-capacity insertion
+cn_icmain_native,B0_rand_best_of_2,1910.0,-inf,1910.0,nan,True,False,nan,9.902199983596802,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+pocahontas_native,B0_fcfs,1222.0,-inf,1222.0,nan,True,False,nan,13.068546056747437,0,0,0,0,0,-1,,sequential residual-capacity insertion
+pocahontas_native,B0_edd,854.0,-inf,854.0,nan,True,False,nan,20.239570379257202,0,0,0,0,0,-1,,sequential residual-capacity insertion
+pocahontas_native,B0_minslack,528.0,-inf,528.0,nan,True,False,nan,29.862310647964478,0,0,0,0,0,-1,,sequential residual-capacity insertion
+pocahontas_native,B0_class,682.0,-inf,682.0,nan,True,False,nan,26.347225666046143,0,0,0,0,0,-1,,sequential residual-capacity insertion
+pocahontas_native,B0_conflict,695.0,-inf,695.0,nan,True,False,nan,24.371429920196533,0,0,0,0,0,-1,,sequential residual-capacity insertion
+pocahontas_native,B0_rand_best_of_2,525.0,-inf,525.0,nan,True,False,nan,70.99565482139587,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+harrod_bnsf_native,B0_fcfs,421.0,-inf,421.0,nan,True,False,nan,1.6418919563293457,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+harrod_bnsf_native,B0_edd,475.0,-inf,475.0,nan,True,False,nan,1.604123592376709,0,0,0,0,0,-1,,sequential residual-capacity insertion
+harrod_bnsf_native,B0_minslack,nan,-inf,inf,nan,False,False,nan,1.5357449054718018,0,0,0,0,0,-1,,sequential residual-capacity insertion
+harrod_bnsf_native,B0_class,nan,-inf,inf,nan,False,False,nan,1.3189117908477783,0,0,0,0,0,-1,,sequential residual-capacity insertion
+harrod_bnsf_native,B0_conflict,nan,-inf,inf,nan,False,False,nan,1.7624163627624512,0,0,0,0,0,-1,,sequential residual-capacity insertion
+harrod_bnsf_native,B0_rand_best_of_2,nan,-inf,inf,nan,False,False,nan,2.4441215991973877,0,0,0,0,0,-1,,sequential residual-capacity insertion
+toy_native,B0_fcfs,12.0,-inf,12.0,nan,True,False,nan,0.0009996891021728516,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+toy_native,B0_edd,12.0,-inf,12.0,nan,True,False,nan,0.0009999275207519531,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+toy_native,B0_minslack,12.0,-inf,12.0,nan,True,False,nan,0.00099945068359375,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+toy_native,B0_class,12.0,-inf,12.0,nan,True,False,nan,0.0010006427764892578,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+toy_native,B0_conflict,12.0,-inf,12.0,nan,True,False,nan,0.0010001659393310547,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+toy_native,B0_rand_best_of_2,12.0,-inf,12.0,nan,True,False,nan,0.0015034675598144531,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+transcon_clovis_native,B0_fcfs,nan,-inf,inf,nan,False,False,nan,23.2104914188385,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native,B0_edd,1379.0,-inf,1379.0,nan,True,False,nan,21.28425168991089,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+transcon_clovis_native,B0_minslack,nan,-inf,inf,nan,False,False,nan,19.529532194137573,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native,B0_class,nan,-inf,inf,nan,False,False,nan,16.105956554412842,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native,B0_conflict,nan,-inf,inf,nan,False,False,nan,9.7027268409729,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native,B0_rand_best_of_2,nan,-inf,inf,nan,False,False,nan,25.008851766586304,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native_fullday,B0_fcfs,nan,-inf,inf,nan,False,False,nan,45.28166127204895,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native_fullday,B0_edd,nan,-inf,inf,nan,False,False,nan,39.976945877075195,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native_fullday,B0_minslack,nan,-inf,inf,nan,False,False,nan,36.13045811653137,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native_fullday,B0_class,nan,-inf,inf,nan,False,False,nan,34.205384731292725,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native_fullday,B0_conflict,nan,-inf,inf,nan,False,False,nan,19.077972412109375,0,0,0,0,0,-1,,sequential residual-capacity insertion
+transcon_clovis_native_fullday,B0_rand_best_of_2,nan,-inf,inf,nan,False,False,nan,39.12637782096863,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+hiline_native,B0_fcfs,nan,-inf,inf,nan,False,False,nan,17.47727060317993,0,0,0,0,0,-1,,sequential residual-capacity insertion
+hiline_native,B0_edd,nan,-inf,inf,nan,False,False,nan,12.50741982460022,0,0,0,0,0,-1,,sequential residual-capacity insertion
+hiline_native,B0_minslack,nan,-inf,inf,nan,False,False,nan,11.615475177764893,0,0,0,0,0,-1,,sequential residual-capacity insertion
+hiline_native,B0_class,nan,-inf,inf,nan,False,False,nan,8.461647748947144,0,0,0,0,0,-1,,sequential residual-capacity insertion
+hiline_native,B0_conflict,nan,-inf,inf,nan,False,False,nan,8.283594369888306,0,0,0,0,0,-1,,sequential residual-capacity insertion
+hiline_native,B0_rand_best_of_2,nan,-inf,inf,nan,False,False,nan,17.01987934112549,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+prb_joint_native,B0_fcfs,nan,-inf,inf,nan,False,False,nan,26.68469786643982,0,0,0,0,0,-1,,sequential residual-capacity insertion
+prb_joint_native,B0_edd,641.0,-inf,641.0,nan,True,False,nan,36.81991744041443,0,0,0,0,0,-1,,sequential residual-capacity insertion
+prb_joint_native,B0_minslack,580.0,-inf,580.0,nan,True,False,nan,33.71353220939636,0,0,0,0,0,-1,,sequential residual-capacity insertion
+prb_joint_native,B0_class,nan,-inf,inf,nan,False,False,nan,18.652536869049072,0,0,0,0,0,-1,,sequential residual-capacity insertion
+prb_joint_native,B0_conflict,321.0,-inf,321.0,nan,True,False,nan,18.611101388931274,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+prb_joint_native,B0_rand_best_of_2,820.0,-inf,820.0,nan,True,False,nan,44.2591872215271,0,0,0,0,0,-1,,sequential residual-capacity insertion
+gulf_native,B0_fcfs,nan,-inf,inf,nan,False,False,nan,12.593604803085327,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+gulf_native,B0_edd,nan,-inf,inf,nan,False,False,nan,12.961324453353882,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+gulf_native,B0_minslack,nan,-inf,inf,nan,False,False,nan,11.712377309799194,0,0,0,0,0,-1,,sequential residual-capacity insertion
+gulf_native,B0_class,nan,-inf,inf,nan,False,False,nan,10.193690299987793,0,0,0,0,0,-1,,sequential residual-capacity insertion
+gulf_native,B0_conflict,nan,-inf,inf,nan,False,False,nan,8.542785406112671,0,0,0,0,0,-1,,sequential residual-capacity insertion
+gulf_native,B0_rand_best_of_2,nan,-inf,inf,nan,False,False,nan,23.217310428619385,0,0,0,0,0,-1,,sequential residual-capacity insertion
+panhandle_native,B0_fcfs,1938.0,-inf,1938.0,nan,True,False,nan,25.804240226745605,0,0,0,0,0,-1,,sequential residual-capacity insertion
+panhandle_native,B0_edd,nan,-inf,inf,nan,False,False,nan,27.614442825317383,0,0,0,0,0,-1,,sequential residual-capacity insertion
+panhandle_native,B0_minslack,nan,-inf,inf,nan,False,False,nan,29.413568258285522,0,0,0,0,0,-1,,sequential residual-capacity insertion
+panhandle_native,B0_class,436.0,-inf,436.0,nan,True,False,nan,20.748714208602905,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+panhandle_native,B0_conflict,nan,-inf,inf,nan,False,False,nan,25.31550669670105,0,0,0,0,0,-1,,sequential residual-capacity insertion
+panhandle_native,B0_rand_best_of_2,1168.0,-inf,1168.0,nan,True,False,nan,50.77388882637024,0,0,0,0,0,-1,,sequential residual-capacity insertion
+overland_native,B0_fcfs,490.0,-inf,490.0,nan,True,False,nan,29.613096714019775,0,0,0,0,0,-1,,sequential residual-capacity insertion
+overland_native,B0_edd,444.0,-inf,444.0,nan,True,False,nan,18.109182596206665,0,0,0,0,0,-1,,sequential residual-capacity insertion
+overland_native,B0_minslack,260.0,-inf,260.0,nan,True,False,nan,15.24760890007019,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+overland_native,B0_class,400.0,-inf,400.0,nan,True,False,nan,12.046245098114014,0,0,0,0,0,-1,,sequential residual-capacity insertion
+overland_native,B0_conflict,311.0,-inf,311.0,nan,True,False,nan,12.003310203552246,0,0,0,0,0,-1,,sequential residual-capacity insertion
+overland_native,B0_rand_best_of_2,371.0,-inf,371.0,nan,True,False,nan,21.23357582092285,0,0,0,0,0,-1,,sequential residual-capacity insertion
+moffat_native,B0_fcfs,nan,-inf,inf,nan,False,False,nan,5.60046911239624,0,0,0,0,0,-1,,sequential residual-capacity insertion
+moffat_native,B0_edd,nan,-inf,inf,nan,False,False,nan,6.187392950057983,0,0,0,0,0,-1,,sequential residual-capacity insertion
+moffat_native,B0_minslack,nan,-inf,inf,nan,False,False,nan,6.769453048706055,0,0,0,0,0,-1,,sequential residual-capacity insertion
+moffat_native,B0_class,nan,-inf,inf,nan,False,False,nan,4.887016534805298,0,0,0,0,0,-1,,sequential residual-capacity insertion
+moffat_native,B0_conflict,nan,-inf,inf,nan,False,False,nan,3.8158488273620605,0,0,0,0,0,-1,,sequential residual-capacity insertion
+moffat_native,B0_rand_best_of_2,nan,-inf,inf,nan,False,False,nan,3.295302152633667,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+cpkc_midcon_native,B0_fcfs,nan,-inf,inf,nan,False,False,nan,5.007686376571655,0,0,0,0,0,-1,,sequential residual-capacity insertion
+cpkc_midcon_native,B0_edd,nan,-inf,inf,nan,False,False,nan,5.5884690284729,0,0,0,0,0,-1,,sequential residual-capacity insertion
+cpkc_midcon_native,B0_minslack,nan,-inf,inf,nan,False,False,nan,6.033994197845459,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+cpkc_midcon_native,B0_class,nan,-inf,inf,nan,False,False,nan,2.6872711181640625,0,0,0,0,0,-1,,sequential residual-capacity insertion
+cpkc_midcon_native,B0_conflict,nan,-inf,inf,nan,False,False,nan,2.641437530517578,0,0,0,0,0,-1,,sequential residual-capacity insertion
+cpkc_midcon_native,B0_rand_best_of_2,nan,-inf,inf,nan,False,False,nan,6.052372932434082,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+cn_icmain_native,B0_fcfs,2438.0,-inf,2438.0,nan,True,False,nan,12.312162399291992,0,0,0,0,0,-1,,sequential residual-capacity insertion
+cn_icmain_native,B0_edd,2681.0,-inf,2681.0,nan,True,False,nan,11.923015594482422,0,0,0,0,0,-1,,sequential residual-capacity insertion
+cn_icmain_native,B0_minslack,nan,-inf,inf,nan,False,False,nan,10.676319360733032,0,0,0,0,0,-1,,sequential residual-capacity insertion
+cn_icmain_native,B0_class,nan,-inf,inf,nan,False,False,nan,7.1595139503479,0,0,0,0,0,-1,,sequential residual-capacity insertion
+cn_icmain_native,B0_conflict,nan,-inf,inf,nan,False,False,nan,6.8631017208099365,0,0,0,0,0,-1,,sequential residual-capacity insertion
+cn_icmain_native,B0_rand_best_of_2,1910.0,-inf,1910.0,nan,True,False,nan,13.2104012966156,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+pocahontas_native,B0_fcfs,1222.0,-inf,1222.0,nan,True,False,nan,20.8647780418396,0,0,0,0,0,-1,,sequential residual-capacity insertion
+pocahontas_native,B0_edd,854.0,-inf,854.0,nan,True,False,nan,22.33207392692566,0,0,0,0,0,-1,,sequential residual-capacity insertion
+pocahontas_native,B0_minslack,528.0,-inf,528.0,nan,True,False,nan,31.94294285774231,0,0,0,0,0,-1,,sequential residual-capacity insertion
+pocahontas_native,B0_class,682.0,-inf,682.0,nan,True,False,nan,29.576802492141724,0,0,0,0,0,-1,,sequential residual-capacity insertion
+pocahontas_native,B0_conflict,695.0,-inf,695.0,nan,True,False,nan,23.472801446914673,0,0,0,0,0,-1,,sequential residual-capacity insertion
+pocahontas_native,B0_rand_best_of_2,525.0,-inf,525.0,nan,True,False,nan,42.36594843864441,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+harrod_bnsf_native,B0_fcfs,421.0,-inf,421.0,nan,True,False,nan,1.6612319946289062,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+harrod_bnsf_native,B0_edd,475.0,-inf,475.0,nan,True,False,nan,1.6277198791503906,0,0,0,0,0,-1,,sequential residual-capacity insertion
+harrod_bnsf_native,B0_minslack,nan,-inf,inf,nan,False,False,nan,1.086479902267456,0,0,0,0,0,-1,,sequential residual-capacity insertion
+harrod_bnsf_native,B0_class,nan,-inf,inf,nan,False,False,nan,0.9049215316772461,0,0,0,0,0,-1,,sequential residual-capacity insertion
+harrod_bnsf_native,B0_conflict,nan,-inf,inf,nan,False,False,nan,0.8086440563201904,0,0,0,0,0,-1,,sequential residual-capacity insertion
+harrod_bnsf_native,B0_rand_best_of_2,nan,-inf,inf,nan,False,False,nan,1.3643083572387695,0,0,0,0,0,-1,,sequential residual-capacity insertion
+toy_native,B0_fcfs,12.0,-inf,12.0,nan,True,False,nan,0.0009996891021728516,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+toy_native,B0_edd,12.0,-inf,12.0,nan,True,False,nan,0.0010004043579101562,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+toy_native,B0_minslack,12.0,-inf,12.0,nan,True,False,nan,0.0,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+toy_native,B0_class,12.0,-inf,12.0,nan,True,False,nan,0.0008392333984375,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+toy_native,B0_conflict,12.0,-inf,12.0,nan,True,False,nan,0.0,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)
+toy_native,B0_rand_best_of_2,12.0,-inf,12.0,nan,True,False,nan,0.00208282470703125,0,0,0,0,0,-1,,sequential residual-capacity insertion (BEST rule)

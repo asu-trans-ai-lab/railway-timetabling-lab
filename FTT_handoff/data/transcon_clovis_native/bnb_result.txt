@@ -1,0 +1,3 @@
+B&B done: nodes=1079 branched=1079  LB=204.4  UB=904.0  gap=77.39%  900.5s  (time limit)
+incumbent arrivals: 256 274 311 334 408 448 566 528 577 664 664 711 ...
+incumbent timetable exported: ../data/transcon_clovis_native/internal_timetable/incumbent_timetable.csv

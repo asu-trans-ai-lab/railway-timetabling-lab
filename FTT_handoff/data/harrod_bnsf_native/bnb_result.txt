@@ -1,0 +1,3 @@
+B&B done: nodes=5000 branched=4990  LB=160.3  UB=316.0  gap=49.27%  267.9s  (node budget)
+incumbent arrivals: 108 135 156 186 234 304 264 290 355 342 80 106 ...
+incumbent timetable exported: ../data/harrod_bnsf_native/internal_timetable/incumbent_timetable.csv

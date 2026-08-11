@@ -1,0 +1,16 @@
+element,attribute,value,provenance,evidence
+corridor,geometry+length,"185.8 mi, 81 L3 links",observed,RAS 2026 PUBLIC v5.2.2 L3 link.csv: Dijkstra between named yards; frozen in path_manifest.csv
+corridor,free_speed per link,posted speeds 7-55 mph,observed,RAS 2026 PUBLIC v5.2.2 L3 link.csv free_speed column (no observed run times exist; ANL_STATUS_REPORT gap #3)
+corridor,tracks per link,fwd union rev,inferred,L3 populates tracks on one direction only; healed from reverse link (0 links needed healing)
+blocks,aggregation to controlling blocks,25 blocks,inferred,boundaries at track-count change / named yard / >=10 mph speed jump; >12-mi runs split ~10 mi; harmonic-mean speeds (extract_corridor.py)
+blocks,capacity = min member track count,"cap 1 x21, multi x4",inferred,L3 'capacity' column is a uniform 700000 placeholder and is ignored by design
+blocks,siding spacing on single-track runs,~10-mi boundaries (11 cap-1 blocks >=9.5 mi),synthetic,L3 records NO siding locations (ANL_STATUS_REPORT gap #2); block boundaries act as passing points at typical NA siding spacing
+blocks,speed_ft == speed_tf,direction-symmetric,inferred,L3 has no grade data; real corridors are asymmetric (cf. harrod WB/EB back-solved speeds)
+service,SafetyHeadway,2 min,synthetic,signal-spacing surrogate; not calibrated to any specific CTC block layout
+service,departure slack / max dwell,120 / 120 min,synthetic,operational-flexibility assumption (Harrod-style flexible dispatch)
+service,MonotoneRouting,1,synthetic,modeling rule: corridor trains never reverse; makes LR cost == occupancy (semantics of record)
+service,trains/day and class mix,"10 trains, mix {'M': 4, 'G': 4, 'Z': 2}",synthetic,expert-calibrated to corridor_kb evidence + pinch-ceiling guard; run blocking_layer.py to derive from demand
+service,class speed multipliers,Z x1.25 / M x1.00 / G x0.85,externally_supported,ratio structure from Harrod (2011) Tables 4/7 intermodal vs freight timings
+service,cars per train (derivation constant),IM 150 / manifest 100 / bulk 120 / auto 90,externally_supported,Wenlin_git dev/code/scheduler/preprocessing/stages/s1_block_to_train.py defaults
+service,peaked entry structure,"bunched Z fleets + M/G band, half-cycle direction offset",synthetic,time-of-day evidence unavailable; structure follows the 8-step memo's realism requirement
+service,intended_arrival = entry + free-run,objective counts conflict delay only,inferred,free-flow baseline provably 0 (make_trains/extract_corridor reproduce the solver formula)

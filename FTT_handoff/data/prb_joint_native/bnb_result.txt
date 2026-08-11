@@ -1,0 +1,3 @@
+B&B done: nodes=765 branched=765  LB=140.2  UB=290.0  gap=51.64%  900.6s  (time limit)
+incumbent arrivals: 427 499 552 607 657 727 777 807 890 899 1010 944 ...
+incumbent timetable exported: ../data/prb_joint_native/internal_timetable/incumbent_timetable.csv

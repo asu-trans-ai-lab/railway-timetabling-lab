@@ -1,0 +1,3 @@
+B&B done: nodes=106 branched=57  LB=85.8  UB=86.0  gap=0.19%  201.5s  (gap target)
+incumbent arrivals: 154 167 181 195 302 280 355 336 406 387 454 443 ...
+incumbent timetable exported: ../data/overland_native/internal_timetable/incumbent_timetable.csv

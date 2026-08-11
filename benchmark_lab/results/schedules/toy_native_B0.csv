@@ -1,0 +1,10 @@
+instance_id,method,train_id,seq,from_node,to_node,link_id,enter_time,leave_time
+toy_native,B0_fcfs,T1,0,1,2,0,0,3
+toy_native,B0_fcfs,T1,1,2,3,1,3,6
+toy_native,B0_fcfs,T1,2,3,4,2,6,9
+toy_native,B0_fcfs,T2,0,1,2,0,4,7
+toy_native,B0_fcfs,T2,1,2,3,1,7,10
+toy_native,B0_fcfs,T2,2,3,4,2,10,13
+toy_native,B0_fcfs,T3,0,1,2,0,8,11
+toy_native,B0_fcfs,T3,1,2,3,1,11,14
+toy_native,B0_fcfs,T3,2,3,4,2,14,17
