@@ -1,0 +1,61 @@
+{
+  "source": "resource_lr_bb_clean/verification/toy_instances.py",
+  "headway_model": "SEGMENT_CLEARANCE_V1",
+  "safety_headway": 3.0,
+  "common_config": {
+    "time_step": 0.5,
+    "horizon": 120.0,
+    "departure_step": 1.0,
+    "wait_step": 5.0
+  },
+  "cases": [
+    {
+      "name": "case01_one_train",
+      "train_count": 1,
+      "departure_slack": 0.0,
+      "max_wait": 0.0,
+      "expected_status": "PROVEN_OPTIMAL",
+      "expected_objective": 10.0
+    },
+    {
+      "name": "case02_two_trains_no_conflict",
+      "train_count": 2,
+      "departure_slack": 0.0,
+      "max_wait": 0.0,
+      "expected_status": "PROVEN_OPTIMAL",
+      "expected_objective": 20.0
+    },
+    {
+      "name": "case03_two_trains_conflict",
+      "train_count": 2,
+      "departure_slack": 10.0,
+      "max_wait": 0.0,
+      "expected_status": "PROVEN_OPTIMAL",
+      "expected_objective": 20.0
+    },
+    {
+      "name": "case05_three_trains_bottleneck",
+      "train_count": 3,
+      "departure_slack": 20.0,
+      "max_wait": 0.0,
+      "expected_status": "PROVEN_OPTIMAL",
+      "expected_objective": 30.0
+    },
+    {
+      "name": "case06_siding",
+      "train_count": 2,
+      "departure_slack": 0.0,
+      "max_wait": 10.0,
+      "expected_status": "PROVEN_OPTIMAL",
+      "expected_objective": 62.0
+    },
+    {
+      "name": "case07_opposing_siding",
+      "train_count": 2,
+      "departure_slack": 0.0,
+      "max_wait": 10.0,
+      "expected_status": "PROVEN_OPTIMAL",
+      "expected_objective": 40.0
+    }
+  ]
+}

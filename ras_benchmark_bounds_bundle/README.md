@@ -1,61 +1,122 @@
-# RAS DP, Lagrangian Relaxation, and Branch-and-Bound Bundle
+# ANL/RAS Train Scheduling Pipeline
 
-This directory reorganizes the existing verified solver components referenced by
-the meeting report. The original solver remains unchanged.
+A clean, reproducible package for the ANL/RAS railway timetabling workflow.
+It contains the input data, RAS adapter, native C++ train DP, Python
+Lagrangian/B&B solver, independent validator, visualization, experiments, and
+tests. Its scope is limited to ANL/RAS train scheduling.
 
-## Layout
-
-- `dp/`: native C++ dynamic program, Python interface, PATH-K/full-domain support,
-  trajectory identity, and headway model metadata.
-- `lagrangian_relaxation/`: legacy safe-capacity LR, physical cross-train LR,
-  fluid-queue support, and physical coupling definitions.
-- `branch_and_bound/`: current conflict-based exact B&B, exact conflict branches,
-  history no-goods, lower-bound validation, and the trusted timetable validator.
-- `dataset/`: complete copies of `RAS_data-set_1`, `RAS_data-set_2`, and
-  `RAS_data-set_3`.
-
-The report's term is interpreted as **Branch-and-Bound**. The current branch is
-an exact exclusion/exclusion disjunction: for a selected A/B conflict, one child
-excludes A's exact conflicting movement and the other excludes B's.
-
-## Dependency Flow
+## Pipeline
 
 ```text
-dataset
-   |
-   v
-DP backend <--- Lagrangian relaxation
-   |
-   v
-conflict-based Branch-and-Bound
+RAS or mini CSV dataset
+        |
+        v
+adapters/ras_adapter.py
+        |
+        v
+solver/cpp/network_dp.cpp  <->  solver/python/dp_interface.py
+        |
+        +--> solver/python/lagrangian.py
+        |
+        +--> solver/python/branch_and_bound.py
+        |
+        v
+schedule.json + schedule.csv
+        |
+        +--> validator/validate_schedule.py --> PASS / FAIL
+        |
+        +--> visualization/plot_space_time.py --> space_time_diagram.png
+        |
+        v
+metrics.json + bb_trace.json
 ```
 
-The B&B node lower bound is the sum of independent unpriced DP minima. The
-Lagrangian code is retained as a separate bound-strengthening component; it is
-not silently substituted into the current exact B&B proof.
+## Directory Map
 
-## Quick Integration Test
+- `data/mini_cases/`: six 1–3 train sanity-check datasets.
+- `data/RAS_data-set_1/`, `2/`, `3/`: complete RAS input directories.
+- `adapters/ras_adapter.py`: RAS CSV to common `Arc`, `Train`, and MOW objects.
+- `solver/cpp/network_dp.cpp`: native per-train time-dependent DP engine.
+- `solver/python/dp_interface.py`: compiles/calls the C++ engine and decodes paths.
+- `solver/python/lagrangian.py`: Lagrangian relaxation and zero-multiplier bound.
+- `solver/python/branch_and_bound.py`: exact conflict-based B&B.
+- `validator/validate_schedule.py`: independent physical feasibility gate.
+- `visualization/plot_space_time.py`: space-time and trajectory plotting.
+- `experiments/`: common mini/RAS pipeline runners.
+- `results/`: generated schedules, validation, figures, metrics, and traces.
+- `tests/test_pipeline.py`: end-to-end regression covering mini and RAS datasets.
 
-Run from this directory:
+## Install
+
+Requirements: Python 3.10+, `g++` with C++17 support, and internet access for
+the one Python plotting dependency.
 
 ```bash
-./run_tests.sh
+./setup.sh
 ```
 
-The smoke test verifies all three RAS dataset directories, compiles and executes
-the native DP, evaluates the Lagrangian relaxation at zero multipliers, and solves
-a tiny two-train conflict case to `PROVEN_OPTIMAL` with validator `PASS`. It does
-not run a full RAS experiment.
+This creates an isolated `.venv`, installs Matplotlib, and compiles
+`solver/cpp/network_dp.cpp` to `solver/cpp/build/network_dp`.
 
-To verify that the complete D1/D2/D3 train sets enter the packaged B&B pipeline,
-run the bounded root-node check:
+## Run One Dataset
 
 ```bash
-./run_ras123_smoke.sh
+.venv/bin/python run_pipeline.py --dataset case03_two_trains_conflict
+.venv/bin/python run_pipeline.py --dataset RAS_data-set_1
 ```
 
-This runs one FULL-domain branching layer for 12, 18, and 20 trains under
-`SEGMENT_CLEARANCE_V1`, `h=3`. Its fixed limits are three generated nodes and
-depth one. Each root must create and solve both exclusion children. A successful
-check establishes dataset-to-DP-to-validator-to-B&B runtime compatibility; it
-does not establish a finite UB or full-instance convergence.
+Mini cases default to a 500-node/30-depth exact budget. RAS datasets default to
+a safe three-node/one-depth compatibility run. Increase budgets explicitly:
+
+```bash
+.venv/bin/python run_pipeline.py --dataset RAS_data-set_2 \
+  --max-nodes 1000 --max-depth 50 --output results/ras2_larger_budget
+```
+
+## Run Standard Suites
+
+```bash
+make mini   # all six mini datasets
+make ras    # bounded D1/D2/D3 pipeline runs
+make test   # full end-to-end regression
+```
+
+## Independent Validation
+
+The validator reads the serialized solver output rather than trusting a solver
+status flag:
+
+```bash
+.venv/bin/python -m validator.validate_schedule \
+  --dataset case03_two_trains_conflict \
+  --schedule results/case03_two_trains_conflict/schedule.json
+```
+
+Only validator `PASS` schedules produce a certified finite UB. A RAS root
+relaxation with conflicts is saved for diagnosis but remains validator `FAIL`.
+
+## Visualization
+
+Every normal pipeline run automatically produces `space_time_diagram.png`.
+The plotting tool can also be called independently:
+
+```bash
+.venv/bin/python -m visualization.plot_space_time \
+  --dataset case03_two_trains_conflict \
+  --schedule results/case03_two_trains_conflict/schedule.csv \
+  --validator-report results/case03_two_trains_conflict/validator_report.json \
+  --output results/case03_two_trains_conflict/space_time_diagram.png
+```
+
+Solid trajectory segments are main track; dashed segments are siding use. The
+title reports validator status and conflict count.
+
+## Scope of Evidence
+
+- All six mini cases are expected to reach `PROVEN_OPTIMAL` and validator `PASS`.
+- D1/D2/D3 default runs verify complete data loading, native DP execution,
+  Lagrangian evaluation, B&B branching, serialization, validation, plotting,
+  and metrics.
+- The default bounded RAS runs do not claim full-instance convergence. They may
+  report no finite UB and `DEPTH_BUDGET_EXHAUSTED` by design.
+- Current production headway is `SEGMENT_CLEARANCE_V1`, `h = 3 minutes`.
