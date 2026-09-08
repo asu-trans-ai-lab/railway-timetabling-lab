@@ -1,4 +1,4 @@
-# ANL/RAS Train Scheduling Pipeline
+# Train Scheduling Pipeline
 
 A clean, reproducible package for the ANL/RAS railway timetabling workflow.
 It contains the input data, RAS adapter, native C++ train DP, Python
@@ -74,7 +74,7 @@ The production track remains in `solver/cpp/` and `solver/python/`. Dr. Zhou's c
 | B&B | `solver/python/branch_and_bound.py` |
 | Validator | `validator/validate_schedule.py`, `validator/trusted_physics.py` |
 | Visualization | `visualization/plot_space_time.py` |
-| Weekly RAS reports | `weekly_reports/` |
+| Reports | `weekly_reports/` |
 | Original Fast Train | `references/fast_train_original/` |
 | Paper-vs-code audit | `references/PAPER_IMPLEMENTATION_COMPARISON.md` |
 
