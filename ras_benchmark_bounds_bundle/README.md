@@ -39,6 +39,10 @@ metrics.json + bb_trace.json
 
 The actual call chain is `run_pipeline.py` -> `experiments/common.py::run_pipeline` -> `adapters/ras_adapter.py` -> `solver/python/dp_interface.py::NetworkDP` -> `solver/cpp/network_dp.cpp`, followed by schedule serialization, independent validation, and plotting.
 
+## Parallel Theoretical IDP Framework
+
+The production track remains in `solver/cpp/` and `solver/python/`. Dr. Zhou's complete IDP-0 through IDP-4 theoretical/reference track is preserved separately in `solver/theoretical_dp/idp/`. The theoretical implementation does not replace or modify production code; it provides controlled small-case verification and comparison. See `solver/theoretical_dp/README.md` for commands and scope.
+
 ## Directory Map
 
 - `data/mini_cases/`: six 1–3 train sanity-check datasets.
@@ -48,6 +52,7 @@ The actual call chain is `run_pipeline.py` -> `experiments/common.py::run_pipeli
 - `solver/python/dp_interface.py`: compiles/calls the C++ engine and decodes paths.
 - `solver/python/lagrangian.py`: Lagrangian relaxation and zero-multiplier bound.
 - `solver/python/branch_and_bound.py`: exact conflict-based B&B.
+- `solver/theoretical_dp/`: preserved Zhou IDP-0 through IDP-4 framework and wrappers.
 - `validator/validate_schedule.py`: independent physical feasibility gate.
 - `visualization/plot_space_time.py`: space-time and trajectory plotting.
 - `experiments/`: common mini/RAS pipeline runners.

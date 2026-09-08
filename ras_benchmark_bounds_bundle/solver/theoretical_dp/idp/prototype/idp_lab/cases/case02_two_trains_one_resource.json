@@ -1,0 +1,34 @@
+{
+  "name": "case02_two_trains_one_resource",
+  "time_step_min": 1,
+  "safety_headway_min": 3,
+  "metadata": {
+    "purpose": "single binary resource-reservation branch",
+    "expected_objective": 18,
+    "expected_delay": 8,
+    "horizon_min": 60,
+    "idp_level": "IDP-0..4 teaching benchmark"
+  },
+  "jobs": [
+    {
+      "train_id": "A",
+      "release_min": 0,
+      "tasks": [
+        {
+          "resource_id": 1,
+          "duration_min": 5
+        }
+      ]
+    },
+    {
+      "train_id": "B",
+      "release_min": 0,
+      "tasks": [
+        {
+          "resource_id": 1,
+          "duration_min": 5
+        }
+      ]
+    }
+  ]
+}

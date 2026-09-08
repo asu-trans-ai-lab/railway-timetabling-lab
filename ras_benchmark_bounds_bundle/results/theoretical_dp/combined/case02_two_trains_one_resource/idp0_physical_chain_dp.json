@@ -1,0 +1,25 @@
+{
+  "actions": [
+    {
+      "action": "OCCUPY",
+      "next_time_min": 5.0,
+      "resource_id": 1,
+      "state_task_index": 0,
+      "state_time_min": 0.0
+    }
+  ],
+  "completion_min": 5.0,
+  "feasible": true,
+  "horizon_min": 40.0,
+  "objective_travel_min": 5.0,
+  "reason": "",
+  "states_evaluated": 77,
+  "task_ends": [
+    5.0
+  ],
+  "task_starts": [
+    0.0
+  ],
+  "total_wait_min": 0.0,
+  "train_id": "A"
+}

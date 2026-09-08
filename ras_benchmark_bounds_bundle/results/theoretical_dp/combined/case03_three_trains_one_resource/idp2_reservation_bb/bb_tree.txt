@@ -1,0 +1,11 @@
+N0 parent=None ROOT | LB=15 | status=EXPANDED | conflicts=3 | safe=0/3@0 | next=R1: A:0 [0,5) vs B:0 [0,5)
+  N1 parent=0 R1: A:0 BEFORE B:0 | LB=23 | status=EXPANDED | conflicts=1 | safe=0/3@0 | next=R1: A:0 [0,5) vs C:0 [0,5)
+  N2 parent=0 R1: B:0 BEFORE A:0 | LB=23 | status=EXPANDED | conflicts=1 | safe=0/3@0 | next=R1: B:0 [0,5) vs C:0 [0,5)
+    N3 parent=1 R1: A:0 BEFORE C:0 | LB=31 | status=EXPANDED | conflicts=1 | safe=1/3@8 | next=R1: B:0 [8,13) vs C:0 [8,13)
+    N4 parent=1 R1: C:0 BEFORE A:0 | LB=39 | status=FATHOMED_FEASIBLE | conflicts=0 | safe=3/3@21
+    N5 parent=2 R1: B:0 BEFORE C:0 | LB=31 | status=EXPANDED | conflicts=1 | safe=1/3@8 | next=R1: A:0 [8,13) vs C:0 [8,13)
+    N6 parent=2 R1: C:0 BEFORE B:0 | LB=39 | status=FATHOMED_FEASIBLE | conflicts=0 | safe=3/3@21
+      N7 parent=3 R1: B:0 BEFORE C:0 | LB=39 | status=FATHOMED_FEASIBLE | conflicts=0 | safe=3/3@21
+      N8 parent=3 R1: C:0 BEFORE B:0 | LB=39 | status=FATHOMED_FEASIBLE | conflicts=0 | safe=3/3@21
+      N9 parent=5 R1: A:0 BEFORE C:0 | LB=39 | status=FATHOMED_FEASIBLE | conflicts=0 | safe=3/3@21
+      N10 parent=5 R1: C:0 BEFORE A:0 | LB=39 | status=FATHOMED_FEASIBLE | conflicts=0 | safe=3/3@21

@@ -1,0 +1,10 @@
+[
+  {
+    "first_task": 0,
+    "first_train": "A",
+    "label": "R1: A:0 BEFORE B:0",
+    "resource_id": 1,
+    "second_task": 0,
+    "second_train": "B"
+  }
+]

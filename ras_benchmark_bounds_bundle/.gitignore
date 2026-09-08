@@ -3,3 +3,6 @@ __pycache__/
 .venv/
 solver/cpp/build/
 results/*/
+!results/theoretical_dp/
+!results/theoretical_dp/**
+solver/theoretical_dp/idp/prototype/resource_reservation_lite/cpp/reservation_bb

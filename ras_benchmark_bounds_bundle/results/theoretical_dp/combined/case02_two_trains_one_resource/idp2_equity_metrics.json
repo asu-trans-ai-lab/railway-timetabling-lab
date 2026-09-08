@@ -1,0 +1,13 @@
+{
+  "average_train_delay": 4.0,
+  "delay_by_train": {
+    "A": 0.0,
+    "B": 8.0
+  },
+  "free_run_total": 10.0,
+  "max_to_average_delay_ratio": 2.0,
+  "max_train_delay": 8.0,
+  "objective_total_travel": 18.0,
+  "p95_train_delay": 7.6,
+  "total_delay": 8.0
+}

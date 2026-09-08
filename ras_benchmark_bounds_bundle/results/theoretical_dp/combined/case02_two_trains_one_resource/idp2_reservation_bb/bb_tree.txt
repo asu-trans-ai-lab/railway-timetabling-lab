@@ -1,0 +1,3 @@
+N0 parent=None ROOT | LB=10 | status=EXPANDED | conflicts=1 | safe=0/2@0 | next=R1: A:0 [0,5) vs B:0 [0,5)
+  N1 parent=0 R1: A:0 BEFORE B:0 | LB=18 | status=FATHOMED_FEASIBLE | conflicts=0 | safe=2/2@13
+  N2 parent=0 R1: B:0 BEFORE A:0 | LB=18 | status=FATHOMED_FEASIBLE | conflicts=0 | safe=2/2@13

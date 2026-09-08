@@ -1,0 +1,74 @@
+[
+  {
+    "first_task": 0,
+    "first_train": "A",
+    "label": "R1: A:0 BEFORE B:0",
+    "resource_id": 1,
+    "second_task": 0,
+    "second_train": "B"
+  },
+  {
+    "first_task": 0,
+    "first_train": "A",
+    "label": "R1: A:0 BEFORE C:0",
+    "resource_id": 1,
+    "second_task": 0,
+    "second_train": "C"
+  },
+  {
+    "first_task": 0,
+    "first_train": "B",
+    "label": "R1: B:0 BEFORE C:0",
+    "resource_id": 1,
+    "second_task": 0,
+    "second_train": "C"
+  },
+  {
+    "first_task": 1,
+    "first_train": "A",
+    "label": "R2: A:1 BEFORE B:1",
+    "resource_id": 2,
+    "second_task": 1,
+    "second_train": "B"
+  },
+  {
+    "first_task": 1,
+    "first_train": "A",
+    "label": "R2: A:1 BEFORE C:1",
+    "resource_id": 2,
+    "second_task": 1,
+    "second_train": "C"
+  },
+  {
+    "first_task": 1,
+    "first_train": "B",
+    "label": "R2: B:1 BEFORE C:1",
+    "resource_id": 2,
+    "second_task": 1,
+    "second_train": "C"
+  },
+  {
+    "first_task": 2,
+    "first_train": "A",
+    "label": "R3: A:2 BEFORE B:2",
+    "resource_id": 3,
+    "second_task": 2,
+    "second_train": "B"
+  },
+  {
+    "first_task": 2,
+    "first_train": "A",
+    "label": "R3: A:2 BEFORE C:2",
+    "resource_id": 3,
+    "second_task": 2,
+    "second_train": "C"
+  },
+  {
+    "first_task": 2,
+    "first_train": "B",
+    "label": "R3: B:2 BEFORE C:2",
+    "resource_id": 3,
+    "second_task": 2,
+    "second_train": "C"
+  }
+]

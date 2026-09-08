@@ -1,0 +1,68 @@
+{
+  "name": "case05_three_trains_three_resources",
+  "time_step_min": 1,
+  "safety_headway_min": 3,
+  "metadata": {
+    "purpose": "multi-job multi-task recursive B&B",
+    "expected_objective": 69,
+    "expected_delay": 24,
+    "horizon_min": 60,
+    "idp_level": "IDP-0..4 teaching benchmark"
+  },
+  "jobs": [
+    {
+      "train_id": "A",
+      "release_min": 0,
+      "tasks": [
+        {
+          "resource_id": 1,
+          "duration_min": 5
+        },
+        {
+          "resource_id": 2,
+          "duration_min": 5
+        },
+        {
+          "resource_id": 3,
+          "duration_min": 5
+        }
+      ]
+    },
+    {
+      "train_id": "B",
+      "release_min": 0,
+      "tasks": [
+        {
+          "resource_id": 1,
+          "duration_min": 5
+        },
+        {
+          "resource_id": 2,
+          "duration_min": 5
+        },
+        {
+          "resource_id": 3,
+          "duration_min": 5
+        }
+      ]
+    },
+    {
+      "train_id": "C",
+      "release_min": 0,
+      "tasks": [
+        {
+          "resource_id": 1,
+          "duration_min": 5
+        },
+        {
+          "resource_id": 2,
+          "duration_min": 5
+        },
+        {
+          "resource_id": 3,
+          "duration_min": 5
+        }
+      ]
+    }
+  ]
+}

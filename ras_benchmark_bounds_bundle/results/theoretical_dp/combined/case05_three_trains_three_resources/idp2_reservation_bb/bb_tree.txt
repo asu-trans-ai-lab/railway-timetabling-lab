@@ -1,0 +1,11 @@
+N0 parent=None ROOT | LB=45 | status=EXPANDED | conflicts=9 | safe=0/9@0 | next=R1: A:0 [0,5) vs B:0 [0,5)
+  N1 parent=0 R1: A:0 BEFORE B:0 | LB=53 | status=EXPANDED | conflicts=3 | safe=0/9@0 | next=R1: A:0 [0,5) vs C:0 [0,5)
+  N2 parent=0 R1: B:0 BEFORE A:0 | LB=53 | status=EXPANDED | conflicts=3 | safe=0/9@0 | next=R1: B:0 [0,5) vs C:0 [0,5)
+    N3 parent=1 R1: A:0 BEFORE C:0 | LB=61 | status=EXPANDED | conflicts=3 | safe=1/9@8 | next=R1: B:0 [8,13) vs C:0 [8,13)
+    N4 parent=1 R1: C:0 BEFORE A:0 | LB=69 | status=FATHOMED_FEASIBLE | conflicts=0 | safe=9/9@31
+    N5 parent=2 R1: B:0 BEFORE C:0 | LB=61 | status=EXPANDED | conflicts=3 | safe=1/9@8 | next=R1: A:0 [8,13) vs C:0 [8,13)
+    N6 parent=2 R1: C:0 BEFORE B:0 | LB=69 | status=FATHOMED_FEASIBLE | conflicts=0 | safe=9/9@31
+      N7 parent=3 R1: B:0 BEFORE C:0 | LB=69 | status=FATHOMED_FEASIBLE | conflicts=0 | safe=9/9@31
+      N8 parent=3 R1: C:0 BEFORE B:0 | LB=69 | status=FATHOMED_FEASIBLE | conflicts=0 | safe=9/9@31
+      N9 parent=5 R1: A:0 BEFORE C:0 | LB=69 | status=FATHOMED_FEASIBLE | conflicts=0 | safe=9/9@31
+      N10 parent=5 R1: C:0 BEFORE A:0 | LB=69 | status=FATHOMED_FEASIBLE | conflicts=0 | safe=9/9@31

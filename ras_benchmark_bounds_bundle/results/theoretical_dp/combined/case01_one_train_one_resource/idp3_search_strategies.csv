@@ -1,0 +1,7 @@
+delay,feasible,first_ub,nodes_to_first_ub,safe_frontier_min,safe_tasks,seconds_to_first_ub,strategy
+0.0,True,5.0,1,5.0,1,5.7541998103260994e-05,dfs
+0.0,True,5.0,1,5.0,1,2.983299782499671e-05,best_first
+0.0,True,5.0,1,,,2.1249987185001373e-05,beam_1
+0.0,True,5.0,1,,,7.695800741203129e-05,beam_2
+0.0,True,5.0,1,,,5.445801070891321e-05,beam_4
+0.0,True,5.0,1,,,2.099999983329326e-05,beam_8

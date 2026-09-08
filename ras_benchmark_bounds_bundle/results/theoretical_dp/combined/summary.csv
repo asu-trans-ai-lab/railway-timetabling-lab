@@ -1,0 +1,6 @@
+idp0_first_train_travel,idp1_objective,idp1_states,idp2_lb,idp2_nodes,idp2_status,idp2_ub,idp4_best_dual,idp4_ub,instance,resources,tasks,trains
+5.0,5.0,2,5.0,1,PROVEN_OPTIMAL,5.0,5.0,5.0,case01_one_train_one_resource,1,1,1
+5.0,18.0,5,18.0,3,PROVEN_OPTIMAL,18.0,17.99999999254942,18.0,case02_two_trains_one_resource,1,2,2
+5.0,39.0,16,39.0,11,PROVEN_OPTIMAL,39.0,38.99999998281852,39.0,case03_three_trains_one_resource,1,3,3
+15.0,38.0,37,38.0,3,PROVEN_OPTIMAL,38.0,37.99999998382287,38.0,case04_two_trains_three_resources,3,6,2
+15.0,69.0,634,69.0,11,PROVEN_OPTIMAL,69.0,68.99999994010552,69.0,case05_three_trains_three_resources,3,9,3

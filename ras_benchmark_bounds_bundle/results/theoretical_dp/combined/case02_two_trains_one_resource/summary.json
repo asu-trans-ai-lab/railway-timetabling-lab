@@ -1,0 +1,15 @@
+{
+  "idp0_first_train_travel": 5.0,
+  "idp1_objective": 18.0,
+  "idp1_states": 5,
+  "idp2_lb": 18.0,
+  "idp2_nodes": 3,
+  "idp2_status": "PROVEN_OPTIMAL",
+  "idp2_ub": 18.0,
+  "idp4_best_dual": 17.99999999254942,
+  "idp4_ub": 18.0,
+  "instance": "case02_two_trains_one_resource",
+  "resources": 1,
+  "tasks": 2,
+  "trains": 2
+}

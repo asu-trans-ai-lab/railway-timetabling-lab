@@ -1,0 +1,80 @@
+{
+  "completion_by_train": {
+    "A": 15.0,
+    "B": 23.0,
+    "C": 31.0
+  },
+  "free_run_total": 45.0,
+  "objective_total_travel": 69.0,
+  "tasks": [
+    {
+      "end_min": 5.0,
+      "resource_id": 1,
+      "start_min": 0.0,
+      "task_index": 0,
+      "train_id": "A"
+    },
+    {
+      "end_min": 10.0,
+      "resource_id": 2,
+      "start_min": 5.0,
+      "task_index": 1,
+      "train_id": "A"
+    },
+    {
+      "end_min": 13.0,
+      "resource_id": 1,
+      "start_min": 8.0,
+      "task_index": 0,
+      "train_id": "B"
+    },
+    {
+      "end_min": 15.0,
+      "resource_id": 3,
+      "start_min": 10.0,
+      "task_index": 2,
+      "train_id": "A"
+    },
+    {
+      "end_min": 18.0,
+      "resource_id": 2,
+      "start_min": 13.0,
+      "task_index": 1,
+      "train_id": "B"
+    },
+    {
+      "end_min": 21.0,
+      "resource_id": 1,
+      "start_min": 16.0,
+      "task_index": 0,
+      "train_id": "C"
+    },
+    {
+      "end_min": 23.0,
+      "resource_id": 3,
+      "start_min": 18.0,
+      "task_index": 2,
+      "train_id": "B"
+    },
+    {
+      "end_min": 26.0,
+      "resource_id": 2,
+      "start_min": 21.0,
+      "task_index": 1,
+      "train_id": "C"
+    },
+    {
+      "end_min": 31.0,
+      "resource_id": 3,
+      "start_min": 26.0,
+      "task_index": 2,
+      "train_id": "C"
+    }
+  ],
+  "total_delay": 24.0,
+  "travel_time_by_train": {
+    "A": 15.0,
+    "B": 23.0,
+    "C": 31.0
+  }
+}

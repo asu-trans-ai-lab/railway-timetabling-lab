@@ -1,0 +1,21 @@
+[
+  {
+    "best_child_lb": 18.0,
+    "best_child_safe_frontier": 13.0,
+    "best_child_safe_tasks": 2,
+    "child_count": 2,
+    "conflict_time_min": 0.0,
+    "delta_best_child_lb": 8.0,
+    "delta_safe_frontier": 13.0,
+    "delta_safe_tasks": 2,
+    "depth": 0,
+    "left_task": "A:0",
+    "node_id": 0,
+    "num_conflicts_before": 1,
+    "parent_lb": 10.0,
+    "resource_id": 1,
+    "right_task": "B:0",
+    "safe_frontier_before": 0.0,
+    "safe_tasks_before": 0
+  }
+]

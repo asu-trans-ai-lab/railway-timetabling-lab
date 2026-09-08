@@ -1,0 +1,1 @@
+N0 parent=None ROOT | LB=5 | status=FATHOMED_FEASIBLE | conflicts=0 | safe=1/1@5

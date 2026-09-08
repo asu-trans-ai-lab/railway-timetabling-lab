@@ -1,0 +1,11 @@
+{
+  "name": "case03_three_trains_one_resource",
+  "time_step_min": 1,
+  "safety_headway_min": 3,
+  "metadata": {"purpose": "recursive resource ordering on one machine", "expected_objective": 39, "expected_delay": 24},
+  "jobs": [
+    {"train_id": "A", "release_min": 0, "tasks": [{"resource_id": 1, "duration_min": 5}]},
+    {"train_id": "B", "release_min": 0, "tasks": [{"resource_id": 1, "duration_min": 5}]},
+    {"train_id": "C", "release_min": 0, "tasks": [{"resource_id": 1, "duration_min": 5}]}
+  ]
+}

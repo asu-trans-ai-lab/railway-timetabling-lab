@@ -1,0 +1,39 @@
+{
+  "completion_by_train": {
+    "A": 5.0,
+    "B": 13.0,
+    "C": 21.0
+  },
+  "dispatches": [
+    {
+      "end_min": 5.0,
+      "resource_id": 1,
+      "start_min": 0.0,
+      "step": 0,
+      "task_index": 0,
+      "train_id": "A"
+    },
+    {
+      "end_min": 13.0,
+      "resource_id": 1,
+      "start_min": 8.0,
+      "step": 1,
+      "task_index": 0,
+      "train_id": "B"
+    },
+    {
+      "end_min": 21.0,
+      "resource_id": 1,
+      "start_min": 16.0,
+      "step": 2,
+      "task_index": 0,
+      "train_id": "C"
+    }
+  ],
+  "feasible": true,
+  "free_run_total": 15.0,
+  "objective_total_travel": 39.0,
+  "reason": "",
+  "states_evaluated": 16,
+  "total_delay": 24.0
+}

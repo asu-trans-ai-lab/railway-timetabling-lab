@@ -1,0 +1,4 @@
+absolute_gap,action,branch_decision,depth,elapsed_seconds,fathom_reason,global_lb,incumbent_source,incumbent_ub,initial_ub,iteration,node_delay_lb,node_id,node_lb,nodes_expanded,nodes_generated,num_conflicts,num_reservations,parent_id,relative_gap,safe_frontier_min,safe_task_ratio,safe_tasks,selected_conflict,solver_status,status,total_tasks
+0.0,root_solved,,0,0.00010795799607876688,,5.0,GLOBAL_TRAIN_PRIORITY,5.0,5.0,0,0.0,0,5.0,,,0,0,,0.0,5.0,1.0,1,,,FEASIBLE,1
+0.0,root_feasible,,0,0.00011458300286903977,,5.0,GLOBAL_TRAIN_PRIORITY,5.0,,1,0.0,0,5.0,,,0,0,,0.0,5.0,1.0,1,,,FATHOMED_FEASIBLE,1
+0.0,finished,,,0.00011987499601673335,,5.0,GLOBAL_TRAIN_PRIORITY,5.0,,2,,,,0,1,,,,0.0,,,,,PROVEN_OPTIMAL,,

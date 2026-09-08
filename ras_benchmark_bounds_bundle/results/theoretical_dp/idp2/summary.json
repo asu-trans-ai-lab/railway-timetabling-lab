@@ -1,0 +1,62 @@
+[
+  {
+    "UB": 5.0,
+    "beam8_UB": 5.0,
+    "beam8_nodes": 1,
+    "delay": 0.0,
+    "instance": "case01_one_train_one_resource",
+    "nodes": 1,
+    "root_lb": 5.0,
+    "status": "PROVEN_OPTIMAL",
+    "tasks": 1,
+    "trains": 1
+  },
+  {
+    "UB": 18.0,
+    "beam8_UB": 18.0,
+    "beam8_nodes": 3,
+    "delay": 8.0,
+    "instance": "case02_two_trains_one_resource",
+    "nodes": 3,
+    "root_lb": 10.0,
+    "status": "PROVEN_OPTIMAL",
+    "tasks": 2,
+    "trains": 2
+  },
+  {
+    "UB": 39.0,
+    "beam8_UB": 39.0,
+    "beam8_nodes": 11,
+    "delay": 24.0,
+    "instance": "case03_three_trains_one_resource",
+    "nodes": 11,
+    "root_lb": 15.0,
+    "status": "PROVEN_OPTIMAL",
+    "tasks": 3,
+    "trains": 3
+  },
+  {
+    "UB": 38.0,
+    "beam8_UB": 38.0,
+    "beam8_nodes": 3,
+    "delay": 8.0,
+    "instance": "case04_two_trains_three_resources",
+    "nodes": 3,
+    "root_lb": 30.0,
+    "status": "PROVEN_OPTIMAL",
+    "tasks": 6,
+    "trains": 2
+  },
+  {
+    "UB": 69.0,
+    "beam8_UB": 69.0,
+    "beam8_nodes": 11,
+    "delay": 24.0,
+    "instance": "case05_three_trains_three_resources",
+    "nodes": 11,
+    "root_lb": 45.0,
+    "status": "PROVEN_OPTIMAL",
+    "tasks": 9,
+    "trains": 3
+  }
+]

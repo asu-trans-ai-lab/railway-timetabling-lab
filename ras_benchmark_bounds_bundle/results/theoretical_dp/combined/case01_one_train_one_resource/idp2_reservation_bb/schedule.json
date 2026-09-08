@@ -1,0 +1,20 @@
+{
+  "completion_by_train": {
+    "A": 5.0
+  },
+  "free_run_total": 5.0,
+  "objective_total_travel": 5.0,
+  "tasks": [
+    {
+      "end_min": 5.0,
+      "resource_id": 1,
+      "start_min": 0.0,
+      "task_index": 0,
+      "train_id": "A"
+    }
+  ],
+  "total_delay": 0.0,
+  "travel_time_by_train": {
+    "A": 5.0
+  }
+}

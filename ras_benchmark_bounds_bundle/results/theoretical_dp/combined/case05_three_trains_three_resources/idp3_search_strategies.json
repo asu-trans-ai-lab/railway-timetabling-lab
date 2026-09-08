@@ -1,0 +1,62 @@
+[
+  {
+    "delay": 24.0,
+    "feasible": true,
+    "first_ub": 69.0,
+    "nodes_to_first_ub": 7,
+    "safe_frontier_min": 31.0,
+    "safe_tasks": 9,
+    "seconds_to_first_ub": 0.001050959006533958,
+    "strategy": "dfs"
+  },
+  {
+    "delay": 24.0,
+    "feasible": true,
+    "first_ub": 69.0,
+    "nodes_to_first_ub": 11,
+    "safe_frontier_min": 31.0,
+    "safe_tasks": 9,
+    "seconds_to_first_ub": 0.0011283750063739717,
+    "strategy": "best_first"
+  },
+  {
+    "delay": 24.0,
+    "feasible": true,
+    "first_ub": 69.0,
+    "nodes_to_first_ub": 7,
+    "safe_frontier_min": null,
+    "safe_tasks": null,
+    "seconds_to_first_ub": 0.0006465000042226166,
+    "strategy": "beam_1"
+  },
+  {
+    "delay": 24.0,
+    "feasible": true,
+    "first_ub": 69.0,
+    "nodes_to_first_ub": 11,
+    "safe_frontier_min": null,
+    "safe_tasks": null,
+    "seconds_to_first_ub": 0.0011611249938141555,
+    "strategy": "beam_2"
+  },
+  {
+    "delay": 24.0,
+    "feasible": true,
+    "first_ub": 69.0,
+    "nodes_to_first_ub": 11,
+    "safe_frontier_min": null,
+    "safe_tasks": null,
+    "seconds_to_first_ub": 0.00129162501252722,
+    "strategy": "beam_4"
+  },
+  {
+    "delay": 24.0,
+    "feasible": true,
+    "first_ub": 69.0,
+    "nodes_to_first_ub": 11,
+    "safe_frontier_min": null,
+    "safe_tasks": null,
+    "seconds_to_first_ub": 0.001145041998825036,
+    "strategy": "beam_8"
+  }
+]
