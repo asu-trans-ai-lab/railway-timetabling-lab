@@ -1,0 +1,5 @@
+key	value
+name	RAS_data-set_1
+time_unit	1
+headway	3
+wait_model	siding_only

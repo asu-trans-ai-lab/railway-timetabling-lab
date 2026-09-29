@@ -153,6 +153,46 @@ title reports validator status and conflict count.
   report no finite UB and `DEPTH_BUDGET_EXHAUSTED` by design.
 - Current production headway is `SEGMENT_CLEARANCE_V1`, `h = 3 minutes`.
 
+## Three Engines on the Fixed-Track Model (2026-09-28)
+
+Three independent engines for the fixed-track RAS model: routes fixed down to the track, capacity 1 per track
+segment, `H = 3`, waiting only at the origin and at the route's siding points (a waiting train stands clear and holds
+no track), objective `OBJ-E = Σ (arrival − release)` (`OBJ-D = OBJ-E − TT0`, the delay only). Each engine uses only its
+own upper bound, windows and lower bound; every upper bound passes the independent C++ validator. No LNS anywhere.
+
+| Engine | Code | Strongest configuration | D1 | D2 | D3 |
+|---|---|---|---|---|---|
+| E1 block-pair CP-SAT | `solver/python/e1_blockpair.py` | block pairs, symmetry, 3 workers | 2220 proven | 4127 proven | 4056 proven |
+| E2 kernel + LP + MILP | `solver/python/e2_colgen.py` + `solver/cpp/siding_lr.cpp` | meet rows as cuts, heuristic at the master duals every 5 iterations | 2220 proven | [3710, 4801] 22.72 % | [3816, 4566] 16.43 % |
+| E3 B&B + DP | `solver/python/e3_bb.py` + `solver/cpp/siding_lr.cpp` | meet rows, block-pair branching, node heuristic, dives, 8 processes | 2220 proven | [3873, 4604] 15.88 % | [3879, 4417] 12.18 % |
+
+(OBJ-E, ≤ 30 min per engine and dataset; `[LB, UB]` and the OBJ-E gap where not closed. E1's optima are also certified
+by a brute-force enumeration: OBJ-E ≤ 2219 / 4126 / 4055 infeasible.)
+
+```bash
+python3 -m pip install -r requirements-three-engines.txt       # ortools, highspy, numpy
+python3 -m experiments.run_three_engines e1 --dataset D2
+python3 -m experiments.run_three_engines e2 --dataset D2 [--milp cplex]   # CPLEX: set CPLEX_BIN
+python3 -m experiments.run_three_engines e3 --dataset D2 [--workers 8]
+python3 -m experiments.run_toy_cells e23 --ns 2,3,5,8                    # toy corridor, bottleneck before / after
+python3 -m experiments.run_s01 --instance DIR --engine e3                # S01 (data not in this repository)
+python3 -m tests.test_three_engines
+```
+
+Run the engines as separate CLI processes. On macOS, OR-Tools and highspy can bundle different `libhighs`
+versions, so the regression tests isolate E2 in a subprocess.
+
+| Component | Location |
+|---|---|
+| Fixed-track data (D1–D3) and donors | `data/fixed_track/` |
+| Fixed-track adapter and validator | `adapters/fixed_track_adapter.py`, `validator/fixed_track/fixed_track_validate.cpp` |
+| Resource-chain model, validator, kernel wrapper | `solver/python/siding_model.py`, `siding_validate.py`, `siding_kernel.py` |
+| C++ kernel of E2 / E3 (train DP, pricing, B&B) | `solver/cpp/siding_lr.cpp` (built to `solver/cpp/build/siding_lr` on first use) |
+| Control cells, identified bottleneck (phase-time) | `adapters/control_cells.py` |
+| Toy corridor 10–20–10 | `adapters/toy_corridor.py`, `solver/python/e1_blockpair_chain.py`, `experiments/run_toy_cells.py` |
+| S01 corridor adapter and validator | `adapters/s01_adapter.py`, `validator/s01/`, `experiments/run_s01.py` |
+| Tests | `tests/test_three_engines.py` |
+
 ## RAS Weekly Report Archive
 
 These are report milestones, not code snapshots. See `weekly_reports/README.md` and each dated `RESULT_MANIFEST.md`.

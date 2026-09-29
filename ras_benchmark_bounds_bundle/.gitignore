@@ -6,3 +6,7 @@ results/*/
 !results/theoretical_dp/
 !results/theoretical_dp/**
 solver/theoretical_dp/idp/prototype/resource_reservation_lite/cpp/reservation_bb
+
+validator/fixed_track/build/
+validator/s01/build/
+data/fixed_track/donors/*.validation.tsv
