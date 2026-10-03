@@ -31,6 +31,9 @@
 #include <fstream>
 #include <iostream>
 #include <map>
+#include <set>
+#include <new>
+#include <stdexcept>
 #include <memory>
 #include <queue>
 #include <numeric>
@@ -70,59 +73,112 @@ struct Pair { int k, b, dir, leg, len; };         // train k through block b: en
 vector<Pair> g_Pairs;
 vector<vector<int>> g_PairAtLeg;                  // [train][leg] -> pair index or -1
 
+// read_instance: the token file, every field checked before use (a malformed or inconsistent instance is refused
+// with the reason, never run): counts and indices in range, tracks >= 1, running times >= 1, releases >= 0, legs >= 1,
+// direction +1 / -1, stand flag 0 / 1 / 2, unique train ids, blocks of in-range single-track resources, and a horizon
+// small enough for the minute-indexed arrays.
+const long MAX_COUNT = 1000000, MAX_MINUTES = 10000000;
 bool read_instance(const char* path)
 {
     ifstream in(path);
-    if (!in) return false;
+    if (!in) { fprintf(stderr, "cannot open %s\n", path); return false; }
+    auto bad = [&](const string& why) { fprintf(stderr, "invalid instance %s: %s\n", path, why.c_str()); return false; };
+    auto count = [&](long& v, long lo, const char* what) -> bool {
+        if (!(in >> v)) return bad(string("missing or non-numeric ") + what);
+        if (v < lo || v > MAX_COUNT) return bad(string(what) + " out of range: " + to_string(v));
+        return true;
+    };
     string key;
+    bool seen_res = false, seen_trains = false;
     while (in >> key)
     {
-        if (key == "HEADWAY") in >> g_H;
-        else if (key == "ALPHA") in >> g_Alpha;
-        else if (key == "BETA") in >> g_Beta;
-        else if (key == "UB") in >> g_UB;
+        if (key == "HEADWAY" || key == "ALPHA" || key == "BETA" || key == "UB")
+        {
+            long v;
+            if (!(in >> v)) return bad("missing or non-numeric " + key);
+            if (v < 0 || v > MAX_MINUTES) return bad(key + " out of range: " + to_string(v));
+            (key == "HEADWAY" ? g_H : key == "ALPHA" ? g_Alpha : key == "BETA" ? g_Beta : g_UB) = (int)v;
+        }
         else if (key == "RESOURCES")
         {
-            int m; in >> m;
+            long m;
+            if (!count(m, 1, "RESOURCES count")) return false;
             g_ResName.resize(m); g_Tracks.resize(m);
-            for (int r = 0; r < m; r++) in >> g_ResName[r] >> g_Tracks[r];
+            for (long r = 0; r < m; r++)
+            {
+                if (!(in >> g_ResName[r] >> g_Tracks[r])) return bad("resource " + to_string(r) + ": malformed");
+                if (g_Tracks[r] < 1 || g_Tracks[r] > 1000) return bad("resource " + g_ResName[r] + ": tracks < 1");
+            }
+            seen_res = true;
         }
         else if (key == "BLOCKS")
         {
-            int nb; in >> nb;
+            long nb;
+            if (!count(nb, 0, "BLOCKS count")) return false;
             g_Block.resize(nb);
-            for (int b = 0; b < nb; b++)
+            for (long b = 0; b < nb; b++)
             {
-                int len; in >> len;
+                long len;
+                if (!count(len, 1, "block length")) return false;
                 g_Block[b].resize(len);
-                for (int j = 0; j < len; j++) in >> g_Block[b][j];
+                for (long j = 0; j < len; j++)
+                    if (!(in >> g_Block[b][j])) return bad("block " + to_string(b) + ": malformed");
             }
         }
         else if (key == "TRAINS")
         {
-            int n; in >> n;
+            long n;
+            if (!count(n, 1, "TRAINS count")) return false;
             g_T.resize(n);
-            for (int k = 0; k < n; k++)
+            for (long k = 0; k < n; k++)
             {
                 auto& T = g_T[k];
-                int term, legs, nt;
-                in >> T.id >> T.release >> T.dir >> term >> legs;
+                long term, legs, nt;
+                if (!(in >> T.id >> T.release >> T.dir >> term)) return bad("train " + to_string(k) + ": malformed header");
+                if (!count(legs, 1, "number of legs")) return false;
+                if (T.release < 0 || T.release > MAX_MINUTES) return bad("train " + T.id + ": release out of range");
+                if (T.dir != 1 && T.dir != -1) return bad("train " + T.id + ": direction must be +1 or -1");
+                if (term != 0 && term != 1) return bad("train " + T.id + ": terminal flag must be 0 or 1");
                 T.terminal = term != 0;
                 T.legs.resize(legs);
-                for (int i = 0; i < legs; i++)
+                long total = T.release;
+                for (long i = 0; i < legs; i++)
                 {
-                    int s;
-                    in >> T.legs[i].res >> T.legs[i].p >> s;
+                    long s;
+                    if (!(in >> T.legs[i].res >> T.legs[i].p >> s)) return bad("train " + T.id + ": malformed leg");
+                    if (T.legs[i].p < 1 || T.legs[i].p > MAX_MINUTES) return bad("train " + T.id + ": run time < 1 or too large");
+                    if (s < 0 || s > 2) return bad("train " + T.id + ": stand flag must be 0, 1 or 2");
                     T.legs[i].stand = s != 0;
                     T.legs[i].pocket = s == 2;
-                    if (T.legs[i].p < 1) { fprintf(stderr, "run time < 1\n"); return false; }
+                    total += T.legs[i].p;
                 }
-                in >> nt;
+                if (total > MAX_MINUTES) return bad("train " + T.id + ": horizon too large");
+                if (!count(nt, 0, "number of blocks a train passes")) return false;
                 T.through.resize(nt);
-                for (int j = 0; j < nt; j++) in >> T.through[j];
+                for (long j = 0; j < nt; j++)
+                    if (!(in >> T.through[j])) return bad("train " + T.id + ": malformed block list");
             }
+            seen_trains = true;
         }
-        else { fprintf(stderr, "unknown key %s\n", key.c_str()); return false; }
+        else return bad("unknown key " + key);
+    }
+    if (!seen_res) return bad("no RESOURCES section");
+    if (!seen_trains) return bad("no TRAINS section");
+    int m = (int)g_Tracks.size(), nb = (int)g_Block.size();
+    for (int b = 0; b < nb; b++)
+        for (int r : g_Block[b])
+        {
+            if (r < 0 || r >= m) return bad("block " + to_string(b) + ": resource index out of range");
+            if (g_Tracks[r] != 1) return bad("block " + to_string(b) + ": a phase block must be single track");
+        }
+    set<string> ids;
+    for (auto& T : g_T)
+    {
+        if (!ids.insert(T.id).second) return bad("duplicate train id " + T.id);
+        for (auto& L : T.legs)
+            if (L.res < 0 || L.res >= m) return bad("train " + T.id + ": resource index out of range");
+        for (int b : T.through)
+            if (b < 0 || b >= nb) return bad("train " + T.id + ": block index out of range");
     }
     // block entries: the leg on the block's west resource (eastbound) or east resource (westbound)
     g_PairAtLeg.assign(g_T.size(), {});
@@ -151,7 +207,7 @@ bool read_instance(const char* path)
             g_Pairs.push_back({k, b, T.dir, leg, len});
         }
     }
-    return !g_T.empty() && !g_Tracks.empty();
+    return true;
 }
 
 // ========================================================
@@ -1378,6 +1434,7 @@ int g_KDive = 5;                                  // --k-dive K: Lagrangian step
 int g_SplitN = 0;                                 // --split N FILE: stop when N nodes are open, write them to FILE
 const char* g_SplitFile = nullptr;
 const char* g_NodesIn = nullptr;                  // --nodes-in FILE: start from these nodes instead of the root
+const char* g_DumpOpen = nullptr;                 // --dump-open FILE: on a time cap, write the open nodes (same format)
 const char* g_SharedUB = nullptr;                 // --shared-ub FILE: an incumbent value shared between processes
 int g_NodeHeur = 0;                               // --node-heuristic bits: 1 Lagrangian repair, 2 phase-slot construction
 int g_NodeHeurEvery = 1;                          // --node-heuristic-every N: at the root and every N-th node
@@ -1745,10 +1802,31 @@ int bb_mode(double time_cap, const string& rule, int k_root, int k_node, double 
         fclose(f);
         printf("SPLIT %zu nodes written\n", written);
     }
+    const char* status = split_done ? "SPLIT" : (open.empty() && !next ? "PROVEN" : "TIME_CAP");
+    if (!split_done && g_DumpOpen)                   // parallel rounds: the next round resumes from these nodes
+    {
+        if (next) { open.push(next); next = nullptr; }
+        FILE* f = fopen(g_DumpOpen, "w");
+        size_t written = 0;
+        while (!open.empty())
+        {
+            BBNode* x = open.top(); open.pop();
+            if (x->key < ub)
+            {
+                fprintf(f, "%d %d %zu", x->key, x->depth, x->res.size());
+                for (auto& r : x->res) fprintf(f, " %d %d %d %d %d", r.type, r.k, r.a, r.lo, r.hi);
+                fprintf(f, "\n");
+                written++;
+            }
+            delete x;
+        }
+        fclose(f);
+        printf("OPEN %zu nodes written\n", written);
+    }
     printf("RESULT mode bb rule %s phase %d status %s LB %d UB %d root %d examined %ld created %ld pruned %ld "
            "infeasible %ld feasible %ld branch_phase %ld branch_cell %ld branch_dep %ld seconds %.1f branch_meet %ld "
            "pruned_by_propagation %ld propagation_above_lagrangian %ld\n",
-           rule.c_str(), g_Phase ? 1 : 0, split_done ? "SPLIT" : (open.empty() && !next ? "PROVEN" : "TIME_CAP"),
+           rule.c_str(), g_Phase ? 1 : 0, status,
            final_lb, ub, root_lb, examined,
            created, pruned, infeasible, feasible_nodes, by_phase, by_cell, by_dep, elapsed(), by_meet, by_prop, prop_wins);
     while (!open.empty()) { delete open.top(); open.pop(); }
@@ -2124,10 +2202,10 @@ int upper_bound_mode(double time_cap, unsigned seed, const char* out)
 // 7. MAIN
 // ========================================================
 
-int main(int argc, char** argv)
+int real_main(int argc, char** argv)
 {
     if (argc < 2) { fprintf(stderr, "usage: siding_lr INSTANCE --mode ub|lb ...\n"); return 2; }
-    if (!read_instance(argv[1])) { fprintf(stderr, "cannot read %s\n", argv[1]); return 2; }
+    if (!read_instance(argv[1])) return 2;
     string mode = "ub";
     double time_cap = 60.0, theta = 1.0;
     int iterations = 300, patience = 20, ub = -1;
@@ -2176,6 +2254,7 @@ int main(int argc, char** argv)
         else if (s == "--k-dive") g_KDive = max(0, atoi(next()));
         else if (s == "--split") { g_SplitN = atoi(next()); g_SplitFile = next(); }
         else if (s == "--nodes-in") g_NodesIn = next();
+        else if (s == "--dump-open") g_DumpOpen = next();
         else if (s == "--shared-ub") g_SharedUB = next();
         else if (s == "--node-heuristic-every") g_NodeHeurEvery = max(1, atoi(next()));
         else if (s == "--phase-moves") g_PhaseMove = atof(next());
@@ -2183,6 +2262,11 @@ int main(int argc, char** argv)
         else if (s == "--lb-time-cap") g_LbTimeCap = atof(next());
         else if (s == "--max-ruin") g_MaxRuin = max(2, atoi(next()));
         else { fprintf(stderr, "unknown option %s\n", s.c_str()); return 2; }
+    }
+    if ((g_Phase || g_Meet) && g_H < 1)
+    {
+        fprintf(stderr, "phase-time and meet rows need H >= 1 (opposing trains could swap inside a block)\n");
+        return 2;
     }
     if (ub >= 0) g_UB = ub;
     printf("INSTANCE trains %zu resources %zu blocks %zu pairs %zu H %d alpha %d beta %d\n",
@@ -2194,4 +2278,12 @@ int main(int argc, char** argv)
     if (mode == "probe") return probe_mode(k_root, k_node, theta_node, patience_node, restrict_file, part, parts);
     fprintf(stderr, "unknown mode %s\n", mode.c_str());
     return 2;
+}
+
+// every failure ends with a message and a nonzero exit code, never an uncaught exception
+int main(int argc, char** argv)
+{
+    try { return real_main(argc, argv); }
+    catch (const bad_alloc&) { fprintf(stderr, "out of memory (instance horizon or size too large)\n"); return 3; }
+    catch (const exception& e) { fprintf(stderr, "error: %s\n", e.what()); return 3; }
 }

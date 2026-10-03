@@ -5,7 +5,10 @@ train holds one cell at a time, over [entry_c, exit_c + H), so a follower may en
 left it and H has passed -- the cumulative-flow occupancy O_c(t) = W^A_c(t) - W^D_c(t) <= C_c, one cell at a time.
 Engines and kernel are untouched: they read cells as resources.
 
-    cellify(model, cell_minutes)          every single-track resource longer than cell_minutes -> ceil(p / cell) cells
+    cellify(model, cell_minutes)          every single-track resource longer than cell_minutes -> a chain of cells that
+                                          every train traverses in full (coarsened when a fast train is too short)
+    check_cells(model)                    the invariant: on a split resource every train runs all its cells, in its
+                                          direction's order, each for >= 1 minute
     identify_bottleneck(model, keep=1)    keep the phase blocks with the largest occupancy demand sum(run + H)
 
 Opposing trains cannot swap between two cells of one single-track stretch: nobody may stand at a cell boundary and
@@ -39,18 +42,22 @@ def _split(p: int, m: int) -> list[int]:
 
 def cellify(model: Model, cell_minutes: int | None) -> Model:
     """A copy of `model` with every single-track, no-standing resource cut into control cells of at most
-    `cell_minutes` of running (by the slowest train on it); None or 0 keeps the model as it is."""
+    `cell_minutes` of running (by the slowest train on it), but never more cells than the shortest positive running
+    time on that resource: every train must traverse every cell for at least one minute on the integer grid, so that
+    opposing trains share the same physical cells (Meng & Zhou 2014, eq. 33). None or 0 keeps the model as it is."""
     if not cell_minutes:
         return model
-    longest = {}
+    longest, shortest = {}, {}
     for t in model.trains:
         for r, p, _ in t.path:
             longest[r] = max(longest.get(r, 0), p)
+            if p > 0:
+                shortest[r] = min(shortest.get(r, p), p)
     new_res, cells_of = [], {}
     for r, res in enumerate(model.resources):
         m = 1
         if res.tracks == 1 and not res.siding and longest.get(r, 0) > cell_minutes:
-            m = math.ceil(longest[r] / cell_minutes)
+            m = max(1, min(math.ceil(longest[r] / cell_minutes), shortest.get(r, 1)))
         ids = []
         for j in range(m):
             name = res.name if m == 1 else f"{res.name}#{j + 1}"
@@ -65,11 +72,11 @@ def cellify(model: Model, cell_minutes: int | None) -> Model:
             if len(ids) == 1:
                 path.append((ids[0], p, stand))
                 continue
-            parts = _split(p, len(ids)) if p >= len(ids) else [1] * p + [0] * (len(ids) - p)
+            parts = _split(p, len(ids))
+            assert min(parts) >= 1 and sum(parts) == p, (t.train_id, r, p, len(ids))
             order = ids if t.direction > 0 else ids[::-1]
             for cid, q in zip(order, parts):
-                if q > 0:
-                    path.append((cid, q, False))
+                path.append((cid, q, False))
         trains.append(replace(t, path=path, through=[]))
     blocks = _blocks(new_res)
     for t in trains:
@@ -77,6 +84,28 @@ def cellify(model: Model, cell_minutes: int | None) -> Model:
         t.through = [b for b, blk in enumerate(blocks) if all(i in on for i in blk)]
     return Model(model.name + f"_cells{cell_minutes}", model.headway, model.alpha, model.beta, new_res, trains, blocks)
 
+
+def check_cells(model: Model) -> list[str]:
+    """Every resource cut into cells (names R#1..R#m) is traversed in full by every train that uses it: all m cells,
+    in order 1..m eastbound and m..1 westbound, each for >= 1 minute. Returns the violations (empty = holds)."""
+    cells_of = {}
+    for i, r in enumerate(model.resources):
+        if "#" in r.name:
+            parent, _, j = r.name.rpartition("#")
+            cells_of.setdefault(parent, {})[int(j)] = i
+    errors = []
+    for t in model.trains:
+        for parent, cells in cells_of.items():
+            ids = [cells[j] for j in sorted(cells)]
+            seq = [(r, p) for r, p, _ in t.path if r in set(ids)]
+            if not seq:
+                continue
+            want = ids if t.direction > 0 else ids[::-1]
+            if [r for r, _ in seq] != want:
+                errors.append(f"{t.train_id}: on {parent} runs {[model.resources[r].name for r, _ in seq]}")
+            if any(p < 1 for _, p in seq):
+                errors.append(f"{t.train_id}: a zero-minute cell on {parent}")
+    return errors
 
 def block_demand(model: Model) -> list[int]:
     """Per phase block: sum over the trains through it of (running time inside + H) -- its occupancy demand."""

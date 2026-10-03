@@ -86,6 +86,24 @@ def test_cells_keep_running_times_and_the_bottleneck_is_the_middle():
     assert max(demand) == demand[1]
 
 
+def test_cells_are_shared_when_running_times_differ():
+    """Review finding C1 (2026-09-30): a train faster than the cell count must still traverse every cell, so that
+    opposing trains share the same physical cells and every train stays in the block (end to end through cellify)."""
+    from adapters.control_cells import check_cells
+    from adapters.toy_corridor import C0, corridor_model
+    m = corridor_model("c1", C0, [("E1", 1, 0), ("W1", -1, 5)], 3)
+    m.trains[1].path = [(r, 2 if m.resources[r].name == "R23" else p, s) for r, p, s in m.trains[1].path]
+    c = cellify(m, 5)
+    cells = {t.train_id: [c.resources[r].name for r, _, _ in t.path if c.resources[r].name.startswith("R23")]
+             for t in c.trains}
+    assert sorted(cells["E1"]) == sorted(cells["W1"]) and cells["E1"] == cells["W1"][::-1], cells
+    assert not check_cells(c)
+    assert all(sum(p for _, p, _ in a.path) == sum(p for _, p, _ in b.path) for a, b in zip(m.trains, c.trains))
+    assert {tuple(t.through) for t in c.trains} == {tuple(range(len(c.blocks)))}
+    for n in (2, 5, 8):                                 # the uniform toy keeps its cells unchanged
+        for cells_min in (10, 5):
+            assert not check_cells(toy_model(n, cells=cells_min))
+
 def test_physical_check_catches_a_swap_inside_a_stretch():
     m = toy_model(2, cells=10)
     sched = {"E1": [(0, "R12", 0, 10), (1, "S2", 10, 11), (2, "R23#1", 11, 21), (3, "R23#2", 21, 31), (4, "S3", 31, 32),

@@ -30,8 +30,19 @@ def build() -> Path:
     return BINARY
 
 
+def run_kernel(args: list[str], pattern: re.Pattern | None = None) -> tuple[str, re.Match | None]:
+    """Run the kernel; a refused instance or any failure raises RuntimeError with the kernel's own message."""
+    p = subprocess.run([str(build()), *map(str, args)], capture_output=True, text=True)
+    if p.returncode != 0:
+        why = (p.stderr.strip().splitlines() or [f"exit code {p.returncode}"])[-1]
+        raise RuntimeError(f"kernel failed ({p.returncode}): {why}")
+    m = pattern.search(p.stdout) if pattern is not None else None
+    if pattern is not None and m is None:
+        raise RuntimeError("kernel output has no RESULT line")
+    return p.stdout, m
+
+
 def greedy_ub(inst: Path, out: Path) -> int:
     """Sequential insertion in release order by the train DP: no search."""
-    log = subprocess.run([str(build()), str(inst), "--mode", "ub", "--time-cap", "0", "--out", str(out)],
-                         capture_output=True, text=True).stdout
-    return int(RESULT_UB.search(log).group(1))
+    _, m = run_kernel([inst, "--mode", "ub", "--time-cap", "0", "--out", out], RESULT_UB)
+    return int(m.group(1))
