@@ -46,12 +46,15 @@ def toy_model(n: int, interval: int = 15, h: int = 10, cells: int | None = None)
 
 def physical_check(model: Model, schedule) -> list[str]:
     """Independent of the cell split: on every single-track stretch (a parent resource), two opposing trains never
-    overlap -- the stretch is held from the first cell's entry to the last cell's exit + H."""
+    overlap -- the stretch is held from the first cell's entry to the last cell's exit + H (to the arrival + H when
+    the train then stands clear at a wait point, holding nothing)."""
     parent = lambda name: name.split("#")[0]             # noqa: E731
     single = {parent(r.name) for r in model.resources if r.tracks == 1 and not r.siding}
     spans = {}
     for t in model.trains:
         for i, name, e, x in schedule[t.train_id]:
+            if int(t.path[i][2]) == 2:                    # a pocket: clear of the line on arrival
+                x = e + t.path[i][1]
             p = parent(name)
             if p in single:
                 a, b = spans.get((t.train_id, p), (e, x))

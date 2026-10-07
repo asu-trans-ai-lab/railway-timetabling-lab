@@ -44,6 +44,8 @@
 #include <climits>
 #include <cstdio>
 #include <unistd.h>
+#include <fcntl.h>
+#include <sys/file.h>
 
 using namespace std;
 
@@ -1347,6 +1349,63 @@ void load_duals(const Duals* d)
     for (auto& e : d->mb) g_Runs[e.first / (g_W + 1)].b[e.first % (g_W + 1)] = e.second;
 }
 
+// write_duals / read_duals: a node's warm-start multipliers in an open-node file (--split, --dump-open, --nodes-in).
+// The flat indices depend on the cell count g_W, which depends on the UB the writer had, so the writer's g_W and
+// run count go with them and the reader re-indexes; cells beyond the reader's horizon and meet multipliers of a
+// different run set are dropped (the node then starts from fewer duals, never from wrong ones).
+void write_duals(FILE* f, long id, const Duals& d)
+{
+    fprintf(f, "W %ld %d %zu", id, g_W, g_Runs.size());
+    for (const auto* v : {&d.lam, &d.mu, &d.ma, &d.mb})
+    {
+        fprintf(f, " %zu", v->size());
+        for (auto& e : *v) fprintf(f, " %d %.9g", e.first, e.second);
+    }
+    fprintf(f, "\n");
+}
+
+long g_DualCap = 256;                             // --dual-cap N: at most N multiplier sets per node file; the nodes
+                                                  // are written best bound first, later ones go without (cold start)
+void write_open_node(FILE* f, const BBNode* x, map<const Duals*, long>& ids)
+{
+    long id = -1;
+    if (x->warm)
+    {
+        auto it = ids.find(x->warm.get());
+        if (it != ids.end()) id = it->second;
+        else if ((long)ids.size() < g_DualCap) { id = (long)ids.size(); ids[x->warm.get()] = id; write_duals(f, id, *x->warm); }
+    }
+    fprintf(f, "%d %d %zu", x->key, x->depth, x->res.size());
+    for (auto& r : x->res) fprintf(f, " %d %d %d %d %d", r.type, r.k, r.a, r.lo, r.hi);
+    if (id >= 0) fprintf(f, " w %ld", id);
+    fprintf(f, "\n");
+}
+
+shared_ptr<Duals> read_duals(istringstream& in)
+{
+    int w_old; size_t runs_old;
+    in >> w_old >> runs_old;
+    auto d = make_shared<Duals>();
+    vector<pair<int, float>>* parts[4] = {&d->lam, &d->mu, &d->ma, &d->mb};
+    for (int part = 0; part < 4; part++)
+    {
+        size_t cnt; in >> cnt;
+        int width_old = part < 2 ? w_old : w_old + 1, width_new = part < 2 ? g_W : g_W + 1;
+        for (size_t i = 0; i < cnt; i++)
+        {
+            int c; float v; in >> c >> v;
+            int row = c / width_old, t = c % width_old;
+            if (t >= width_new) continue;
+            if (part >= 2 && runs_old != g_Runs.size()) continue;
+            int idx = row * width_new + t;
+            if (part == 0 && idx >= (int)g_Lambda.size()) continue;
+            if (part == 1 && row >= (int)g_Mu.size()) continue;
+            parts[part]->push_back({idx, v});
+        }
+    }
+    return d;
+}
+
 // node_lr
 //   meaning:   max_j L(lambda_j, mu_j) over K subgradient steps from the loaded duals, under the node's restrictions;
 //              the trips at the best step in `best_trips`, its duals left loaded; +inf if a train has no trip
@@ -1436,6 +1495,8 @@ const char* g_SplitFile = nullptr;
 const char* g_NodesIn = nullptr;                  // --nodes-in FILE: start from these nodes instead of the root
 const char* g_DumpOpen = nullptr;                 // --dump-open FILE: on a time cap, write the open nodes (same format)
 const char* g_SharedUB = nullptr;                 // --shared-ub FILE: an incumbent value shared between processes
+bool g_FreezeUB = false;                          // --freeze-ub: prune with the given --ub only; incumbents are
+int g_BestFound = INT32_MAX;                      // recorded (g_BestFound) but never tighten the bound or the windows
 int g_NodeHeur = 0;                               // --node-heuristic bits: 1 Lagrangian repair, 2 phase-slot construction
 int g_NodeHeurEvery = 1;                          // --node-heuristic-every N: at the root and every N-th node
 
@@ -1467,14 +1528,25 @@ int bb_mode(double time_cap, const string& rule, int k_root, int k_node, double 
     if (g_NodesIn)                                   // a share of an open list written by --split (parallel B&B)
     {
         ifstream in(g_NodesIn);
-        int key, depth, nr;
-        while (in >> key >> depth >> nr)
+        map<string, shared_ptr<Duals>> duals;          // "W id ..." lines: warm starts, shared by the nodes naming them
+        string line;
+        size_t with_duals = 0;
+        while (getline(in, line))
         {
+            istringstream ls(line);
+            string first;
+            if (!(ls >> first)) continue;
+            if (first == "W") { string id; ls >> id; duals[id] = read_duals(ls); continue; }
+            int key = stoi(first), depth, nr;
+            ls >> depth >> nr;
             vector<Restr> res(nr);
-            for (auto& x : res) in >> x.type >> x.k >> x.a >> x.lo >> x.hi;
-            open.push(new BBNode{0, depth, key, res, nullptr});
+            for (auto& x : res) ls >> x.type >> x.k >> x.a >> x.lo >> x.hi;
+            shared_ptr<Duals> warm;
+            string tag, id;
+            if (ls >> tag >> id && tag == "w" && duals.count(id)) { warm = duals[id]; with_duals++; }
+            open.push(new BBNode{0, depth, key, res, warm});
         }
-        printf("NODES IN %zu\n", open.size());
+        printf("NODES IN %zu (%zu with warm duals)\n", open.size(), with_duals);
     }
     else open.push(new BBNode{0, 0, (int)free_total, {}, nullptr});
     auto read_shared = [&]() -> int {
@@ -1483,13 +1555,20 @@ int bb_mode(double time_cap, const string& rule, int k_root, int k_node, double 
         int v;
         return (in >> v) ? v : INT32_MAX;
     };
-    auto write_shared = [&](int v) {
-        if (!g_SharedUB || v >= read_shared()) return;
-        string tmp = string(g_SharedUB) + ".tmp" + to_string((long)getpid());
-        { ofstream o(tmp); o << v << "\n"; }
-        rename(tmp.c_str(), g_SharedUB);
+    auto write_shared = [&](int v) {                // read-compare-write under an exclusive lock: two processes
+        if (!g_SharedUB || g_FreezeUB) return;      // cannot both pass the comparison and let the worse value win
+        int fd = ::open((string(g_SharedUB) + ".lock").c_str(), O_CREAT | O_RDWR, 0644);
+        if (fd >= 0) flock(fd, LOCK_EX);
+        if (v < read_shared())
+        {
+            string tmp = string(g_SharedUB) + ".tmp" + to_string((long)getpid());
+            { ofstream o(tmp); o << v << "\n"; }
+            rename(tmp.c_str(), g_SharedUB);
+        }
+        if (fd >= 0) { flock(fd, LOCK_UN); close(fd); }
     };
     auto new_ub = [&](int v) {                       // windows of the new incumbent: every better schedule fits
+        if (g_FreezeUB) { g_BestFound = min(g_BestFound, v); return; }
         ub = v; g_UB = ub;
         for (int k = 0; k < n; k++) Tk[k] = min(Tk[k], g_T[k].release + ub - 1 - (int)llround(free_total - g_Free[k]));
     };
@@ -1559,7 +1638,7 @@ int bb_mode(double time_cap, const string& rule, int k_root, int k_node, double 
                 }
             g_Mode = PRICED;
             for (auto& [v, sched] : found)
-                if (v < ub - 1e-9)
+                if (v < (g_FreezeUB ? g_BestFound : ub) - 1e-9)
                 {
                     new_ub((int)llround(v)); best_sched = sched;
                     printf("UB %d %.1f node %ld heuristic%s\n", ub, elapsed(), examined, diving ? " dive" : "");
@@ -1736,7 +1815,7 @@ int bb_mode(double time_cap, const string& rule, int k_root, int k_node, double 
             feasible_nodes++;
             double cost = 0.0;
             for (int k = 0; k < n; k++) cost += true_cost(k, trips[k]);
-            if (cost < ub - 1e-9)
+            if (cost < (g_FreezeUB ? g_BestFound : ub) - 1e-9)
             {
                 new_ub((int)llround(cost)); best_sched = trips;
                 printf("UB %d %.1f node %ld\n", ub, elapsed(), examined);
@@ -1769,7 +1848,7 @@ int bb_mode(double time_cap, const string& rule, int k_root, int k_node, double 
         delete node;
         if (elapsed() - last_report >= 5.0)
         {
-            int sh = read_shared();
+            int sh = g_FreezeUB ? INT32_MAX : read_shared();
             if (sh < ub) { new_ub(sh); printf("UB %d %.1f shared\n", ub, elapsed()); }
         }
         if (elapsed() - last_report >= 10.0)
@@ -1786,15 +1865,14 @@ int bb_mode(double time_cap, const string& rule, int k_root, int k_node, double 
         split_done = true;
         if (next) { open.push(next); next = nullptr; }
         FILE* f = fopen(g_SplitFile, "w");
+        map<const Duals*, long> ids;
         size_t written = 0;
         while (!open.empty())
         {
             BBNode* x = open.top(); open.pop();
             if (x->key < ub)
             {
-                fprintf(f, "%d %d %zu", x->key, x->depth, x->res.size());
-                for (auto& r : x->res) fprintf(f, " %d %d %d %d %d", r.type, r.k, r.a, r.lo, r.hi);
-                fprintf(f, "\n");
+                write_open_node(f, x, ids);
                 written++;
             }
             delete x;
@@ -1807,15 +1885,14 @@ int bb_mode(double time_cap, const string& rule, int k_root, int k_node, double 
     {
         if (next) { open.push(next); next = nullptr; }
         FILE* f = fopen(g_DumpOpen, "w");
+        map<const Duals*, long> ids;
         size_t written = 0;
         while (!open.empty())
         {
             BBNode* x = open.top(); open.pop();
             if (x->key < ub)
             {
-                fprintf(f, "%d %d %zu", x->key, x->depth, x->res.size());
-                for (auto& r : x->res) fprintf(f, " %d %d %d %d %d", r.type, r.k, r.a, r.lo, r.hi);
-                fprintf(f, "\n");
+                write_open_node(f, x, ids);
                 written++;
             }
             delete x;
@@ -1825,10 +1902,11 @@ int bb_mode(double time_cap, const string& rule, int k_root, int k_node, double 
     }
     printf("RESULT mode bb rule %s phase %d status %s LB %d UB %d root %d examined %ld created %ld pruned %ld "
            "infeasible %ld feasible %ld branch_phase %ld branch_cell %ld branch_dep %ld seconds %.1f branch_meet %ld "
-           "pruned_by_propagation %ld propagation_above_lagrangian %ld\n",
+           "pruned_by_propagation %ld propagation_above_lagrangian %ld found %d\n",
            rule.c_str(), g_Phase ? 1 : 0, status,
            final_lb, ub, root_lb, examined,
-           created, pruned, infeasible, feasible_nodes, by_phase, by_cell, by_dep, elapsed(), by_meet, by_prop, prop_wins);
+           created, pruned, infeasible, feasible_nodes, by_phase, by_cell, by_dep, elapsed(), by_meet, by_prop, prop_wins,
+           g_FreezeUB ? g_BestFound : ub);
     while (!open.empty()) { delete open.top(); open.pop(); }
     delete next;
     return 0;
@@ -2256,6 +2334,8 @@ int real_main(int argc, char** argv)
         else if (s == "--nodes-in") g_NodesIn = next();
         else if (s == "--dump-open") g_DumpOpen = next();
         else if (s == "--shared-ub") g_SharedUB = next();
+        else if (s == "--freeze-ub") g_FreezeUB = true;
+        else if (s == "--dual-cap") g_DualCap = atol(next());
         else if (s == "--node-heuristic-every") g_NodeHeurEvery = max(1, atoi(next()));
         else if (s == "--phase-moves") g_PhaseMove = atof(next());
         else if (s == "--phase-heuristic-every") g_PhaseHeurEvery = atoi(next());

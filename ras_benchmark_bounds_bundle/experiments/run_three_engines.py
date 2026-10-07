@@ -67,6 +67,9 @@ def run_e2(dataset: str, seconds: float, milp: str, heur_every: int, meet: bool,
 
 def run_e3(dataset: str, seconds: float, workers: int, work: Path) -> dict:
     from solver.python.e3_bb import STRONGEST, run_parallel, run_single
+    for old in [*work.glob("best_*.csv"), *work.glob("worker_*.log"), *work.glob("share_*.txt"), *work.glob("open_*.txt"),
+                *work.glob("*_pkg.csv")]:
+        old.unlink(missing_ok=True)               # never read a schedule left by an earlier run
     inst = to_chain_instance(dataset, work / "instance.txt")
     if workers <= 0:
         res = run_single(inst, work, seconds)

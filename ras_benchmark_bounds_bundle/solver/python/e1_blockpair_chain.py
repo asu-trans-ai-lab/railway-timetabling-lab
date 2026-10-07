@@ -55,7 +55,7 @@ def build(model, ub: int | None, hint: dict | None, symmetry: bool = False, hori
                         m.Add(exit_ >= entry + p)
                     else:
                         m.Add(exit_ == entry + p)
-                    variable_size = bool(stand)
+                    variable_size = bool(stand) and int(stand) != 2      # a pocket: it stands clear after p
                 else:
                     exit_ = entry + p
                     variable_size = False
@@ -67,7 +67,7 @@ def build(model, ub: int | None, hint: dict | None, symmetry: bool = False, hori
                     single.setdefault(r, []).append((k, j, off, p + H))
                 else:
                     end = m.NewIntVar(0, 10 ** 6, f"e{k}_{i}")
-                    m.Add(end == exit_ + H)
+                    m.Add(end == (entry + p if (i == b and int(stand) == 2) else exit_) + H)
                     size = m.NewIntVar(0, 10 ** 6, f"z{k}_{i}")
                     st = m.NewIntVar(0, 10 ** 6, f"st{k}_{i}")
                     m.Add(st == start)

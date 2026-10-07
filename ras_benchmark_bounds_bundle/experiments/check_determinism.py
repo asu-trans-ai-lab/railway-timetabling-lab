@@ -82,13 +82,14 @@ def main() -> int:
     ap.add_argument("--seconds", type=float, default=1800)
     ap.add_argument("--s01", default=None, help="an S01 instance directory (not in this repository)")
     ap.add_argument("--only", default="", help="run only the instances whose name contains this text")
+    ap.add_argument("--modes", default="serial,parallel", help="serial, parallel or both")
     args = ap.parse_args()
     OUT.mkdir(parents=True, exist_ok=True)
     rows = []
     for name, inst, kind, tree in instances(args.s01):
         if args.only and args.only not in name:
             continue
-        for mode in ("serial", "parallel"):
+        for mode in args.modes.split(","):
             for rep in range(args.repeats):
                 work = Path(tempfile.mkdtemp(prefix=f"det_{mode}_{rep}_"))
                 if mode == "serial":

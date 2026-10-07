@@ -1,5 +1,12 @@
 # Train Scheduling — dedicated project folder
 
+> **What the engines claim (disclaimer, Oct 2026).** The objectives here price waiting (α > 0 at the origin,
+> β > 0 at intermediate stops). Under such objectives a branch-and-bound over the DP / Lagrangian engines returns
+> **validated timetables and relaxation bounds only**: no optimality claim is made after branch-and-bound, and a
+> priority rule (FIFO) or a phase enumeration whose state counts trains is never read as a bound. An optimum is
+> claimed only when a MIP / CP-SAT solver certifies it; a lower bound only from the LP relaxation (space-time
+> formulation) or the Lagrangian relaxation. B&B optimality proofs apply to makespan / minimum completion time.
+
 All train-timetabling work lives here. Layout:
 
 | folder | role |

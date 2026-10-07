@@ -22,15 +22,17 @@ from dataclasses import replace
 from solver.python.siding_model import Model
 
 
-def _blocks(resources):
+def _blocks(resources, stops=frozenset()):
+    """Runs of >= 2 consecutive single-track resources; a run also ends at a boundary i | i+1 in `stops`, where some
+    train may stop clear of the line (a wait point), since a train may not stand inside a phase block."""
     blocks, run = [], []
     for i, res in enumerate(list(resources) + [None]):
-        if res is not None and res.tracks == 1 and not res.siding:
+        if res is not None and res.tracks == 1 and not res.siding and not (run and run[-1] in stops):
             run.append(i)
             continue
         if len(run) >= 2:
             blocks.append(run)
-        run = []
+        run = [i] if res is not None and res.tracks == 1 and not res.siding else []
     return blocks
 
 
@@ -75,10 +77,15 @@ def cellify(model: Model, cell_minutes: int | None) -> Model:
             parts = _split(p, len(ids))
             assert min(parts) >= 1 and sum(parts) == p, (t.train_id, r, p, len(ids))
             order = ids if t.direction > 0 else ids[::-1]
-            for cid, q in zip(order, parts):
-                path.append((cid, q, False))
+            for j, (cid, q) in enumerate(zip(order, parts)):        # a stop at the link's end stays on its last cell
+                path.append((cid, q, stand if j == len(order) - 1 else False))
         trains.append(replace(t, path=path, through=[]))
-    blocks = _blocks(new_res)
+    stops = set()                                          # boundaries i | i+1 where some train may stand
+    for t in trains:
+        for r, _, stand in t.path:
+            if int(stand):
+                stops.add(r if t.direction > 0 else r - 1)
+    blocks = _blocks(new_res, frozenset(stops))
     for t in trains:
         on = {r for r, _, _ in t.path}
         t.through = [b for b, blk in enumerate(blocks) if all(i in on for i in blk)]

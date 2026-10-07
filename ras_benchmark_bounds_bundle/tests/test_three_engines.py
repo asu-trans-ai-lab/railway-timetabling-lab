@@ -162,3 +162,22 @@ if __name__ == "__main__":
         if name.startswith("test_"):
             fn()
             print("PASS", name, flush=True)
+
+
+def test_parallel_rounds_carry_warm_duals_and_match_serial():
+    """Open nodes written by --split carry their warm-start duals, a worker loads them, and the parallel certificate
+    equals the serial one (toy N=5 with phase-time: before the duals were carried, the share holding the optimum ran
+    > 110,000 nodes without closing)."""
+    from solver.python.e3_bb import read_open, run_parallel, run_single
+    tree = ["--phase", "--rule", "interval", "--plunge", "20"]
+    with tempfile.TemporaryDirectory() as tmp:
+        work = Path(tmp)
+        inst = write_instance(identify_bottleneck(toy_model(5, cells=10)), work / "toy5.txt")
+        serial = run_single(inst, work / "serial", 120, tree)
+        par = run_parallel(inst, work / "par", 120, workers=4, tree=tree, log=lambda s: None)
+        assert serial["proven"] and par["proven"] and serial["ub"] == par["ub"] == par["lb"] == 340
+        duals: dict = {}
+        nodes = read_open(work / "par" / "open_nodes.txt", "s", duals)
+        assert nodes and duals and all(d in duals for _, _, d in nodes if d is not None)
+        loaded = (work / "par" / "worker_0_r0.log").read_text()
+        assert "with warm duals" in loaded and " (0 with warm duals)" not in loaded

@@ -20,18 +20,25 @@ certificate.
 """
 from __future__ import annotations
 
+import resource
 import subprocess
 import time
 from pathlib import Path
 
 from solver.python.siding_kernel import RESULT_BB, build, greedy_ub, run_kernel
 
+def child_cpu() -> float:
+    """CPU seconds (user + system) of all finished child processes: the kernel runs of this driver."""
+    u = resource.getrusage(resource.RUSAGE_CHILDREN)
+    return u.ru_utime + u.ru_stime
+
+
 STRONGEST = ["--meet", "--rule", "block", "--node-heuristic", "1", "--plunge", "20", "--k-dive", "5"]
 
 
 def run_single(inst: Path, work: Path, seconds: float, tree: list[str] = STRONGEST) -> dict:
     work.mkdir(parents=True, exist_ok=True)
-    t0 = time.time()
+    t0, c0 = time.time(), child_cpu()
     greedy = greedy_ub(inst, work / "greedy.csv")
     log, m = run_kernel([inst, "--mode", "bb", "--ub", greedy + 1, *tree, "--time-cap", seconds,
                          "--out", work / "best.csv"], RESULT_BB)
@@ -41,7 +48,37 @@ def run_single(inst: Path, work: Path, seconds: float, tree: list[str] = STRONGE
     ub = min(ub, greedy)
     return {"greedy": greedy, "root": root, "lb": ub if status == "PROVEN" else min(lb, ub), "ub": ub,
             "status": status, "nodes": nodes, "proven": status == "PROVEN", "schedule": str(out),
-            "seconds": round(time.time() - t0, 1)}
+            "seconds": round(time.time() - t0, 1), "cpu_seconds": round(child_cpu() - c0, 1)}
+
+
+def read_open(path: Path, tag: str, duals: dict) -> list[tuple[int, str, str | None]]:
+    """An open-node file (--split / --dump-open): node lines "key depth nr restrictions... [w id]" and warm-start lines
+    "W id ...". Returns (key, node text without the w tag, dual key or None); dual lines go into `duals` under tag:id."""
+    nodes = []
+    for ln in path.read_text().splitlines():
+        parts = ln.split()
+        if not parts:
+            continue
+        if parts[0] == "W":
+            duals[f"{tag}:{parts[1]}"] = " ".join(parts[2:])
+            continue
+        dual = None
+        if len(parts) >= 2 and parts[-2] == "w":
+            dual, parts = f"{tag}:{parts[-1]}", parts[:-2]
+        nodes.append((int(parts[0]), " ".join(parts), dual))
+    return nodes
+
+
+def write_share(path: Path, nodes: list, duals: dict) -> None:
+    """A worker's share: each warm start written once, before the nodes that name it."""
+    ids, lines = {}, []
+    for _, text, dual in nodes:
+        if dual is not None and dual in duals and dual not in ids:
+            ids[dual] = len(ids)
+            lines.append(f"W {ids[dual]} {duals[dual]}")
+    for _, text, dual in nodes:
+        lines.append(text + (f" w {ids[dual]}" if dual in ids else ""))
+    path.write_text("\n".join(lines) + "\n")
 
 
 def run_parallel(inst: Path, work: Path, seconds: float, workers: int = 8, split_nodes: int = 64,
@@ -50,7 +87,7 @@ def run_parallel(inst: Path, work: Path, seconds: float, workers: int = 8, split
         raise ValueError("run_parallel needs workers >= 1 (use run_single for one process)")
     work.mkdir(parents=True, exist_ok=True)
     binary = build()
-    t0 = time.time()
+    t0, c0 = time.time(), child_cpu()
     greedy = greedy_ub(inst, work / "greedy.csv")
     shared = work / "shared_ub.txt"
     shared.write_text(f"{greedy}\n")
@@ -64,7 +101,8 @@ def run_parallel(inst: Path, work: Path, seconds: float, workers: int = 8, split
     if status != "SPLIT":                            # the tree closed (or ran out of time) before splitting
         lb = ub_s if status == "PROVEN" else lb_s
     else:
-        pool = [ln for ln in split.read_text().splitlines() if ln.strip()]
+        duals: dict[str, str] = {}
+        pool = read_open(split, "s", duals)
         best = min(ub_s, greedy)
         rnd, slice_ = 0, max(5.0, min(30.0, 0.1 * seconds))
         while pool:
@@ -72,15 +110,17 @@ def run_parallel(inst: Path, work: Path, seconds: float, workers: int = 8, split
             if left < 1.0:
                 break
             cap = min(slice_, left)
-            pool = [ln for ln in pool if int(ln.split()[0]) < best]      # nodes the best UB already prunes are closed
+            pool = [x for x in pool if x[0] < best]      # nodes the best UB already prunes are closed
             if not pool:
                 break
-            pool.sort(key=lambda ln: int(ln.split()[0]))
+            pool.sort(key=lambda x: x[0])
+            used = {x[2] for x in pool}
+            duals = {k: v for k, v in duals.items() if k in used}
             shared.write_text(f"{best}\n")
             procs = []
             for w in range(min(workers, len(pool))):
                 share = work / f"share_{w}_r{rnd}.txt"
-                share.write_text("\n".join(pool[w::workers]) + "\n")
+                write_share(share, pool[w::workers], duals)
                 cmd = [str(binary), str(inst), "--mode", "bb", "--ub", str(best + 1), *tree, "--nodes-in", str(share),
                        "--time-cap", str(cap), "--shared-ub", str(shared), "--dump-open",
                        str(work / f"open_{w}_r{rnd}.txt"), "--out", str(work / f"best_{w}_r{rnd}.csv")]
@@ -100,14 +140,16 @@ def run_parallel(inst: Path, work: Path, seconds: float, workers: int = 8, split
                 best = min(best, ub_w)
                 dumped = work / f"open_{w}_r{rnd}.txt"
                 if st != "PROVEN" and dumped.exists():           # its unfinished nodes go back into the pool
-                    pool += [ln for ln in dumped.read_text().splitlines() if ln.strip()]
+                    pool += read_open(dumped, f"{w}r{rnd}", duals)
+                for used in (dumped, work / f"share_{w}_r{rnd}.txt"):   # node files with duals are large: the pool holds them now
+                    used.unlink(missing_ok=True)
             rnd += 1
             slice_ *= 2
-        pool = [ln for ln in pool if int(ln.split()[0]) < best]
-        lb = min([best] + [int(ln.split()[0]) for ln in pool])
+        pool = [x for x in pool if x[0] < best]
+        lb = min([best] + [x[0] for x in pool])
         results.append({"worker": "rounds", "status": "summary", "lb": lb, "ub": best, "rounds": rnd,
                         "open_nodes": len(pool), "out": work / "none"})
     ub = min(min(r["ub"] for r in results), greedy)
     lb = min(lb, ub)
     return {"greedy": greedy, "root": root, "lb": lb, "ub": ub, "results": results, "proven": lb == ub,
-            "seconds": round(time.time() - t0, 1)}
+            "seconds": round(time.time() - t0, 1), "cpu_seconds": round(child_cpu() - c0, 1)}
