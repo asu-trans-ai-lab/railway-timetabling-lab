@@ -54,8 +54,13 @@ CPLEX = Path(os.environ.get("CPLEX_BIN", Path.home() / "Applications/CPLEX_Studi
 
 
 def solve(model: Model, horizon: int, seconds: float = 120.0, threads: int = 4, verbose: bool = False,
-          solver: str = "highs", window_ub: int | None = None) -> dict:
-    """window_ub: a known timetable value UB. Every train's own delay is at most UB - TT0 in any timetable of value <= UB
+          solver: str = "highs", window_ub: int | None = None, export: str | None = None,
+          mip_start: dict | None = None) -> dict:
+    """export: write the model to this file (.mps / .lp, by HiGHS; the objective constant is the model's offset, so a
+    solver reports OBJ-E itself) and return without solving.
+    mip_start: train_id -> [entry minute of every leg] + [exit minute of the last leg], a validated timetable given to CPLEX
+    as its MIP start (an .mst file).
+    window_ub: a known timetable value UB. Every train's own delay is at most UB - TT0 in any timetable of value <= UB
     (all delays are >= 0), so each cumulative curve is forced to 1 from earliest + (UB - TT0) on, and the objective is
     capped at UB. solver: "highs" (in process) or "cplex" (the model is written as MPS and solved by CPLEX)."""
     import highspy
@@ -187,15 +192,32 @@ def solve(model: Model, horizon: int, seconds: float = 120.0, threads: int = 4, 
     starts.append(len(cols))
     h.addRows(len(rows_lo), np.array(rows_lo), np.array(rows_hi), len(cols), np.array(starts[:-1], dtype=np.int32),
               np.array(cols, dtype=np.int32), np.array(vals))
+    if export:
+        h.changeObjectiveOffset(const)
+        h.writeModel(str(export))
+        return {"exported": str(export), "vars": n, "rows": len(rows_lo), "constant": const}
+    x0 = None
+    if mip_start is not None:                      # the curves of the start timetable: E = 1 from each event on
+        x0 = np.zeros(n)
+        for k, tr in enumerate(model.trains):
+            times = mip_start[tr.train_id]
+            for i in range(len(tr.path) + 1):
+                for t in range(times[i], T + 1):
+                    x0[idx[(k, i, t)]] = 1.0
     t0 = time.time()
     if solver == "cplex":
-        status, objv, bnd, x = run_cplex(h, seconds, threads)
+        status, objv, bnd, x = run_cplex(h, seconds, threads, x0)
         out = {"status": status, "seconds": round(time.time() - t0, 2), "vars": n, "rows": len(rows_lo), "solver": "cplex"}
         if x is None:
             return out
         value, bound = objv + const, bnd + const
         gap = (value - bound) / max(1e-9, abs(value))
     else:
+        if x0 is not None:                         # the same MIP start for HiGHS
+            sol = highspy.HighsSolution()
+            sol.col_value = list(x0)
+            sol.value_valid = True
+            h.setSolution(sol)
         h.run()
         status = h.modelStatusToString(h.getModelStatus())
         info = h.getInfo()
@@ -216,12 +238,41 @@ def solve(model: Model, horizon: int, seconds: float = 120.0, threads: int = 4, 
     return out
 
 
-def run_cplex(h, seconds, threads):
-    """Write the HiGHS model as MPS, solve it with the CPLEX interactive optimizer, read its .sol (XML)."""
+def write_mst(path: Path, mps: Path, x0) -> None:
+    """A CPLEX MIP start: the column names in the order of the MPS COLUMNS section, with the start values."""
+    names, seen, section = [], set(), None
+    with open(mps) as f:
+        for line in f:
+            if not line.startswith(" "):
+                section = line.split()[0] if line.strip() else section
+                if section == "RHS":
+                    break
+                continue
+            if section == "COLUMNS":
+                name = line.split()[0]
+                if name not in seen and name != "MARKER" and "'MARKER'" not in line:
+                    seen.add(name)
+                    names.append(name)
+    with open(path, "w") as f:
+        f.write('<?xml version="1.0" encoding="UTF-8"?>\n<CPLEXSolutions version="1.2">\n'
+                '<CPLEXSolution version="1.2">\n<header problemName="m" solutionName="start" solutionIndex="0"/>\n'
+                '<variables>\n')
+        for j, (name, v) in enumerate(zip(names, x0)):
+            f.write(f'<variable name="{name}" index="{j}" value="{int(round(v))}"/>\n')
+        f.write("</variables>\n</CPLEXSolution>\n</CPLEXSolutions>\n")
+
+
+def run_cplex(h, seconds, threads, x0=None):
+    """Write the HiGHS model as MPS, solve it with the CPLEX interactive optimizer (from the MIP start x0, if given),
+    read its .sol (XML)."""
     import xml.etree.ElementTree as ET
     work = Path(tempfile.mkdtemp(prefix="cplex_"))
     h.writeModel(str(work / "m.mps"))
-    log = subprocess.run([str(CPLEX), "-c", f"read {work / 'm.mps'}", f"set timelimit {seconds}", f"set threads {threads}",
+    cmds = [f"read {work / 'm.mps'}"]
+    if x0 is not None:
+        write_mst(work / "start.mst", work / "m.mps", x0)
+        cmds.append(f"read {work / 'start.mst'}")
+    log = subprocess.run([str(CPLEX), "-c", *cmds, f"set timelimit {seconds}", f"set threads {threads}",
                           "set mip tolerances mipgap 0", "optimize", f"write {work / 'm.sol'}", "quit"],
                          capture_output=True, text=True).stdout
     (work / "cplex.log").write_text(log)
