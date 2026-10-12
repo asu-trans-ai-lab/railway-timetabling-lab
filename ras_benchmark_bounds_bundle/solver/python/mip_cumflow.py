@@ -23,6 +23,7 @@ from __future__ import annotations
 import json
 import os
 import pickle
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -45,6 +46,7 @@ def solve_isolated(model: Model, horizon: int, seconds: float = 120.0, threads: 
     subprocess.run([sys.executable, "-m", "solver.python.mip_cumflow", str(work / "model.pkl"), str(work / "out.json"),
                     str(horizon), str(seconds), str(threads), json.dumps(kw)], cwd=PACKAGE, check=True)
     out = json.loads((work / "out.json").read_text())
+    shutil.rmtree(work, ignore_errors=True)                   # the model pickle and MPS files are large
     if "schedule" in out:
         out["schedule"] = {k: [tuple(leg) for leg in v] for k, v in out["schedule"].items()}
     return out
@@ -53,16 +55,13 @@ def solve_isolated(model: Model, horizon: int, seconds: float = 120.0, threads: 
 CPLEX = Path(os.environ.get("CPLEX_BIN", Path.home() / "Applications/CPLEX_Studio222/cplex/bin/arm64_osx/cplex"))
 
 
-def solve(model: Model, horizon: int, seconds: float = 120.0, threads: int = 4, verbose: bool = False,
-          solver: str = "highs", window_ub: int | None = None, export: str | None = None,
-          mip_start: dict | None = None) -> dict:
-    """export: write the model to this file (.mps / .lp, by HiGHS; the objective constant is the model's offset, so a
-    solver reports OBJ-E itself) and return without solving.
-    mip_start: train_id -> [entry minute of every leg] + [exit minute of the last leg], a validated timetable given to CPLEX
-    as its MIP start (an .mst file).
+def build(model: Model, horizon: int, window_ub: int | None = None, train_slack: list | None = None) -> dict | None:
+    """The cumulative-flow MIP as a HiGHS model: {"h", "const" (objective constant), "idx" ((k, i, t) -> column),
+    "decode" (x -> schedule)}; None when the horizon is shorter than some train's earliest arrival.
     window_ub: a known timetable value UB. Every train's own delay is at most UB - TT0 in any timetable of value <= UB
     (all delays are >= 0), so each cumulative curve is forced to 1 from earliest + (UB - TT0) on, and the objective is
-    capped at UB. solver: "highs" (in process) or "cplex" (the model is written as MPS and solved by CPLEX)."""
+    capped at UB. train_slack: a delay cap per train (a space-time prism, e.g. from a minimum average speed): curve
+    (k, i) is forced to 1 from earliest + train_slack[k] on."""
     import highspy
     H, T = model.headway, horizon
     idx = {}                                   # (k, i, t) -> column
@@ -84,8 +83,12 @@ def solve(model: Model, horizon: int, seconds: float = 120.0, threads: int = 4, 
         for (k, i, t), c in idx.items():
             if t >= earliest[(k, i)] + slack:
                 lo[c] = 1.0
+    if train_slack is not None:
+        for (k, i, t), c in idx.items():
+            if t >= earliest[(k, i)] + train_slack[k]:
+                lo[c] = 1.0
     if any(earliest[(k, len(tr.path))] > T for k, tr in enumerate(model.trains)):
-        return {"status": "HORIZON_TOO_SHORT"}
+        return None
 
     rows_lo, rows_hi, starts, cols, vals = [], [], [], [], []
 
@@ -181,10 +184,7 @@ def solve(model: Model, horizon: int, seconds: float = 120.0, threads: int = 4, 
         row([(int(c), float(obj[c])) for c in nz], -inf, window_ub - const)
 
     h = highspy.Highs()
-    h.setOptionValue("output_flag", verbose)
-    h.setOptionValue("time_limit", float(seconds))
-    h.setOptionValue("threads", threads)
-    h.setOptionValue("mip_rel_gap", 0.0)
+    h.setOptionValue("output_flag", False)
     n = len(lo)
     h.addVars(n, np.array(lo), np.array(hi))
     h.changeColsIntegrality(n, np.arange(n, dtype=np.int32), np.array([highspy.HighsVarType.kInteger] * n))
@@ -192,6 +192,38 @@ def solve(model: Model, horizon: int, seconds: float = 120.0, threads: int = 4, 
     starts.append(len(cols))
     h.addRows(len(rows_lo), np.array(rows_lo), np.array(rows_hi), len(cols), np.array(starts[:-1], dtype=np.int32),
               np.array(cols, dtype=np.int32), np.array(vals))
+
+    def decode(x):
+        sched = {}
+        for k, tr in enumerate(model.trains):
+            curve = lambda i: next(t for t in range(T + 1) if x[idx[(k, i, t)]] > 0.5)   # noqa: E731
+            times = [curve(i) for i in range(len(tr.path) + 1)]
+            sched[tr.train_id] = [(i, model.resources[r].name, times[i], times[i + 1])
+                                  for i, (r, _, _) in enumerate(tr.path)]
+        return sched
+    free_vars = int(sum(1 for a, b_ in zip(lo, hi) if a < b_))
+    return {"h": h, "const": const, "idx": idx, "decode": decode, "rows": len(rows_lo), "free_vars": free_vars}
+
+
+def solve(model: Model, horizon: int, seconds: float = 120.0, threads: int = 4, verbose: bool = False,
+          solver: str = "highs", window_ub: int | None = None, export: str | None = None,
+          mip_start: dict | None = None, train_slack: list | None = None) -> dict:
+    """export: write the model to this file (.mps / .lp, by HiGHS; the objective constant is the model's offset, so a
+    solver reports OBJ-E itself) and return without solving.
+    mip_start: train_id -> [entry minute of every leg] + [exit minute of the last leg], a validated timetable given to CPLEX
+    as its MIP start (an .mst file).
+    window_ub: see build(). solver: "highs" (in process) or "cplex" (the model is written as MPS and solved by CPLEX)."""
+    import highspy
+    b = build(model, horizon, window_ub, train_slack)
+    if b is None:
+        return {"status": "HORIZON_TOO_SHORT"}
+    h, const, idx, T = b["h"], b["const"], b["idx"], horizon
+    rows_lo = range(b["rows"])
+    h.setOptionValue("output_flag", verbose)
+    h.setOptionValue("time_limit", float(seconds))
+    h.setOptionValue("threads", threads)
+    h.setOptionValue("mip_rel_gap", 0.0)
+    n = h.getNumCol()
     if export:
         h.changeObjectiveOffset(const)
         h.writeModel(str(export))
@@ -207,7 +239,8 @@ def solve(model: Model, horizon: int, seconds: float = 120.0, threads: int = 4, 
     t0 = time.time()
     if solver == "cplex":
         status, objv, bnd, x = run_cplex(h, seconds, threads, x0)
-        out = {"status": status, "seconds": round(time.time() - t0, 2), "vars": n, "rows": len(rows_lo), "solver": "cplex"}
+        out = {"status": status, "seconds": round(time.time() - t0, 2), "vars": n, "rows": len(rows_lo), "solver": "cplex",
+               "free_vars": b["free_vars"]}
         if x is None:
             return out
         value, bound = objv + const, bnd + const
@@ -221,19 +254,15 @@ def solve(model: Model, horizon: int, seconds: float = 120.0, threads: int = 4, 
         h.run()
         status = h.modelStatusToString(h.getModelStatus())
         info = h.getInfo()
-        out = {"status": status, "seconds": round(time.time() - t0, 2), "vars": n, "rows": len(rows_lo), "solver": "highs"}
+        out = {"status": status, "seconds": round(time.time() - t0, 2), "vars": n, "rows": len(rows_lo), "solver": "highs",
+               "free_vars": b["free_vars"]}
         if info.primal_solution_status != 2:       # no feasible point
             return out
         x = np.array(h.getSolution().col_value)
         value = info.objective_function_value + const
         bound = info.mip_dual_bound + const
         gap = info.mip_gap
-    sched = {}
-    for k, tr in enumerate(model.trains):
-        curve = lambda i: next(t for t in range(T + 1) if x[idx[(k, i, t)]] > 0.5)   # noqa: E731
-        times = [curve(i) for i in range(len(tr.path) + 1)]
-        sched[tr.train_id] = [(i, model.resources[r].name, times[i], times[i + 1]) for i, (r, _, _) in enumerate(tr.path)]
-    out.update(value=int(round(value)), bound=float(bound), gap=float(gap), schedule=sched,
+    out.update(value=int(round(value)), bound=float(bound), gap=float(gap), schedule=b["decode"](x),
                proven=status in ("Optimal", "integer optimal solution"))
     return out
 
@@ -276,8 +305,10 @@ def run_cplex(h, seconds, threads, x0=None):
                           "set mip tolerances mipgap 0", "optimize", f"write {work / 'm.sol'}", "quit"],
                          capture_output=True, text=True).stdout
     (work / "cplex.log").write_text(log)
+    run_cplex.last_log = log                               # nodes, root bound: read by mip_formulations
     if not (work / "m.sol").exists():
-        return "no solution", None, None, None
+        shutil.rmtree(work, ignore_errors=True)
+        return ("infeasible" if "integer infeasible" in log.lower() else "no solution"), None, None, None
     root = ET.parse(work / "m.sol").getroot()
     head = root.find("header").attrib
     xs = np.zeros(h.getNumCol())
@@ -290,6 +321,7 @@ def run_cplex(h, seconds, threads, x0=None):
     else:                                                  # time limit: the last "best bound" CPLEX printed
         m = re.findall(r"Current MIP best bound =\s*([-0-9.e+]+)", log)
         bnd = float(m[-1]) if m else float("nan")
+    shutil.rmtree(work, ignore_errors=True)                # MPS of large models: gigabytes over a long run
     return status, float(head["objectiveValue"]), bnd, xs
 
 

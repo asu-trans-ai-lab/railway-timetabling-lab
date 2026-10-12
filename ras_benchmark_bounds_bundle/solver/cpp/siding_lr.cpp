@@ -1,5 +1,8 @@
 // siding_lr.cpp -- the siding_rules model on resources (docs/SIDING_RULES_NOTE.md): a train stands only at its
-// origin or inside a resource with two tracks; cost = running + ALPHA * origin minutes + BETA * standing minutes.
+// origin or after a leg whose stand flag allows it (1: on the resource, holding it, e.g. a station track; 2: a
+// pocket, i.e. a siding beside the line, holding nothing). The number of tracks of a resource is its capacity
+// only: two trains may meet or overtake on a double-track link, but nobody stands there unless the leg's flag says
+// so; cost = running + ALPHA * origin minutes + BETA * standing minutes.
 //
 //   g++ -O2 -std=c++17 -Wall -Wextra -o build/siding_lr.exe cpp/siding_lr.cpp
 //   build/siding_lr.exe INSTANCE --mode ub [--time-cap S] [--seed N] [--out schedule.csv] [--anneal T0] [--max-ruin m]

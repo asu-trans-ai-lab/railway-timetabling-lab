@@ -32,8 +32,10 @@ def _rows(p):
     return list(csv.DictReader(open(p)))
 
 
-def corridor_model(name: str) -> tuple[Model, dict]:
-    base = DATA / f"{name}_native" if (DATA / f"{name}_native").exists() else DATA / name
+def corridor_model(name: str, base: Path | None = None) -> tuple[Model, dict]:
+    """base: read the instance from this folder instead (e.g. a copy with other trains)."""
+    if base is None:
+        base = DATA / f"{name}_native" if (DATA / f"{name}_native").exists() else DATA / name
     ini = configparser.ConfigParser()
     ini.read(base / "FTSettings.ini")
     H = int(ini["lagrangian"].get("SafetyHeadway", "2")) if "lagrangian" in ini else 2

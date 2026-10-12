@@ -85,7 +85,8 @@ def run_e1(model, seconds, workers=4):
     for tid, i, name, e, x in schedule_from(model, s, S, A, info):
         sched.setdefault(tid, []).append((i, name, e, x))
     v = int(round(s.objective_value))
-    return {"value": v, "status": s.status_name(st), "seconds": round(time.time() - t0, 2), "check": check(model, sched, v)}
+    return {"value": v, "status": s.status_name(st), "seconds": round(time.time() - t0, 2), "check": check(model, sched, v),
+            "schedule": sched}
 
 
 def main() -> int:
